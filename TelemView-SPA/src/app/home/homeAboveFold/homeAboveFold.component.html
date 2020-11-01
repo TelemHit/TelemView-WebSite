@@ -1,0 +1,38 @@
+<div class="container-fluid background-wrapper" >
+  <div class="background-inner top-div"></div>
+  <div class="background-overlay background-overlay-gradient top-div"></div>
+  <div class="gradient-bottom">
+    <svg version="1.1" x="0px" y="0px" width="240px" height="24px" viewBox="0 0 240 24"
+      enable-background="new 0 0 240 24" xml:space="preserve" preserveAspectRatio="none">
+      <path fill="#ffffff" fill-opacity="0.33"
+        d="M240,24V0H0v24C0,24,47.861,5.107,119.849,5.107C191.855,5.107,240,24,240,24z"></path>
+      <path fill="#ffffff" fill-opacity="0.33"
+        d="M119.829,2.661c55.562,0,98.521,9.957,120.171,16.271V0H0v18.902 C21.582,12.598,64.37,2.65,119.829,2.661z">
+      </path>
+      <path fill="#ffffff"
+        d="M119.81,0.117c50.737,0,92.456,6.89,120.19,13.271V0H0v13.34C27.651,6.979,69.17,0.117,119.81,0.117z">
+      </path>
+    </svg>
+  </div>
+
+  <div class="container homePage-top">
+    <div class="logo-top justify-content-between row">
+      <img src="../../../assets/images/Logo.png" alt="לוגו טכנולוגיות למידה" class="logo">
+      <img src="../../../assets/images/logoHit.png" alt="לוגו HIT" class="logo">
+    </div>
+    <div class="text-center gold main-sentence row">
+      <h1 class="col">מבט לתוצרי הפקולטה לטכנולוגיות למידה</h1>
+    </div>
+    <app-typesType class="row" [productTypes]="dataforhome"></app-typesType>
+    <div class="row justify-content-center our-products-btn"><button [ngxScrollTo]="'our_Products'"
+        class="mt-5 btn btn-white lg-col-2 md-col-3 sm-col-6 our-products-btn">לתוצרים שלנו</button></div>
+    <div class="row justify-content-center mt-4 arrow-down-animation"><svg xmlns="http://www.w3.org/2000/svg" width="24.252" height="13.126"
+        viewBox="0 0 24.252 13.126">
+        <path id="Path_17" data-name="Path 17" d="M930.139-891.585l10.712,10.712,10.712-10.712"
+          transform="translate(-928.725 892.999)" fill="none" stroke="#deb992" stroke-linecap="round"
+          stroke-linejoin="round" stroke-width="2" />
+      </svg>
+    </div>
+  </div>
+  <app-photo-gallery class="row photo-gallery" [products]="products"></app-photo-gallery>
+</div>

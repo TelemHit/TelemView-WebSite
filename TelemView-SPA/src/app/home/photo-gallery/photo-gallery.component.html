@@ -1,0 +1,19 @@
+<div class="container text-center gallery-container">
+  <div class="row justify-content-center">
+    <div class="ipad">
+      <carousel [noPause]="false" [pauseOnFocus]="true" [isAnimated]="true">
+        <slide class="carousel-main" *ngFor="let image of galleryImages">
+          <a [routerLink]="['/product/', image.id]" class="img-shadow">
+          <img class="carousel-img" src="{{image.url}}" alt="{{image.title}}" style="display: block; width: 100%;">
+          <div class="carousel-caption d-none d-md-block">
+            <h3><span class="darkBlue-bg">{{image.title}}</span></h3>
+            <p><span class="green-bg">{{image.task}}, {{image.year}}</span></p>
+          </div>
+        </a>
+        </slide>
+      </carousel>
+    
+    </div>
+    <div class="crousel-shadow"></div>
+  </div>
+</div>

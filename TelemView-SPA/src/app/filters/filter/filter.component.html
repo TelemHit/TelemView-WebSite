@@ -1,0 +1,27 @@
+<form (ngSubmit)="updateQueryParameters()" [formGroup]="form" novalidate>
+  <fieldset>
+        <div class="btn-group" dropdown>
+            <button id="proTypeBtn" dropdownToggle type="button" class="btn dropdown-toggle reg-filter" aria-controls="dropdown-basic"
+            [ngClass]="{'active-filter': activeFilter>0}">
+              {{filterTitle}}
+              <span *ngIf="activeFilter>0">({{activeFilter}})</span>
+              <span class="caret"></span>
+            </button>
+
+            <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
+              <ng-container *ngFor="let item of dataforfilter">
+                <li role="menuitem" class="" *ngIf="item.counter > 0">
+                    <input type="checkbox" [checked]="isChecked(item.id || item.title)" class="form-check-input" value="{{item.id || item.title}}" id="{{filterTitle+'_'+(item.id || item.title)}}" (change)="onCheckboxChange($event)" name="ProductType">
+                    <label class="form-check-label" for="{{filterTitle+'_'+(item.id || item.title)}}">
+                      {{item.title || item.name || item}} ({{item.counter}})
+                    </label>
+                </li>
+              </ng-container>
+                <li class="divider dropdown-divider"></li>
+                <button class="btn btn-link" (click)="clearFilter()">איפוס</button>
+                <button type="submit" class="btn btn-primary">סינון</button>
+            </ul>
+            
+        </div>
+</fieldset>
+</form>

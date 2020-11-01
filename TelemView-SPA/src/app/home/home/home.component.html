@@ -1,0 +1,8 @@
+<div class="container-fluid pl-0 pr-0">
+  <app-homeAboveFold class="row" [dataforhome] = "dataforhome['productTypes']" [products] = "products"></app-homeAboveFold>
+  <app-numberOfTypes class="row home_main types-numbers" [dataforhome] = "dataforhome['productTypes']"></app-numberOfTypes>
+  <app-about-faculty></app-about-faculty>
+  <app-multi-filter></app-multi-filter>
+  <app-filters-nav id="our_Products" (clearFilters)="clearAll()" class="home_main row justify-content-center" [dataforhome] = "dataforhome" [productParamsFromHome] ="productParams.params"></app-filters-nav>
+  <app-products class="row" [products] = "products"></app-products>
+</div>

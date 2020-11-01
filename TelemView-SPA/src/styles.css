@@ -1,0 +1,146 @@
+@import "../node_modules/bootstrap-v4-rtl/dist/css/bootstrap-rtl.min.css";
+@import "../node_modules/font-awesome/css/font-awesome.min.css";
+@import "~@ng-select/ng-select/themes/material.theme.css";
+
+html {
+  font-size: 18px;
+}
+body * {
+  direction: rtl;
+  font-family: "Assistant", sans-serif;
+}
+h2 {
+  margin-bottom: 30px;
+}
+.gold {
+  color: #bb9977;
+}
+.lightBlue {
+  color: #22dbd0;
+}
+.lightBlue-bg {
+  background-color: #22dbd0;
+}
+.darkBlue-bg {
+  background-color: #051622;
+}
+.green-bg {
+  background-color: #1ba098;
+}
+.gray-bg{
+    background-color: #F5F5F5;
+}
+.btn-white {
+  color: #051622;
+  background-color: #f4f4f4;
+  border-color: #f4f4f4;
+  -webkit-transition: background-color 100ms linear;
+  -ms-transition: background-color 100ms linear;
+  transition: background-color 100ms linear;
+  font-size: 1.5em;
+}
+.btn-white:hover {
+  color: #051622;
+  background-color: #deb992;
+  border-color: #deb992;
+  -webkit-transition: background-color 100ms linear;
+  -ms-transition: background-color 100ms linear;
+  transition: background-color 100ms linear;
+}
+.btn-white:active {
+  color: #051622;
+  background-color: #deb992;
+  border-color: #deb992;
+}
+
+.btn-yellow {
+  color: #051622;
+  background-color: #deb992;
+  border-color: #deb992;
+  -webkit-transition: background-color 100ms linear;
+  -ms-transition: background-color 100ms linear;
+  transition: background-color 100ms linear;
+  font-size: 1.5em;
+}
+.btn-yellow:hover {
+  background-color: #f4f4f4;
+  border-color: #f4f4f4;
+  -webkit-transition: background-color 100ms linear;
+  -ms-transition: background-color 100ms linear;
+  transition: background-color 100ms linear;
+}
+.btn-yellow:active {
+  background-color: #deb992;
+  border-color: #deb992;
+}
+
+/* homepage carousel */
+.carousel-indicators {
+  bottom: -2.3rem;
+  margin-bottom: 0;
+  padding: unset;
+}
+.carousel-indicators > li {
+  width: 12px;
+  height: 12px;
+  background-color: #051622;
+  opacity: 1;
+  border-radius: 50%;
+}
+.carousel-indicators > li.active {
+  background-color: #1ba098;
+}
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  height: 100px;
+  width: 100px;
+  background-size: 100%, 100%;
+  background-image: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-transition: background-color 100ms linear;
+  -ms-transition: background-color 100ms linear;
+  transition: background-color 100ms linear;
+}
+.carousel-control-next {
+  left: -54px !important;
+  right: unset;
+  width: 7.7%;
+  opacity: 1;
+}
+.carousel-control-prev {
+  right: -54px !important;
+  left: unset;
+  width: 7.7%;
+  opacity: 1;
+}
+
+.carousel-control-prev:hover .carousel-control-prev-icon,
+.carousel-control-next:hover .carousel-control-next-icon {
+  background-color: rgba(0, 0, 0, 0.2);
+  -webkit-transition: background-color 100ms linear;
+  -ms-transition: background-color 100ms linear;
+  transition: background-color 100ms linear;
+  cursor: pointer;
+}
+.carousel-control-next-icon::after {
+  content: url("assets/images/arrow.svg");
+  width: 30px;
+  transform: rotate(90deg);
+}
+
+.carousel-control-prev-icon::after {
+  content: url("assets/images/arrow.svg");
+  width: 30px;
+  transform: rotate(-90deg);
+}
+.main-container {
+  padding: 60px 0 50px 0;
+}
+.main-sm-container{
+    padding: 20px 0 10px 0;
+}
+.main-xs-container{
+  padding: 0;
+}
