@@ -13,7 +13,27 @@ namespace TelemView.API.Data
         modelBuilder.Entity<ProductCourse>().HasKey(sc => new { sc.CourseId, sc.ProductId });
         modelBuilder.Entity<ProductLecturer>().HasKey(sc => new { sc.LecturerId, sc.ProductId });
         modelBuilder.Entity<ProductTag>().HasKey(sc => new { sc.TagId, sc.ProductId });
+        modelBuilder.Entity<OrganizationsAndTypes>().HasKey(sc => new { sc.OrganizationId, sc.OrganizationTypeId });
+
+        modelBuilder.Entity<Product>()
+        .HasOne(o => o.Organization)
+        .WithMany(p => p.Products)
+        .OnDelete(DeleteBehavior.Restrict)
+        .HasForeignKey(o => o.OrganizationId);
+
+        modelBuilder.Entity<Product>()
+        .HasOne(t => t.Task)
+        .WithMany(p => p.Products)
+        .OnDelete(DeleteBehavior.Restrict)
+        .HasForeignKey(t => t.TaskId);
+
+        modelBuilder.Entity<Product>()
+        .HasOne(pt => pt.ProductType)
+        .WithMany(p => p.Products)
+        .OnDelete(DeleteBehavior.Restrict)
+        .HasForeignKey(pt => pt.ProductTypeId);
         }
+        
 
         public DbSet<Product> Products { get; set; }
         public DbSet<Task> Tasks {get; set;}
@@ -29,6 +49,7 @@ namespace TelemView.API.Data
         public DbSet<ProductCourse> ProductsCourses {get; set;}
         public DbSet<ProductLecturer> ProductsLecturers {get; set;}
         public DbSet<ProductTag> ProductsTags {get; set;}
+        public DbSet<OrganizationsAndTypes> OrganizationsAndTypes {get; set;}
         public DbSet<User> Users { get; set; }
     }
 }

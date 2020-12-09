@@ -1,0 +1,17 @@
+<nav class="nav flex-column">
+  <span class="navbar-text"><strong>שלום: {{this.name | titlecase}}</strong></span>
+<hr/>
+  <a class="nav-link" [routerLink]="['/editor/products']">תוצרים</a>
+  <a class="nav-link" href="#">סוגי תוצרים</a>
+  <a class="nav-link" href="#">משימות</a>
+  <a class="nav-link" href="#">קורסים</a>
+  <a class="nav-link" href="#">ארגונים</a>
+  <a class="nav-link" href="#">סוגי ארגונים</a>
+  <a class="nav-link" href="#">מרצים</a>
+  <hr/>
+  <a class="nav-link" href="#">מטה-דאטה</a>
+  <a class="nav-link" href="#">תוצרים לאישור</a>
+  <a class="nav-link" href="#">ניהול משתמשים</a>
+  <hr/>
+  <button class="nav-link btn btn-link text-left" (click)="logOut()">התנתקות</button>
+</nav>

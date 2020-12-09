@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TelemView.API.Migrations
 {
-    public partial class CreateTables : Migration
+    public partial class Create : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -32,6 +32,19 @@ namespace TelemView.API.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Lecturers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Organizations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Title = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Organizations", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -101,23 +114,44 @@ namespace TelemView.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Organizations",
+                name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Title = table.Column<string>(nullable: true),
-                    OrganizationTypeId = table.Column<int>(nullable: true)
+                    Email = table.Column<string>(nullable: true),
+                    Username = table.Column<string>(nullable: true),
+                    Role = table.Column<string>(nullable: true),
+                    PasswordHash = table.Column<byte[]>(nullable: true),
+                    PasswordSalt = table.Column<byte[]>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Organizations", x => x.Id);
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OrganizationsAndTypes",
+                columns: table => new
+                {
+                    OrganizationId = table.Column<int>(nullable: false),
+                    OrganizationTypeId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrganizationsAndTypes", x => new { x.OrganizationId, x.OrganizationTypeId });
                     table.ForeignKey(
-                        name: "FK_Organizations_OrganizationTypes_OrganizationTypeId",
+                        name: "FK_OrganizationsAndTypes_Organizations_OrganizationId",
+                        column: x => x.OrganizationId,
+                        principalTable: "Organizations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_OrganizationsAndTypes_OrganizationTypes_OrganizationTypeId",
                         column: x => x.OrganizationTypeId,
                         principalTable: "OrganizationTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -137,9 +171,9 @@ namespace TelemView.API.Migrations
                     IsPublish = table.Column<bool>(nullable: false),
                     ShowOnHomePage = table.Column<bool>(nullable: false),
                     ThumbnailUrl = table.Column<string>(nullable: true),
-                    TaskId = table.Column<int>(nullable: true),
-                    ProductTypeId = table.Column<int>(nullable: true),
-                    OrganizationId = table.Column<int>(nullable: true)
+                    TaskId = table.Column<int>(nullable: false),
+                    ProductTypeId = table.Column<int>(nullable: false),
+                    OrganizationId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -174,7 +208,8 @@ namespace TelemView.API.Migrations
                     Type = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
                     ProductId = table.Column<int>(nullable: false),
-                    IsMain = table.Column<bool>(nullable: false)
+                    IsMain = table.Column<bool>(nullable: false),
+                    Status = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -289,8 +324,8 @@ namespace TelemView.API.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Organizations_OrganizationTypeId",
-                table: "Organizations",
+                name: "IX_OrganizationsAndTypes_OrganizationTypeId",
+                table: "OrganizationsAndTypes",
                 column: "OrganizationTypeId");
 
             migrationBuilder.CreateIndex(
@@ -335,6 +370,9 @@ namespace TelemView.API.Migrations
                 name: "Media");
 
             migrationBuilder.DropTable(
+                name: "OrganizationsAndTypes");
+
+            migrationBuilder.DropTable(
                 name: "ProductsCourses");
 
             migrationBuilder.DropTable(
@@ -345,6 +383,12 @@ namespace TelemView.API.Migrations
 
             migrationBuilder.DropTable(
                 name: "ProductsTags");
+
+            migrationBuilder.DropTable(
+                name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "OrganizationTypes");
 
             migrationBuilder.DropTable(
                 name: "Courses");
@@ -369,9 +413,6 @@ namespace TelemView.API.Migrations
 
             migrationBuilder.DropTable(
                 name: "Tasks");
-
-            migrationBuilder.DropTable(
-                name: "OrganizationTypes");
         }
     }
 }

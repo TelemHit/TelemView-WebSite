@@ -9,6 +9,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { JwtModule } from '@auth0/angular-jwt';
+import { TagInputModule } from 'ngx-chips';
+import { QuillModule } from 'ngx-quill';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 import { AppComponent } from './app.component';
 import { ProductsComponent } from './home/products/products.component';
@@ -26,15 +31,28 @@ import { FilterComponent } from './filters/filter/filter.component';
 import { ProductsService } from './_services/products.service';
 import { appRoutes } from './routes';
 import { ProductListResolver } from './_resolvers/product-list.resolver';
-import { DataForHomeService } from './_services/dataForHome.service';
 import { DataForHomeResolver } from './_resolvers/data-for-home.resolver';
 import { ProductDetailsResolver } from './_resolvers/product-details.resolver';
 import { AboutFacultyComponent } from './home/about-faculty/about-faculty.component';
 import { MultiFilterComponent } from './filters/multi-filter/multi-filter.component';
+import { LoginComponent } from './editor/login/login.component';
+import { NavComponent } from './editor/nav/nav.component';
+import { EditorProductsComponent } from './editor/editor-products/editor-products.component';
+import { AuthGuard } from './_guards/auth.guard';
+import { SideNavComponent } from './editor/side-nav/side-nav.component';
+import { ProductListEditorResolver } from './_resolvers/product-list-editor.resolver';
+import { ProductEditorResolver } from './_resolvers/product-editor.resolver';
+import { EditProductComponent } from './editor/edit-product/edit-product.component';
+import { MediaFilterDeletedPipe } from './_pipes/mediaFilterDeleted.pipe';
+import { GeneralDataService } from './_services/generalData.service';
+import { AuthService } from './_services/auth.service';
+import { ModalComponent } from './editor/modal/modal.component';
+import { LinkVideoModalComponent } from './editor/link-video-modal/link-video-modal.component';
 
 
-
-
+export function tokenGetter(){
+   return localStorage.getItem('token');
+ }
 
 @NgModule({
    declarations: [
@@ -52,7 +70,15 @@ import { MultiFilterComponent } from './filters/multi-filter/multi-filter.compon
       FilterComponent,
       KeysPipe,
       AboutFacultyComponent,
-      MultiFilterComponent
+      LinkVideoModalComponent,
+      MultiFilterComponent,
+      LoginComponent,
+      NavComponent,
+      EditorProductsComponent,
+      SideNavComponent,
+      EditProductComponent,
+      MediaFilterDeletedPipe,
+      ModalComponent
    ],
    imports: [
       BrowserModule,
@@ -65,17 +91,40 @@ import { MultiFilterComponent } from './filters/multi-filter/multi-filter.compon
       NgxGalleryModule,
       BrowserAnimationsModule,
       BsDropdownModule.forRoot(),
+      ModalModule.forRoot(),
       FormsModule,
       NgSelectModule,
+      TagInputModule,
+      QuillModule.forRoot({
+         modules: {
+            toolbar: [
+              ['bold'],
+              [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+              ['clean']
+            ]
+          }
+      }),
+      BsDatepickerModule.forRoot(),
       ReactiveFormsModule,
-      CarouselModule.forRoot()
+      CarouselModule.forRoot(),
+      JwtModule.forRoot({
+         config: {
+           tokenGetter,
+           allowedDomains: ['localhost:5000'],
+           disallowedRoutes: ['localhost:5000/api/auth']
+         }
+       })
    ],
    providers: [
       ProductsService,
       ProductListResolver,
-      DataForHomeService,
       DataForHomeResolver,
-      ProductDetailsResolver
+      ProductDetailsResolver,
+      ProductListEditorResolver,
+      ProductEditorResolver,
+      AuthService,
+      AuthGuard,
+      GeneralDataService
    ],
    bootstrap: [
       AppComponent

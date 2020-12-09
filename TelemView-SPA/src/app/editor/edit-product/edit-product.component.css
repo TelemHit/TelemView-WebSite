@@ -1,0 +1,21 @@
+.img-thumbnail{
+    height: 150px;
+    width: 200px;
+    object-fit: contain;
+    margin-bottom: 5px;
+}
+iframe.img-thumbnail{
+    margin-bottom: -2px;
+}
+.media-card{
+    width: 200px;
+    margin-left: 10px;
+}
+section{
+    background-color: #F8F8F8;
+    padding: 15px;
+    border-radius: 15px;
+}
+label{
+    font-weight: 600;
+}

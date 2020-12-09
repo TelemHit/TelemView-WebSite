@@ -2,6 +2,10 @@
 @import "../node_modules/font-awesome/css/font-awesome.min.css";
 @import "~@ng-select/ng-select/themes/material.theme.css";
 
+@import '../node_modules/quill/dist/quill.core.css';
+@import '../node_modules/quill/dist/quill.bubble.css';
+@import '../node_modules/quill/dist/quill.snow.css';
+
 html {
   font-size: 18px;
 }
@@ -143,4 +147,26 @@ h2 {
 }
 .main-xs-container{
   padding: 0;
+}
+.ql-container {
+  direction: rtl !important;
+  text-align: right !important;
+  font-size: 1rem !important;
+  border-bottom-right-radius: .25rem;
+  border-bottom-left-radius: .25rem;
+}
+.ql-editor{
+  text-align: right;
+  background-color: white;
+  border-bottom-right-radius: .25rem;
+  border-bottom-left-radius: .25rem;
+}
+
+.ng2-tags-container tag{
+  background: #1BA098 !important ;
+}
+
+quill-editor>.ql-toolbar{
+  border-top-right-radius: .25rem;
+  border-top-left-radius: .25rem;
 }

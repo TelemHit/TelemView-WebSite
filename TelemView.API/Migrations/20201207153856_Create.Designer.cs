@@ -9,14 +9,14 @@ using TelemView.API.Data;
 namespace TelemView.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20201028142722_AddUserEntity")]
-    partial class AddUserEntity
+    [Migration("20201207153856_Create")]
+    partial class Create
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.5");
+                .HasAnnotation("ProductVersion", "3.1.4");
 
             modelBuilder.Entity("TelemView.API.Models.Course", b =>
                 {
@@ -64,6 +64,9 @@ namespace TelemView.API.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Status")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Type")
                         .HasColumnType("TEXT");
 
@@ -83,15 +86,10 @@ namespace TelemView.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("OrganizationTypeId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Title")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("OrganizationTypeId");
 
                     b.ToTable("Organizations");
                 });
@@ -108,6 +106,21 @@ namespace TelemView.API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("OrganizationTypes");
+                });
+
+            modelBuilder.Entity("TelemView.API.Models.OrganizationsAndTypes", b =>
+                {
+                    b.Property<int>("OrganizationId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("OrganizationTypeId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("OrganizationId", "OrganizationTypeId");
+
+                    b.HasIndex("OrganizationTypeId");
+
+                    b.ToTable("OrganizationsAndTypes");
                 });
 
             modelBuilder.Entity("TelemView.API.Models.Product", b =>
@@ -131,10 +144,10 @@ namespace TelemView.API.Migrations
                     b.Property<bool>("IsPublish")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("OrganizationId")
+                    b.Property<int>("OrganizationId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("ProductTypeId")
+                    b.Property<int>("ProductTypeId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("ProductUrl")
@@ -143,7 +156,7 @@ namespace TelemView.API.Migrations
                     b.Property<bool>("ShowOnHomePage")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("TaskId")
+                    b.Property<int>("TaskId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("ThumbnailUrl")
@@ -306,6 +319,9 @@ namespace TelemView.API.Migrations
                     b.Property<string>("Role")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Username")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.ToTable("Users");
@@ -320,26 +336,40 @@ namespace TelemView.API.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TelemView.API.Models.Organization", b =>
+            modelBuilder.Entity("TelemView.API.Models.OrganizationsAndTypes", b =>
                 {
+                    b.HasOne("TelemView.API.Models.Organization", "Organization")
+                        .WithMany("OrganizationAndType")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("TelemView.API.Models.OrganizationType", "OrganizationType")
-                        .WithMany("Organizations")
-                        .HasForeignKey("OrganizationTypeId");
+                        .WithMany("OrganizationAndType")
+                        .HasForeignKey("OrganizationTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("TelemView.API.Models.Product", b =>
                 {
                     b.HasOne("TelemView.API.Models.Organization", "Organization")
                         .WithMany("Products")
-                        .HasForeignKey("OrganizationId");
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("TelemView.API.Models.ProductType", "ProductType")
                         .WithMany("Products")
-                        .HasForeignKey("ProductTypeId");
+                        .HasForeignKey("ProductTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("TelemView.API.Models.Task", "Task")
                         .WithMany("Products")
-                        .HasForeignKey("TaskId");
+                        .HasForeignKey("TaskId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("TelemView.API.Models.ProductCourse", b =>

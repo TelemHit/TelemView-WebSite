@@ -1,0 +1,15 @@
+<!-- login form
+we use template form for login action
+we send user name and pasword to the component using ng-form -->
+<app-nav></app-nav>
+<form #loginForm="ngForm" (ngSubmit)="login()" >
+  <div class="form-group">
+    <label for="email">כתובת מייל</label>
+    <input [(ngModel)]="model.email" name="email" required type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="מהי כתובת המייל שלך?">
+  </div>
+  <div class="form-group">
+    <label for="password">סיסמה</label>
+    <input [(ngModel)]="model.password" name="password" required type="password" class="form-control" id="password" placeholder="מהי הסיסמה שלך?">
+  </div>
+  <button [disabled]="!loginForm.valid" type="submit" class="btn btn-primary">כניסה לעורך</button>
+</form>

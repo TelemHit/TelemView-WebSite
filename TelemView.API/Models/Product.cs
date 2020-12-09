@@ -18,8 +18,11 @@ namespace TelemView.API.Models
         public bool ShowOnHomePage { get; set; }
         public string ThumbnailUrl { get; set; }
         public Task Task {get; set;}
+        public int TaskId {get; set;}
         public ProductType ProductType {get; set;}
+        public int ProductTypeId {get; set;}
         public Organization Organization { get; set; }
+        public int OrganizationId { get; set; }
         public ICollection<Media> Media { get; set; }
         public ICollection<ProductStudent> ProductStudents { get; set; }
         public ICollection<ProductTag> ProductsTags { get; set; }

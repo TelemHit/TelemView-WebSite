@@ -1,0 +1,32 @@
+<form [formGroup]="addItem" (ngSubmit)="saveObject(addItem)">
+
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">{{title}}</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="modalInput">{{label}}</label>
+      <input id="modalInput"
+        class="form-control" type="text" formControlName="url" placeholder="{{placeHolder}}" autocomplete="off"
+        [ngClass]="{'is-invalid': addItem.get('url').touched &&  addItem.getError('notUrl')}">
+      <div class="invalid-feedback">{{typeAlert}}</div>
+      <div class="mt-2">
+      <label for="modalInput_2">{{label_2}}</label>
+      <input id="modalInput_2"
+        class="form-control" type="text" formControlName="mDescription" placeholder="{{placeHolder_2}}" autocomplete="off">
+      </div>
+
+    </div>
+
+    <div *ngIf="successMessage" class="text-success ">{{successMessage}}</div>
+    <div *ngIf="failMessage" class="text-danger">{{failMessage}}</div>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" (click)="bsModalRef.hide()">{{closeBtnName}}</button>
+    <button type="button" class="btn btn-default" [disabled]="!addItem.valid" type="submit">{{saveBtnName}}</button>
+  </div>
+</form>

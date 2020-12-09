@@ -26,9 +26,10 @@ namespace TelemView.API.Helpers
             ))
             .ForMember(dest => dest.Courses, opt => opt.MapFrom(
                 src => src.ProductsCourses
-            ))   
-            .ForMember(dest => dest.OrganizationTypeTitle, opt => opt.MapFrom(
-                src => src.Organization.OrganizationType.Title));
+            ))
+            .ForMember(dest => dest.OrganizationTypes, opt => opt.MapFrom(
+                src => src.Organization.OrganizationAndType
+            ));
             CreateMap<Lecturer, LecturersDto>()
             .ForMember(dest => dest.Counter, opt => 
                 opt.MapFrom(src => src.ProductsLecturers.Count));
@@ -70,13 +71,33 @@ namespace TelemView.API.Helpers
                 src => src.Student.Name
             ));
 
+            CreateMap<OrganizationsAndTypes, OrganizationDto>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(
+                src => src.OrganizationId
+            ))
+            .ForMember(dest => dest.Title, opt => opt.MapFrom(
+                src => src.Organization.Title
+            ));
+
+            CreateMap<OrganizationsAndTypes, OrganizationTypeDto>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(
+                src => src.OrganizationTypeId
+            ))
+            .ForMember(dest => dest.Title, opt => opt.MapFrom(
+                src => src.OrganizationType.Title
+            ));
+
             CreateMap<DataForHome, DataForHomeDto>();
             CreateMap<Year, YearDto>();
             CreateMap<Degree, DegreeDto>();
-            CreateMap<Organization, OrganizationDto>().ForMember(dest => dest.Counter, opt => 
-                    opt.MapFrom(src => src.Products.Count));
+            CreateMap<Organization, OrganizationDto>()
+            .ForMember(dest => dest.Counter, opt => 
+                    opt.MapFrom(src => src.Products.Count))
+            .ForMember(dest => dest.OrganizationTypes, opt => opt.MapFrom(
+                src => src.OrganizationAndType
+            ));
             CreateMap<OrganizationType, OrganizationTypeDto>().ForMember(dest => dest.Counter, opt => 
-                    opt.MapFrom(src => src.Organizations.CalculateCounter()));;
+                    opt.MapFrom(src => src.OrganizationAndType.CalculateCounter()));
             CreateMap<Task, TaskDto>().ForMember(dest => dest.Counter, opt => 
                     opt.MapFrom(src => src.Products.Count));
             CreateMap<ProductType, ProductTypeDto>().ForMember(dest => dest.Counter, opt => 
@@ -93,10 +114,64 @@ namespace TelemView.API.Helpers
             ))
             .ForMember(dest => dest.Courses, opt => opt.MapFrom(
                 src => src.ProductsCourses
-            ))   
-            .ForMember(dest => dest.OrganizationTypeTitle, opt => opt.MapFrom(
-                src => src.Organization.OrganizationType.Title));
-            CreateMap<Media, MediaDto>();
+            ))
+            .ForMember(dest => dest.OrganizationTypes, opt => opt.MapFrom(
+                src => src.Organization.OrganizationAndType
+            ));
+            CreateMap<Media, MediaDto>()
+            .ForMember(dest => dest.MDescription, opt => opt.MapFrom(
+                src => src.Description
+            ));
+
+            CreateMap<ProductUpdateDto, Product>()
+            .ForMember(dest => dest.ProductsTags, opt => opt.MapFrom(
+                src => src.Tags
+            ))
+            .ForMember(dest => dest.ProductStudents, opt => opt.MapFrom(
+                src => src.Students
+            ))
+            .ForMember(dest => dest.ProductsLecturers, opt => opt.MapFrom(
+                src => src.Lecturers
+            ))
+            .ForMember(dest => dest.ProductsCourses, opt => opt.MapFrom(
+                src => src.Courses
+            ));
+
+            CreateMap<TagDto, ProductTag>()
+            .ForMember(dest => dest.TagId, opt => opt.MapFrom(
+                src => src.Id
+            ));
+            
+            CreateMap<StudentDto, ProductStudent>()
+            .ForMember(dest => dest.StudentId, opt => opt.MapFrom(
+                src => src.Id
+            ));
+
+             CreateMap<CourseDto, ProductCourse>()
+            .ForMember(dest => dest.CourseId, opt => opt.MapFrom(
+                src => src.Id
+            ));
+
+             CreateMap<LecturersDto, ProductLecturer>()
+            .ForMember(dest => dest.LecturerId, opt => opt.MapFrom(
+                src => src.Id
+            ));
+
+            CreateMap<MediaForCreationDto, Media>();
+            CreateMap<Media, MediaForReturnDto>()
+            .ForMember(dest => dest.MDescription, opt => opt.MapFrom(
+                src => src.Description
+            ));
+            CreateMap<MediaDto, Media>()
+            .ForMember(dest => dest.Description, opt => opt.MapFrom(
+                src => src.MDescription
+            ));
+
+            CreateMap<LinkForCreationDto, Media>()
+            .ForMember(dest => dest.Description, opt => opt.MapFrom(
+                src => src.MDescription
+            ));
+
         }
     }
 }

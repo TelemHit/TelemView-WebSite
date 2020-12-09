@@ -1,0 +1,226 @@
+<app-nav></app-nav>
+<article class="container">
+    <form [formGroup]="productForm" id="editForm" (ngSubmit)="updateProduct()">
+        <div class="row">
+            <h1>עריכת תוצר</h1>
+            <button class="btn">ביטול</button>
+            <button type="submit" [disabled]="!productForm.valid" class="btn">שמירה</button>
+        </div>
+        <section class="col-sm-7">
+            <h2>מידע כללי אודות התוצר</h2>
+
+            <div class="mb-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <label for="title"><small class="text-danger">* </small>שם</label>
+                    <small class="char-counter">{{productForm.get('title').value.length}}/100</small>
+                </div>
+                <input id="title" [maxlength]="100" formControlName="title" class="form-control" type="text" [ngClass]="{'is-invalid': productForm.get('title').errors 
+            && productForm.get('title').touched}" />
+                <div class="invalid-feedback"
+                    *ngIf="productForm.get('title').errors && productForm.get('title').touched">
+                    יש להזין מינימום 2 תווים</div>
+            </div>
+
+            <div class="mb-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <label for="brief"><small class="text-danger">* </small>תיאור התוצר</label>
+                    <small class="char-counter">{{productForm.get('brief').value.length}}/100</small>
+                </div>
+                <input id="brief" [maxlength]="100" formControlName="brief" class="form-control" type="text" [ngClass]="{'is-invalid': productForm.get('brief').errors 
+            && productForm.get('brief').touched}" />
+                <div class="invalid-feedback"
+                    *ngIf="productForm.get('brief').errors && productForm.get('brief').touched">
+                    יש להזין מינימום 2 תווים</div>
+            </div>
+
+            <div class="mb-4">
+                <label for="tags"><small class="text-danger">* </small>תגיות</label>
+                <div class="alert-danger" *ngIf="tagAlertMessage">{{tagAlertMessage}}</div>
+                <tag-input id="tags" formControlName="tags" [identifyBy]="'id'" [displayBy]="'title'" theme='bootstrap'
+                    [onlyFromAutocomplete]="false" [secondaryPlaceholder]="'תגית'" [placeholder]="'הוספת תגית'"
+                    [separatorKeys]="','" [pasteSplitPattern]="','" [addOnPaste]="true" [onAdding]="onAddedTagFunc"
+                    [clearOnBlur]="true" [ngClass]="{'is-invalid': productForm.get('tags').errors 
+                    && productForm.get('tags').touched}">
+                    <tag-input-dropdown [showDropdownIfEmpty]="true" [autocompleteItems]="generalData['tags']"
+                        [identifyBy]="'id'" [displayBy]="'title'" [keepOpen]="false">
+                    </tag-input-dropdown>
+                </tag-input>
+                <div class="invalid-feedback d-block"
+                    *ngIf="productForm.get('tags').errors && productForm.get('tags').touched">
+                    יש לבחור לפחות תגית אחת</div>
+            </div>
+
+
+            <div class="mb-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <label for="description"><small class="text-danger">* </small>תיאור מפורט</label>
+                </div>
+                <quill-editor id="productDescription" [required]="true" [minLength]="2"  placeholder="תיאור התוצר" formControlName="description" 
+                [ngClass]="{'is-invalid': productForm.get('description').invalid 
+                && productForm.get('description').touched}"></quill-editor>
+                <div class="invalid-feedback d-block"
+                    *ngIf="productForm.get('description').invalid && productForm.get('description').touched">
+                    יש להזין לפחות 2 תווים</div>
+            </div>
+
+            <div class="mb-4">
+                <label><small class="text-danger">* </small>סטודנטים</label>
+                <div class="alert-danger" *ngIf="studentAlertMessage">{{studentAlertMessage}}</div>
+                <tag-input formControlName="students" [identifyBy]="'id'" [displayBy]="'name'" theme='bootstrap'
+                    [onlyFromAutocomplete]="false" [secondaryPlaceholder]="'שם הסטודנט/ית'"
+                    [placeholder]="'הוספת סטודנט'" [separatorKeys]="','" [pasteSplitPattern]="','" [addOnPaste]="true"
+                    [onAdding]="onAddedStudentFunc" [clearOnBlur]="true" [ngClass]="{'is-invalid': productForm.get('students').errors 
+                    && productForm.get('students').touched}">
+                    <tag-input-dropdown [showDropdownIfEmpty]="true" [autocompleteItems]="generalData['students']"
+                        [keepOpen]="false" [identifyBy]="'id'" [displayBy]="'name'">
+                    </tag-input-dropdown>
+                </tag-input>
+                <div class="invalid-feedback d-block"
+                    *ngIf="productForm.get('students').errors && productForm.get('students').touched">
+                    יש לבחור לפחות סטודנט/ית אחד/ת</div>
+            </div>
+
+            <div class="mb-4">
+                <label><small class="text-danger">* </small>ארגון עבורו פותח</label>
+                <select id="organization" class="form-control" formControlName="organizationId"
+                [ngClass]="{'is-invalid': productForm.get('organizationId').invalid 
+                && productForm.get('organizationId').touched}">
+                    <option *ngFor="let org of generalData['organizations']" [ngValue]="org.id">{{org.title}}</option>
+                </select>
+                <div class="invalid-feedback d-block"
+                    *ngIf="productForm.get('organizationId').errors && productForm.get('organizationId').touched">
+                    יש לבחור לפחות סטודנט/ית אחד/ת</div>
+                <div>
+                    <button type="button" class="btn btn-primary" (click)="addOrganizationModal()">הוספת ארגון
+                        חדש</button>
+                </div>
+            </div>
+
+
+            <div class="mb-4">
+                <label for="year"><small class="text-danger">* </small>שנת פיתוח</label>
+                <input id="year" formControlName="yearOfCreation" onkeydown="return false" class="form-control"
+                    autocomplete="off" bsDatepicker [bsConfig]="bsConfig" type="text" />
+            </div>
+
+            <div class="mb-4">
+                <label><small class="text-danger">* </small>תואר</label>
+                <select id="degree" class="form-control" formControlName="degree">
+                    <option>תואר ראשון</option>
+                    <option>תואר שני</option>
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label><small class="text-danger">* </small>סוג</label>
+                <select id="type" class="form-control" formControlName="productTypeId">
+                    <option *ngFor="let type of generalData['productTypes']" [ngValue]="type.id">{{type.title}}</option>
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label for="url"><small class="text-danger">* </small>קישור</label>
+                <input id="url" formControlName="productUrl" class="form-control" type="text" />
+            </div>
+
+        </section>
+
+
+        <section class="col-sm-7">
+            <h2>קורסים ומנחים</h2>
+
+            <div class="mb-4">
+                <label><small class="text-danger">* </small>קורסים</label>
+                <div class="alert-danger" *ngIf="courseAlertMessage">{{courseAlertMessage}}</div>
+            </div>
+
+            <div class="mb-4">
+                <tag-input formControlName="courses" [identifyBy]="'id'" [displayBy]="'title'"
+                    [onlyFromAutocomplete]="false" [secondaryPlaceholder]="'שם הקורס'" [placeholder]="'הוספת קורס'"
+                    [separatorKeys]="','" [pasteSplitPattern]="','" [addOnPaste]="true" [onAdding]="onAddedCourseFunc" theme='bootstrap'
+                    [clearOnBlur]="true" [ngClass]="{'is-invalid': productForm.get('courses').errors 
+                    && productForm.get('courses').touched}">
+                    <tag-input-dropdown [showDropdownIfEmpty]="true" [autocompleteItems]="generalData['courses']"
+                        [identifyBy]="'id'" [displayBy]="'title'" [keepOpen]="false">
+                    </tag-input-dropdown>
+                </tag-input>
+                <div class="invalid-feedback d-block"
+                    *ngIf="productForm.get('courses').errors && productForm.get('courses').touched">
+                    יש לבחור לפחות קורס אחד</div>
+            </div>
+
+            <div class="mb-4">
+                <label><small class="text-danger">* </small>משימה</label>
+                <select id="task" class="form-control" formControlName="taskId">
+                    <option *ngFor="let task of generalData['tasks']" [ngValue]="task.id">{{task.title}}</option>
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label><small class="text-danger">* </small>מנחים</label>
+                <div class="alert-danger" *ngIf="lecturerAlertMessage">{{lecturerAlertMessage}}</div>
+                <tag-input formControlName="lecturers" [identifyBy]="'id'" [displayBy]="'name'" theme='bootstrap'
+                    [onlyFromAutocomplete]="false" [secondaryPlaceholder]="'שם המנחה'" [placeholder]="'הוספת מנחה'"
+                    [separatorKeys]="','" [pasteSplitPattern]="','" [addOnPaste]="true" [onAdding]="onAddedLecturerFunc"
+                    [clearOnBlur]="true" [ngClass]="{'is-invalid': productForm.get('lecturers').errors 
+                    && productForm.get('lecturers').touched}">
+                    <tag-input-dropdown [showDropdownIfEmpty]="true" [autocompleteItems]="generalData['lecturers']"
+                        [identifyBy]="'id'" [displayBy]="'name'" [keepOpen]="false">
+                    </tag-input-dropdown>
+                </tag-input>
+                <div class="invalid-feedback d-block"
+                    *ngIf="productForm.get('lecturers').errors && productForm.get('lecturers').touched">
+                    יש לבחור לפחות מנחה אחד/ת</div>
+            </div>
+
+        </section>
+
+
+        <section class="col-sm-12">
+            <h2>מדיה</h2>
+            <div class="mb-4">
+                <input #MediaUpload type="file" multiple name="mediaUpload" (change)="selectFiles($event)">
+                <button type="button" class="btn btn-primary" (click)="addVideoModal()">הוספת סרטון</button>
+                <button type="button" class="btn btn-primary" (click)="addLinkModal()">הוספת URL</button>
+            </div>
+            <div class="mb-4">
+                <div *ngIf="!checkMainImage() && checkIfImage()" class="alert alert-danger" role="alert">
+                    יש להגדיר תמונה ראשית
+                </div>
+                <div *ngIf="!checkIfImage()" class="alert alert-danger" role="alert">
+                    יש להוסיף לפחות תמונה אחת
+                </div>
+            </div>
+
+            <div>
+                <div class="d-flex flex-row" formArrayName="media">
+                    <div
+                        *ngFor="let media of productForm.controls.media.value; let index = index;trackBy:trackByIndex; ">
+                        <div *ngIf="media.status != 'Delete'" [formGroupName]="index" class="media-card">
+                            <img *ngIf="media.type=='image'" src="{{basicUrl}}{{media.url}}" class="img-thumbnail p-1"
+                                alt="{{media.mDescription}}">
+                            <a *ngIf="media.type=='file'" href="{{basicUrl}}{{media.url}}" target="_blank"><img
+                                    src="../../../assets/images/pdf_icon.svg" class="img-thumbnail p-1"
+                                    alt="{{media.mDescription}}"></a>
+                            <a *ngIf="media.type=='link'" href="{{media.url}}" target="_blank"><img
+                                    src="../../../assets/images/www_icon.svg" class="img-thumbnail p-1"
+                                    alt="{{media.mDescription}}"></a>
+                            <iframe *ngIf="media.type=='video'" [src]="media.urlForShow" class="img-thumbnail p-1"
+                                title="{{media.mDescription}}"></iframe>
+                            <input type="text" class="form-control" formControlName="mDescription" />
+                            <div class="text-center">
+                                <button *ngIf="media.type=='image'" type="button" class="btn btn-sm mr-1"
+                                    [disabled]="media.isMain"
+                                    [ngClass]="media.isMain ? 'btn-success active' : 'btn-secondary'"
+                                    (click)="setMain(media.id)">תמונה ראשית</button>
+
+                                <button *ngIf="!media.isMain" type="button" [disabled]="media.isMain"
+                                    (click)="DeleteFile(media.id)" class="btn btn-sm btn-danger">מחיקה</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </form>
+</article>

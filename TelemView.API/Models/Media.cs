@@ -9,5 +9,6 @@ namespace TelemView.API.Models
         public Product Product { get; set; }
         public int ProductId { get; set; }
         public bool IsMain {get; set; }
+        public string Status { get; set; }
     }
 }

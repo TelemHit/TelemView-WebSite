@@ -1,14 +1,14 @@
 import {Injectable} from '@angular/core';
 import {DataForHome} from '../_models/dataForHome';
 import {Router, Resolve, ActivatedRouteSnapshot} from '@angular/router';
-import {DataForHomeService} from '../_services/dataForHome.service';
+import {GeneralDataService} from '../_services/generalData.service';
 import {Observable, of } from 'rxjs';
 import {catchError } from 'rxjs/operators';
 
 @Injectable()
 export class DataForHomeResolver implements Resolve<DataForHome[]>{
     products: DataForHome[];
-    constructor(private dataForHomeService: DataForHomeService, private router: Router){}
+    constructor(private dataForHomeService: GeneralDataService, private router: Router){}
 
     resolve(route: ActivatedRouteSnapshot): Observable<DataForHome[]>{
 

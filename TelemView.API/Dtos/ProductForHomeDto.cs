@@ -18,7 +18,7 @@ namespace TelemView.API.Dtos
         public string TaskTitle {get; set; }
         public string ProductTypeTitle {get; set;}
         public string OrganizationTitle { get; set; }
-        public string OrganizationTypeTitle { get; set; }
+        public ICollection<OrganizationTypeDto> OrganizationTypes { get; set; }
         public ICollection<LecturersDto> Lecturers { get; set; }
         public ICollection<TagDto> Tags { get; set; }
         public ICollection<CourseDto> Courses { get; set; }

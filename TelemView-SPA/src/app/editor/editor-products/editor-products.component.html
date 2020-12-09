@@ -1,0 +1,18 @@
+<app-nav></app-nav>
+<div class="editor-main-wrapper row">
+    <app-side-nav class="col-2"></app-side-nav>
+    <div class="col-10">
+        <h1>תוצרים</h1>
+        <table>
+            <tr>
+                <th>שם התוצר</th>
+                <th>עריכה</th><th>צפיה</th>
+            </tr>
+            <tr *ngFor="let product of this.products">
+                <th>{{product.title}}</th>
+                <td><a [routerLink]="['/editor/products/', product.id]">עריכה</a></td>
+                <td><a [routerLink]="['/product/',product.id]">צפיה</a></td>
+            </tr>
+        </table>
+    </div>
+</div>

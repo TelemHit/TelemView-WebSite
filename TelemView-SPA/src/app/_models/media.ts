@@ -1,7 +1,10 @@
 export interface Media {
     id: number;
     url: string;
+    urlForShow: any;
     isMain: boolean;
-    description: string;
+    mDescription: string;
     type: string;
+    file?: File;
+    status: string;
 }
