@@ -1,0 +1,12 @@
+.active{
+    background-color: #051622;
+    
+}
+.active a{
+    color: white;
+}
+nav{
+    background-color: white;
+    position: static;
+    padding-right: 0;
+}

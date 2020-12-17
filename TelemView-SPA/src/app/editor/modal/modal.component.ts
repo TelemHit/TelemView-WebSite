@@ -8,6 +8,7 @@ import {
   FormControl,
 } from '@angular/forms';
 import { DataForHome } from 'src/app/_models/dataForHome';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-modal',
@@ -107,11 +108,9 @@ export class ModalComponent implements OnInit {
 
   saveObject(form) {
     this.triggerEvent(form.value);
-    this.addItem.get('name').setValue('');
-    this.closeBtnName = 'סגירה';
-    setTimeout(() => {
-      this.bsModalRef.hide();
-    }, 3000);
+    // this.addItem.get('name').setValue('');
+    // this.closeBtnName = 'סגירה';
+    this.bsModalRef.hide();
   }
 
   triggerEvent(item: any) {

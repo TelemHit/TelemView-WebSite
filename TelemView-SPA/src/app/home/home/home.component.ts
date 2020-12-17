@@ -18,7 +18,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.route.data.subscribe(data => {
-      this.products = data.products;
+      this.products = data.result.products;
       this.dataforhome = data.dataforhome;
       console.log(this.dataforhome);
     });
@@ -35,7 +35,7 @@ export class HomeComponent implements OnInit {
 
   loadProducts(){
     this.productsServise.getProducts(this.productParams).subscribe(res =>
-      this.products = res
+      this.products = res.result
     );
   }
 

@@ -9,9 +9,9 @@
 html {
   font-size: 18px;
 }
-body * {
+body *:not(i) {
   direction: rtl;
-  font-family: "Assistant", sans-serif;
+  font-family: "Assistant", sans-serif !important;
 }
 h2 {
   margin-bottom: 30px;
@@ -152,14 +152,28 @@ h2 {
   direction: rtl !important;
   text-align: right !important;
   font-size: 1rem !important;
+  /* border-radius: .25rem; */
+
   border-bottom-right-radius: .25rem;
   border-bottom-left-radius: .25rem;
 }
+
+.ql-editor ol li, .ql-editor ul li {
+  padding-right: 1.5em;
+}
+
+.ql-editor li::before {
+  margin-left: 0.3em !important;
+  margin-right: -1.5em !important;
+}
+
 .ql-editor{
   text-align: right;
   background-color: white;
   border-bottom-right-radius: .25rem;
   border-bottom-left-radius: .25rem;
+height: 200px;
+  /* border-radius: .25rem; */
 }
 
 .ng2-tags-container tag{
@@ -169,4 +183,70 @@ h2 {
 quill-editor>.ql-toolbar{
   border-top-right-radius: .25rem;
   border-top-left-radius: .25rem;
+}
+
+.ng2-tag-input--focused {
+  border-bottom: 2px solid #051622 !important;
+}
+
+.btn-primary-dark {
+  color: #fff;
+  background-color: #051622;
+  border-color: #051622;
+}
+
+.btn-primary-dark:not([disabled]):hover,
+.btn-primary-dark:not([disabled]):active,
+.btn-primary-dark:not([disabled]):focus,
+.btn-primary-dark:not([disabled]).active {
+  /* let's darken #004E64 a bit for hover effect */
+  background: #0A2C44;
+  color: #ffffff;
+  border-color: #0A2C44;
+}
+.btn-primary-dark:disabled:hover{
+  color: white;
+}
+
+.btn-outline-primary-dark{
+  color: #051622;
+  border-color: #051622;
+}
+.btn-outline-primary-dark:not([disabled]):hover,
+.btn-outline-primary-dark:not([disabled]):active,
+.btn-outline-primary-dark:not([disabled]):focus,
+.btn-outline-primary-dark:not([disabled]).active {
+  /* let's darken #004E64 a bit for hover effect */
+  background: #0A2C44;
+  color: #ffffff;
+  border-color: #0A2C44;
+}
+
+.pagination > li > a
+{
+    background-color: white;
+    color: #1ba098;
+}
+
+.pagination > li > a:focus,
+.pagination > li > a:hover,
+.pagination > li > span:focus,
+.pagination > li > span:hover
+{
+    color: #1ba098;
+    background-color: #eee;
+    border-color: #ddd;
+}
+
+.pagination > .active > a
+{
+    color: white;
+    background-color: #1ba098 !Important;
+    border: solid 1px #1ba098 !Important;
+}
+
+.pagination > .active > a:hover
+{
+    background-color: #1ba098 !Important;
+    border: solid 1px #1ba098;
 }

@@ -1,5 +1,4 @@
 <form [formGroup]="addItem" (ngSubmit)="saveObject(addItem)">
-
   <div class="modal-header">
     <h4 class="modal-title pull-left">{{title}}</h4>
     <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
@@ -37,4 +36,5 @@
     <button type="button" class="btn btn-default" (click)="bsModalRef.hide()">{{closeBtnName}}</button>
     <button type="button" class="btn btn-default" [disabled]="!addItem.valid" type="submit">{{saveBtnName}}</button>
   </div>
+
 </form>

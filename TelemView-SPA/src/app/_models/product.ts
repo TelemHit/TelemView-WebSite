@@ -14,6 +14,7 @@ export interface Product {
         degree: string;
         showOnHomePage: boolean;
         taskTitle: string;
+        isPublish: boolean;
         taskId: number;
         productTypeTitle: string;
         productTypeId: number;

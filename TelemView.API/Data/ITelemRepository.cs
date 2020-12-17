@@ -7,8 +7,9 @@ namespace TelemView.API.Data
 {
     public interface ITelemRepository
     {
-        Task<IEnumerable<Product>> GetProducts(ProductParams productParams);
+        Task<PagedList<Product>> GetProducts(ProductParams productParams);
         Task<Product> GetProduct(int id);
+        Task <bool> ProductExists(int id);
         Task<DataForHome> GetDataForHome();
         Task<bool> SaveAll();
         void Add<T>(T entity) where T : class;
@@ -24,5 +25,6 @@ namespace TelemView.API.Data
         Task<bool> CourseExists(string title);
         Task<Organization> AddOrganization(Organization organization, IEnumerable<int> organizationTypes);
         Task<bool> OrganizationExists(string title);
+        Task<Product> CreateProduct(Product product);
     }
 }

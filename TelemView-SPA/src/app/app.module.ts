@@ -14,6 +14,12 @@ import { TagInputModule } from 'ngx-chips';
 import { QuillModule } from 'ngx-quill';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { AlertModule } from 'ngx-bootstrap/alert';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { TimeagoModule, TimeagoIntl, TimeagoFormatter, TimeagoCustomFormatter } from 'ngx-timeago';
+
 
 import { AppComponent } from './app.component';
 import { ProductsComponent } from './home/products/products.component';
@@ -39,6 +45,7 @@ import { LoginComponent } from './editor/login/login.component';
 import { NavComponent } from './editor/nav/nav.component';
 import { EditorProductsComponent } from './editor/editor-products/editor-products.component';
 import { AuthGuard } from './_guards/auth.guard';
+import { PreventUnsavedChangesGuard } from './_guards/prevent-unsaved-changes.guard';
 import { SideNavComponent } from './editor/side-nav/side-nav.component';
 import { ProductListEditorResolver } from './_resolvers/product-list-editor.resolver';
 import { ProductEditorResolver } from './_resolvers/product-editor.resolver';
@@ -47,7 +54,10 @@ import { MediaFilterDeletedPipe } from './_pipes/mediaFilterDeleted.pipe';
 import { GeneralDataService } from './_services/generalData.service';
 import { AuthService } from './_services/auth.service';
 import { ModalComponent } from './editor/modal/modal.component';
+import { AlertModalComponent } from './editor/alert-modal/alert-modal.component';
 import { LinkVideoModalComponent } from './editor/link-video-modal/link-video-modal.component';
+import { EditorTypesComponent } from './editor/editor-types/editor-types.component';
+
 
 
 export function tokenGetter(){
@@ -70,7 +80,6 @@ export function tokenGetter(){
       FilterComponent,
       KeysPipe,
       AboutFacultyComponent,
-      LinkVideoModalComponent,
       MultiFilterComponent,
       LoginComponent,
       NavComponent,
@@ -78,7 +87,10 @@ export function tokenGetter(){
       SideNavComponent,
       EditProductComponent,
       MediaFilterDeletedPipe,
-      ModalComponent
+      ModalComponent,
+      AlertModalComponent,
+      LinkVideoModalComponent,
+      EditorTypesComponent
    ],
    imports: [
       BrowserModule,
@@ -91,10 +103,17 @@ export function tokenGetter(){
       NgxGalleryModule,
       BrowserAnimationsModule,
       BsDropdownModule.forRoot(),
-      ModalModule.forRoot(),
+      AlertModule.forRoot(),
       FormsModule,
       NgSelectModule,
+      NgxSpinnerModule,
+      TimeagoModule.forRoot(
+         {formatter: { provide: 
+            TimeagoFormatter, useClass: TimeagoCustomFormatter }
+         }),
       TagInputModule,
+      TooltipModule.forRoot(),
+      PaginationModule.forRoot(),
       QuillModule.forRoot({
          modules: {
             toolbar: [
@@ -107,6 +126,7 @@ export function tokenGetter(){
       BsDatepickerModule.forRoot(),
       ReactiveFormsModule,
       CarouselModule.forRoot(),
+      ModalModule.forRoot(),
       JwtModule.forRoot({
          config: {
            tokenGetter,
@@ -124,7 +144,14 @@ export function tokenGetter(){
       ProductEditorResolver,
       AuthService,
       AuthGuard,
-      GeneralDataService
+      PreventUnsavedChangesGuard,
+      GeneralDataService,
+      TimeagoIntl
+   ],
+   entryComponents: [
+      AlertModalComponent,
+      ModalComponent,
+      LinkVideoModalComponent
    ],
    bootstrap: [
       AppComponent

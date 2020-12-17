@@ -11,7 +11,7 @@ namespace TelemView.API.Dtos
         public int YearOfCreation { get; set; }
         public string Degree { get; set; }
         public string ProductUrl { get; set; }
-        //public int TaskId {get; set; }
+        public int TaskId {get; set; }
         public int ProductTypeId {get; set;}
         public int OrganizationId { get; set; }
         public string Description { get; set; }

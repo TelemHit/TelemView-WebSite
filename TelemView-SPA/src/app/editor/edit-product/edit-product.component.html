@@ -1,29 +1,40 @@
 <app-nav></app-nav>
-<article class="container">
+<article class="container-fluid pt-5">
     <form [formGroup]="productForm" id="editForm" (ngSubmit)="updateProduct()">
-        <div class="row">
-            <h1>עריכת תוצר</h1>
-            <button class="btn">ביטול</button>
-            <button type="submit" [disabled]="!productForm.valid" class="btn">שמירה</button>
+        <div class="container">
+            <div class="row justify-content-between align-items-center mb-3">
+                <h1 *ngIf="this.routeName !== 'create'">עריכת תוצר</h1>
+                <h1 *ngIf="this.routeName === 'create'">תוצר חדש</h1>
+                <div>
+                    <button type="submit" [disabled]="!productForm.valid || !productForm.dirty"
+                        class="btn btn-primary-dark">שמירה</button>
+                    <button type="button" class="btn" [routerLink]="['/editor/products']">ביטול</button>
+                </div>
+            </div>
         </div>
-        <section class="col-sm-7">
-            <h2>מידע כללי אודות התוצר</h2>
+        <section class="container mb-5">
+            <div class="row">
+                <h2 class="col">מידע כללי אודות התוצר</h2>
+            </div>
 
-            <div class="mb-4">
+
+            <div class="mb-4 form-group col-lg-6 col-md-8 col-sm-12">
                 <div class="d-flex justify-content-between align-items-center">
                     <label for="title"><small class="text-danger">* </small>שם</label>
                     <small class="char-counter">{{productForm.get('title').value.length}}/100</small>
                 </div>
+
                 <input id="title" [maxlength]="100" formControlName="title" class="form-control" type="text" [ngClass]="{'is-invalid': productForm.get('title').errors 
             && productForm.get('title').touched}" />
                 <div class="invalid-feedback"
                     *ngIf="productForm.get('title').errors && productForm.get('title').touched">
                     יש להזין מינימום 2 תווים</div>
+
             </div>
 
-            <div class="mb-4">
+            <div class="mb-4 form-group col-lg-6 col-md-8 col-sm-12">
                 <div class="d-flex justify-content-between align-items-center">
-                    <label for="brief"><small class="text-danger">* </small>תיאור התוצר</label>
+                    <label for="brief"><small class="text-danger">* </small>תיאור תמציתי</label>
                     <small class="char-counter">{{productForm.get('brief').value.length}}/100</small>
                 </div>
                 <input id="brief" [maxlength]="100" formControlName="brief" class="form-control" type="text" [ngClass]="{'is-invalid': productForm.get('brief').errors 
@@ -33,8 +44,9 @@
                     יש להזין מינימום 2 תווים</div>
             </div>
 
-            <div class="mb-4">
-                <label for="tags"><small class="text-danger">* </small>תגיות</label>
+            <div class="mb-4 form-group col-lg-6 col-md-8 col-sm-12">
+                <label for="tags"><small class="text-danger">* </small>תגיות <i class="fa fa-info-circle"
+                        tooltip="תגיות שמאפיינות את התוצר. לדוגמה: שפות תכנות בהן פותח."></i></label>
                 <div class="alert-danger" *ngIf="tagAlertMessage">{{tagAlertMessage}}</div>
                 <tag-input id="tags" formControlName="tags" [identifyBy]="'id'" [displayBy]="'title'" theme='bootstrap'
                     [onlyFromAutocomplete]="false" [secondaryPlaceholder]="'תגית'" [placeholder]="'הוספת תגית'"
@@ -51,19 +63,19 @@
             </div>
 
 
-            <div class="mb-4">
+            <div class="mb-4 form-group col-lg-6 col-md-8 col-sm-12">
                 <div class="d-flex justify-content-between align-items-center">
                     <label for="description"><small class="text-danger">* </small>תיאור מפורט</label>
                 </div>
-                <quill-editor id="productDescription" [required]="true" [minLength]="2"  placeholder="תיאור התוצר" formControlName="description" 
-                [ngClass]="{'is-invalid': productForm.get('description').invalid 
+                <quill-editor id="productDescription" [required]="true" [minLength]="2" placeholder="תיאור התוצר"
+                    formControlName="description" [ngClass]="{'is-invalid': productForm.get('description').errors 
                 && productForm.get('description').touched}"></quill-editor>
                 <div class="invalid-feedback d-block"
-                    *ngIf="productForm.get('description').invalid && productForm.get('description').touched">
+                    *ngIf="productForm.get('description').errors && productForm.get('description').touched">
                     יש להזין לפחות 2 תווים</div>
             </div>
 
-            <div class="mb-4">
+            <div class="mb-4 form-group col-lg-6 col-md-8 col-sm-12">
                 <label><small class="text-danger">* </small>סטודנטים</label>
                 <div class="alert-danger" *ngIf="studentAlertMessage">{{studentAlertMessage}}</div>
                 <tag-input formControlName="students" [identifyBy]="'id'" [displayBy]="'name'" theme='bootstrap'
@@ -80,65 +92,92 @@
                     יש לבחור לפחות סטודנט/ית אחד/ת</div>
             </div>
 
-            <div class="mb-4">
+            <div class="mb-4 form-group col-lg-6 col-md-8 col-sm-12">
                 <label><small class="text-danger">* </small>ארגון עבורו פותח</label>
-                <select id="organization" class="form-control" formControlName="organizationId"
-                [ngClass]="{'is-invalid': productForm.get('organizationId').invalid 
+                <select id="organization" class="custom-select" formControlName="organizationId" [ngClass]="{'is-invalid': productForm.get('organizationId').errors 
                 && productForm.get('organizationId').touched}">
-                    <option *ngFor="let org of generalData['organizations']" [ngValue]="org.id">{{org.title}}</option>
+                    <option value="" disabled>בחירת ארגון...</option>
+                    <option *ngFor="let org of generalData['organizations']" [ngValue]="org.id">{{org.title}}
+                    </option>
                 </select>
-                <div class="invalid-feedback d-block"
+
+                <div class="invalid-feedback"
                     *ngIf="productForm.get('organizationId').errors && productForm.get('organizationId').touched">
-                    יש לבחור לפחות סטודנט/ית אחד/ת</div>
-                <div>
-                    <button type="button" class="btn btn-primary" (click)="addOrganizationModal()">הוספת ארגון
-                        חדש</button>
-                </div>
+                    יש לבחור ארגון</div>
+
+                <div class="d-flex justify-content-end mt-3">
+                    <button type="button" class="btn btn-primary-dark" (click)="addOrganizationModal()"
+                        tooltip="יצירת ארגון שאינו קיים ברשימה.">הוספת ארגון
+                        חדש</button></div>
             </div>
 
 
-            <div class="mb-4">
+
+            <div class="mb-4 form-group col-lg-6 col-md-8 col-sm-12">
                 <label for="year"><small class="text-danger">* </small>שנת פיתוח</label>
                 <input id="year" formControlName="yearOfCreation" onkeydown="return false" class="form-control"
                     autocomplete="off" bsDatepicker [bsConfig]="bsConfig" type="text" />
             </div>
 
-            <div class="mb-4">
+            <div class="mb-4 form-group col-lg-6 col-md-8 col-sm-12">
                 <label><small class="text-danger">* </small>תואר</label>
-                <select id="degree" class="form-control" formControlName="degree">
+                <select id="degree" class="custom-select" formControlName="degree" [ngClass]="{'is-invalid': productForm.get('degree').errors 
+                && productForm.get('degree').touched}">
+                    <option value="" disabled>בחירת תואר...</option>
+
                     <option>תואר ראשון</option>
                     <option>תואר שני</option>
                 </select>
+                <div class="invalid-feedback"
+                    *ngIf="productForm.get('degree').errors && productForm.get('degree').touched">
+                    יש לבחור תואר</div>
             </div>
 
-            <div class="mb-4">
+            <div class="mb-4 form-group col-lg-6 col-md-8 col-sm-12">
                 <label><small class="text-danger">* </small>סוג</label>
-                <select id="type" class="form-control" formControlName="productTypeId">
+                <select id="type" class="custom-select" formControlName="productTypeId" [ngClass]="{'is-invalid': productForm.get('productTypeId').errors 
+                && productForm.get('productTypeId').touched}">
+                    <option value="" disabled>בחירת סוג תוצר...</option>
                     <option *ngFor="let type of generalData['productTypes']" [ngValue]="type.id">{{type.title}}</option>
                 </select>
+                <div class="invalid-feedback"
+                    *ngIf="productForm.get('productTypeId').errors && productForm.get('productTypeId').touched">
+                    יש לבחור סוג תוצר</div>
+
             </div>
 
-            <div class="mb-4">
+            <div class="mb-4 form-group col-lg-6 col-md-8 col-sm-12">
                 <label for="url"><small class="text-danger">* </small>קישור</label>
-                <input id="url" formControlName="productUrl" class="form-control" type="text" />
+                <input id="url" (input)="checkUrl()" formControlName="productUrl" class="form-control" type="text"
+                    [ngClass]="{'is-invalid': productForm.get('productUrl').errors 
+                && productForm.get('productUrl').touched ||
+                productForm.hasError('notUrl') 
+                && productForm.get('productUrl').value.length > 0
+            }" />
+                <div class="invalid-feedback"
+                    *ngIf="productForm.get('productUrl').hasError('required') && productForm.get('productUrl').touched">
+                    יש להזין קישור לתוצר</div>
+                <div class="invalid-feedback"
+                    *ngIf="productForm.hasError('notUrl') && productForm.get('productUrl').value.length > 0">
+                    יש להזין כתובת url תקינה</div>
+                <iframe class="card col-12 mt-2" height="300" *ngIf="!productForm.getError('notUrl') && sanitizedUrl"
+                    [src]="sanitizedUrl"></iframe>
             </div>
 
         </section>
 
 
-        <section class="col-sm-7">
+        <section class="container mb-5">
             <h2>קורסים ומנחים</h2>
 
-            <div class="mb-4">
+            <div class="mb-4 form-group col-lg-6 col-md-8 col-sm-12">
                 <label><small class="text-danger">* </small>קורסים</label>
                 <div class="alert-danger" *ngIf="courseAlertMessage">{{courseAlertMessage}}</div>
-            </div>
 
-            <div class="mb-4">
                 <tag-input formControlName="courses" [identifyBy]="'id'" [displayBy]="'title'"
                     [onlyFromAutocomplete]="false" [secondaryPlaceholder]="'שם הקורס'" [placeholder]="'הוספת קורס'"
-                    [separatorKeys]="','" [pasteSplitPattern]="','" [addOnPaste]="true" [onAdding]="onAddedCourseFunc" theme='bootstrap'
-                    [clearOnBlur]="true" [ngClass]="{'is-invalid': productForm.get('courses').errors 
+                    [separatorKeys]="','" [pasteSplitPattern]="','" [addOnPaste]="true" [onAdding]="onAddedCourseFunc"
+                    theme='bootstrap' [clearOnBlur]="true" [ngClass]="{'is-invalid': productForm.get('courses').errors 
                     && productForm.get('courses').touched}">
                     <tag-input-dropdown [showDropdownIfEmpty]="true" [autocompleteItems]="generalData['courses']"
                         [identifyBy]="'id'" [displayBy]="'title'" [keepOpen]="false">
@@ -149,14 +188,19 @@
                     יש לבחור לפחות קורס אחד</div>
             </div>
 
-            <div class="mb-4">
+            <div class="mb-4 form-group col-lg-6 col-md-8 col-sm-12">
                 <label><small class="text-danger">* </small>משימה</label>
-                <select id="task" class="form-control" formControlName="taskId">
+                <select id="task" class="custom-select" formControlName="taskId" [ngClass]="{'is-invalid': productForm.get('taskId').errors 
+                && productForm.get('taskId').touched}">
+                    <option value="" disabled>בחירת משימה...</option>
                     <option *ngFor="let task of generalData['tasks']" [ngValue]="task.id">{{task.title}}</option>
                 </select>
+                <div class="invalid-feedback"
+                    *ngIf="productForm.get('taskId').errors && productForm.get('taskId').touched">
+                    יש לבחור משימה</div>
             </div>
 
-            <div class="mb-4">
+            <div class="mb-4 form-group col-lg-6 col-md-8 col-sm-12">
                 <label><small class="text-danger">* </small>מנחים</label>
                 <div class="alert-danger" *ngIf="lecturerAlertMessage">{{lecturerAlertMessage}}</div>
                 <tag-input formControlName="lecturers" [identifyBy]="'id'" [displayBy]="'name'" theme='bootstrap'
@@ -176,51 +220,76 @@
         </section>
 
 
-        <section class="col-sm-12">
-            <h2>מדיה</h2>
-            <div class="mb-4">
-                <input #MediaUpload type="file" multiple name="mediaUpload" (change)="selectFiles($event)">
-                <button type="button" class="btn btn-primary" (click)="addVideoModal()">הוספת סרטון</button>
-                <button type="button" class="btn btn-primary" (click)="addLinkModal()">הוספת URL</button>
+        <section class="container pb-5">
+            <h2>העלאת מדיה</h2>
+            <div class="mb-2 row btn-group mr-15">
+                <div class="btn btn-outline-primary-dark">
+                    <label id="upload-photo-lbl" for="upload-photo">תמונות וקבצי PDF</label>
+                    <input #MediaUpload id="upload-photo" type="file" multiple name="mediaUpload"
+                        (change)="selectFiles($event)">
+                </div>
+                <button type="button" class="btn btn-outline-primary-dark" (click)="addVideoModal()">סרטון</button>
+                <button type="button" class="btn btn-outline-primary-dark" (click)="addLinkModal()">קישור לאתר</button>
             </div>
-            <div class="mb-4">
-                <div *ngIf="!checkMainImage() && checkIfImage()" class="alert alert-danger" role="alert">
+            <div class="row">
+                <div *ngIf="this.productForm.getError('noImage')" class="mr-15 invalid-feedback d-block col"
+                    role="alert">
+                    יש להוסיף לפחות תמונה אחת
+                </div>
+                <div *ngIf="this.productForm.getError('noMainImage') && !this.productForm.getError('noImage')"
+                    class="mr-15 col invalid-feedback d-block" role="alert">
                     יש להגדיר תמונה ראשית
                 </div>
-                <div *ngIf="!checkIfImage()" class="alert alert-danger" role="alert">
-                    יש להוסיף לפחות תמונה אחת
+                <div class="col-12" *ngFor="let alert of alerts">
+                    <alert type="danger" dismissible="true" (onClosed)="onClosed(alert)">{{alert}}</alert>
                 </div>
             </div>
 
-            <div>
-                <div class="d-flex flex-row" formArrayName="media">
+
+            <div class="container">
+                <div class="d-flex flex-row flex-wrap" formArrayName="media">
                     <div
                         *ngFor="let media of productForm.controls.media.value; let index = index;trackBy:trackByIndex; ">
-                        <div *ngIf="media.status != 'Delete'" [formGroupName]="index" class="media-card">
-                            <img *ngIf="media.type=='image'" src="{{basicUrl}}{{media.url}}" class="img-thumbnail p-1"
-                                alt="{{media.mDescription}}">
-                            <a *ngIf="media.type=='file'" href="{{basicUrl}}{{media.url}}" target="_blank"><img
-                                    src="../../../assets/images/pdf_icon.svg" class="img-thumbnail p-1"
+                        <div *ngIf="media.status != 'Delete'" [formGroupName]="index" class="mt-4 media-card">
+                            <img id="media_{{index}}" *ngIf="media.type=='image' && media.id != 0"
+                                src="{{basicUrl}}{{media.url}}" class="img-thumbnail p-1" alt="{{media.mDescription}}">
+                            <img id="media_{{index}}" *ngIf="media.type=='image' && media.id == 0" src="{{media.url}}"
+                                class="img-thumbnail p-1" alt="{{media.mDescription}}">
+
+                            <a id="media_{{index}}" *ngIf="media.type=='file'" href="{{basicUrl}}{{media.url}}"
+                                target="_blank"><img src="../../../assets/images/pdf_icon.svg" class="img-thumbnail p-1"
                                     alt="{{media.mDescription}}"></a>
-                            <a *ngIf="media.type=='link'" href="{{media.url}}" target="_blank"><img
+                            <a id="media_{{index}}" *ngIf="media.type=='link'" href="{{media.url}}" target="_blank"><img
                                     src="../../../assets/images/www_icon.svg" class="img-thumbnail p-1"
                                     alt="{{media.mDescription}}"></a>
                             <iframe *ngIf="media.type=='video'" [src]="media.urlForShow" class="img-thumbnail p-1"
                                 title="{{media.mDescription}}"></iframe>
-                            <input type="text" class="form-control" formControlName="mDescription" />
-                            <div class="text-center">
-                                <button *ngIf="media.type=='image'" type="button" class="btn btn-sm mr-1"
+                            <div class="input-group">
+                                <button tooltip="קביעת התמונה הראשית שתופיע בדף הבית." id="isMain_{{index}}"
+                                    *ngIf="media.type=='image'" type="button" class="btn btn-sm"
                                     [disabled]="media.isMain"
                                     [ngClass]="media.isMain ? 'btn-success active' : 'btn-secondary'"
-                                    (click)="setMain(media.id)">תמונה ראשית</button>
-
-                                <button *ngIf="!media.isMain" type="button" [disabled]="media.isMain"
-                                    (click)="DeleteFile(media.id)" class="btn btn-sm btn-danger">מחיקה</button>
+                                    (click)="setMain($event)"><i class="fa fa-flag"></i></button>
+                                <button tooltip="מחיקת התמונה." id="delete_{{index}}" *ngIf="!media.isMain"
+                                    type="button" [disabled]="media.isMain" (click)="DeleteFile($event)"
+                                    class="btn btn-sm btn-danger"><i class="fa fa-trash-o"></i></button>
+                                <input type="text" class="form-control" formControlName="mDescription" />
                             </div>
+
+                            <div *ngIf="noDescription(index)" class="invalid-feedback d-block" role="alert">
+                                יש לרשום תיאור
+                            </div>
+
                         </div>
                     </div>
                 </div>
             </div>
         </section>
+        <div class="container text-center mt-5">
+            <button type="submit" [disabled]="!productForm.valid || !productForm.dirty"
+                class="btn btn-primary-dark">שמירה</button>
+            <button type="button" class="btn" [routerLink]="['/editor/products']">ביטול</button>
+        </div>
     </form>
 </article>
+<ngx-spinner [fullScreen]="true" type="ball-fussion" size="medium" color="#1BA098"></ngx-spinner>

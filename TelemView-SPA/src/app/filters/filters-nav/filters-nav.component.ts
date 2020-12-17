@@ -55,13 +55,9 @@ export class FiltersNavComponent implements OnInit {
     private fb: FormBuilder,
     private productsServise: ProductsService
   ) {
-    this.modelChanged
-      .pipe(
-        debounceTime(this.debounceTime)
-      )
-      .subscribe(() => {
-        this.updateSearch();
-      });
+    this.modelChanged.pipe(debounceTime(this.debounceTime)).subscribe(() => {
+      this.updateSearch();
+    });
   }
 
   ngOnInit() {
@@ -69,11 +65,11 @@ export class FiltersNavComponent implements OnInit {
     this.checkIfSearched();
   }
 
-  checkIfSearched(){
-    if (this.productParamsFromHome){
-      if (this.productParamsFromHome.hasOwnProperty('search')){
-        if(this.productParamsFromHome['search'].length>0){
-          this.someValue=this.productParamsFromHome['search'];
+  checkIfSearched() {
+    if (this.productParamsFromHome) {
+      if (this.productParamsFromHome.hasOwnProperty('search')) {
+        if (this.productParamsFromHome['search'].length > 0) {
+          this.someValue = this.productParamsFromHome['search'];
         }
       }
     }
@@ -101,11 +97,11 @@ export class FiltersNavComponent implements OnInit {
     }
     return toReturn;
   }
-  clearSearch(){
+  clearSearch() {
     this.someValue = '';
     this.updateSearch();
   }
-  modelChange(){
+  modelChange() {
     this.modelChanged.next();
   }
   updateSearch() {

@@ -1,8 +1,12 @@
 <nav class="nav flex-column">
   <span class="navbar-text"><strong>שלום: {{this.name | titlecase}}</strong></span>
 <hr/>
+<li class="nav-item" routerLinkActive="active">
   <a class="nav-link" [routerLink]="['/editor/products']">תוצרים</a>
-  <a class="nav-link" href="#">סוגי תוצרים</a>
+</li>
+<li class="nav-item" routerLinkActive="active">
+  <a class="nav-link" [routerLink]="['/editor/types']">סוגי תוצרים</a>
+  </li>
   <a class="nav-link" href="#">משימות</a>
   <a class="nav-link" href="#">קורסים</a>
   <a class="nav-link" href="#">ארגונים</a>

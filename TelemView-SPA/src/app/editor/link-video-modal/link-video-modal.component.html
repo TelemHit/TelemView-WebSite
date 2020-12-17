@@ -9,9 +9,10 @@
   <div class="modal-body">
     <div class="form-group">
       <label for="modalInput">{{label}}</label>
-      <input id="modalInput"
+      <input id="modalInput" (input)="checkUrl()"
         class="form-control" type="text" formControlName="url" placeholder="{{placeHolder}}" autocomplete="off"
         [ngClass]="{'is-invalid': addItem.get('url').touched &&  addItem.getError('notUrl')}">
+        <iframe class="card col-12 mt-2" height="300" *ngIf="!addItem.getError('notUrl')" [src]="sanitizedUrl"></iframe>
       <div class="invalid-feedback">{{typeAlert}}</div>
       <div class="mt-2">
       <label for="modalInput_2">{{label_2}}</label>

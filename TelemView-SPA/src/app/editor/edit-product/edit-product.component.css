@@ -12,10 +12,37 @@ iframe.img-thumbnail{
     margin-left: 10px;
 }
 section{
-    background-color: #F8F8F8;
+    background-color: white;
     padding: 15px;
     border-radius: 15px;
 }
 label{
     font-weight: 600;
 }
+article{
+    background-color: #F8F8F8;
+    padding-bottom: 70px;
+    margin-top:60px ;
+}
+
+#upload-photo-lbl {
+    cursor: pointer;
+    margin: unset;
+    font-weight: unset;
+    /* Style as you please, it will become the visible UI component. */
+ }
+ 
+ #upload-photo {
+    display: none;
+    position: absolute;
+    z-index: -1001;
+ }
+
+ .mr-15{
+     margin-right: 15px;
+     margin-left: 15px;
+ }
+
+ button > i {
+    pointer-events: none;
+} 

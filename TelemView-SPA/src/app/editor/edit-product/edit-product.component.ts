@@ -1,7 +1,13 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  HostListener,
+} from '@angular/core';
 import { Product } from 'src/app/_models/product';
 import { ProductsService } from 'src/app/_services/products.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   NgForm,
   FormBuilder,
@@ -9,9 +15,11 @@ import {
   Validators,
   FormArray,
   FormControl,
+  AbstractControl,
 } from '@angular/forms';
 import { AuthService } from 'src/app/_services/auth.service';
 import { DataForHome } from 'src/app/_models/dataForHome';
+import { ProductForCreate } from 'src/app/_models/productForCreate';
 import { Media } from 'src/app/_models/media';
 import { repeatWhen } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
@@ -29,7 +37,7 @@ import { Lecturer } from 'src/app/_models/lecturer';
 import { OrganizationForUpdate } from 'src/app/_models/OrganizationForUpdate';
 import { LinkVideoModalComponent } from '../link-video-modal/link-video-modal.component';
 import { DomSanitizer } from '@angular/platform-browser';
-
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-edit-product',
@@ -57,16 +65,25 @@ export class EditProductComponent implements OnInit {
   lecturerAlertMessage: string;
   productForm: FormGroup;
   quillCounter: number;
+  imageUrl: string[] | ArrayBuffer[];
+  routeName: string;
+  sanitizedUrl;
+  alerts = [];
 
   @ViewChild('MediaUpload', { static: true }) mediaUpload: ElementRef;
   @ViewChild('EditForm', { static: true }) editForm: NgForm;
-
 
   public onAddedStudentFunc = this.beforeAddStudent.bind(this);
   public onAddedTagFunc = this.beforeAddTag.bind(this);
   public onAddedCourseFunc = this.beforeAddCourse.bind(this);
   public onAddedLecturerFunc = this.beforeAddLecturer.bind(this);
-  
+
+  @HostListener('window: beforeunload', ['$event'])
+  unloadNotification($event: any) {
+    if (this.productForm.dirty) {
+      $event.returnValue = true;
+    }
+  }
 
   constructor(
     private productService: ProductsService,
@@ -75,33 +92,91 @@ export class EditProductComponent implements OnInit {
     private generalDataService: GeneralDataService,
     private modalService: BsModalService,
     private formBuilder: FormBuilder,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private router: Router,
+    private spinner: NgxSpinnerService
   ) {}
 
   ngOnInit() {
+    this.route.url.subscribe((val) => (this.routeName = val[1].path));
     this.route.data.subscribe((data) => {
-      data.product.media.forEach((media) => {
-        if (media.type === 'video') {
-          media.urlForShow = this.safeURL(media.url);
-        }
-      });
-      this.product = data.product;
+      console.log(data.dataforhome);
       this.generalData = data.dataforhome;
-      this.year = new Date(this.product.yearOfCreation, 0);
-      console.log(this.year);
+      if (this.routeName !== 'create' && data.product) {
+        data.product.media.forEach((media) => {
+          if (media.type === 'video') {
+            media.urlForShow = this.safeURL(media.url);
+          }
+        });
+        this.product = data.product;
+        this.year = new Date(this.product.yearOfCreation, 0);
+      }
     });
 
-    //initialize form
+    if (!this.product && this.routeName !== 'create'){
+      this.router.navigate(['editor/products']);
+    }
+    // initialize form
     this.createProductForm();
-    this.patch();
-    console.log(this.productForm.controls.media);
+    if (this.product) {
+      this.initializeValues();
+      this.patch(this.product.media);
+    }
     // datepicker configurations
     this.bsConfig = {
-      containerClass: 'theme-green',
+      containerClass: 'theme-blue',
       dateInputFormat: 'YYYY',
       minMode: 'year',
       maxDate: new Date(),
     };
+  }
+
+  initializeValues() {
+    if (this.product.title) {
+      this.productForm.controls.title.setValue(this.product.title);
+    }
+    if (this.product.brief) {
+      this.productForm.controls.brief.setValue(this.product.brief);
+    }
+    if (this.product.taskId) {
+      this.productForm.controls.taskId.setValue(this.product.taskId);
+    }
+    if (this.product.tags) {
+      this.productForm.controls.tags.setValue(this.product.tags);
+    }
+    if (this.product.description) {
+      this.productForm.controls.description.setValue(this.product.description);
+    }
+    if (this.product.students) {
+      this.productForm.controls.students.setValue(this.product.students);
+    }
+    if (this.product.organizationId) {
+      this.productForm.controls.organizationId.setValue(
+        this.product.organizationId
+      );
+    }
+    if (this.product.yearOfCreation) {
+      this.productForm.controls.yearOfCreation.setValue(
+        this.product.yearOfCreation
+      );
+    }
+    if (this.product.degree) {
+      this.productForm.controls.degree.setValue(this.product.degree);
+    }
+    if (this.product.productTypeId) {
+      this.productForm.controls.productTypeId.setValue(
+        this.product.productTypeId
+      );
+    }
+    if (this.product.productUrl) {
+      this.productForm.controls.productUrl.setValue(this.product.productUrl);
+    }
+    if (this.product.courses) {
+      this.productForm.controls.courses.setValue(this.product.courses);
+    }
+    if (this.product.lecturers) {
+      this.productForm.controls.lecturers.setValue(this.product.lecturers);
+    }
   }
 
   // Creating form
@@ -109,7 +184,7 @@ export class EditProductComponent implements OnInit {
     this.productForm = this.formBuilder.group(
       {
         title: [
-          this.product.title,
+          '',
           [
             Validators.minLength(2),
             Validators.maxLength(100),
@@ -117,35 +192,55 @@ export class EditProductComponent implements OnInit {
           ],
         ],
         brief: [
-          this.product.brief,
+          '',
           [
             Validators.minLength(2),
             Validators.maxLength(100),
             Validators.required,
           ],
         ],
-        taskId: [this.product.taskId, Validators.required],
-        tags: [this.product.tags, Validators.required],
-        description: [
-          this.product.description,
-          [
-            Validators.minLength(2),
-            Validators.required
-          ],
-        ],
-        students: [this.product.students, Validators.required],
-        organizationId: [this.product.organizationId, Validators.required],
-        yearOfCreation: [this.year, Validators.required],
-        degree: [this.product.degree, Validators.required],
-        productTypeId: [this.product.productTypeId, Validators.required],
-        productUrl: [this.product.productUrl, Validators.required],
-        courses: [this.product.courses, Validators.required],
-        lecturers: [this.product.lecturers, Validators.required],
+        taskId: ['', Validators.required],
+        tags: [[], Validators.required],
+        description: ['', [Validators.minLength(2), Validators.required]],
+        students: [[], Validators.required],
+        organizationId: ['', Validators.required],
+        yearOfCreation: ['', Validators.required],
+        degree: ['', Validators.required],
+        productTypeId: ['', Validators.required],
+        productUrl: ['', Validators.required],
+        courses: [[], Validators.required],
+        lecturers: [[], Validators.required],
         media: this.formBuilder.array([]),
       },
-      { validator: this.isUrl }
+      { validator: [this.isUrl, this.hasImages, this.hasMainImage] }
     );
   }
+
+  hasMainImage(g: FormGroup) {
+    return g.controls.media.value.find((m) => m.isMain === true)
+      ? null
+      : { noMainImage: true };
+  }
+
+  hasImages(g: FormGroup) {
+    return g.controls.media.value.filter(
+      (m) => m.type === 'image' && m.status !== 'Delete'
+    ).length > 0
+      ? null
+      : { noImage: true };
+  }
+
+  // checks if media has description
+  noDescription(i) {
+    if (
+      this.productForm.controls.media.value[i].mDescription.toString().trim()
+        .length < 1
+    ) {
+      return true;
+    }
+    return false;
+  }
+
   // Check if url
   isUrl(g: FormGroup) {
     return /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(
@@ -161,9 +256,10 @@ export class EditProductComponent implements OnInit {
   }
 
   // patch values to media control
-  patch() {
+  patch(array) {
     const control = this.productForm.get('media') as FormArray;
-    this.product.media.forEach((x) => {
+    control.clear();
+    array.forEach((x) => {
       control.push(
         this.patchValues(
           x.mDescription,
@@ -172,21 +268,23 @@ export class EditProductComponent implements OnInit {
           x.status,
           x.type,
           x.url,
-          x.urlForShow
+          x.urlForShow,
+          x.file
         )
       );
     });
   }
 
-  patchValues(mDescription, id, isMain, status, type, url, urlForShow) {
+  patchValues(mDescription, id, isMain, status, type, url, urlForShow, file?) {
     return this.formBuilder.group({
-      mDescription: [mDescription],
+      mDescription: [mDescription, Validators.required],
       id: [id],
       isMain: [isMain],
       status: [status],
       type: [type],
       url: [url],
       urlForShow: [urlForShow],
+      file: [file],
     });
   }
 
@@ -200,7 +298,11 @@ export class EditProductComponent implements OnInit {
         const newStudent = this.generalData['students'].find(
           (t) => t.name === studentToAdd
         );
-        if (!this.productForm.controls.students.value.find((s) => s.id === newStudent.id)) {
+        if (
+          !this.productForm.controls.students.value.find(
+            (s) => s.id === newStudent.id
+          )
+        ) {
           return of(newStudent);
         } else {
           this.studentAlertMessage = 'הסטודנט/ית כבר ברשימה';
@@ -249,7 +351,11 @@ export class EditProductComponent implements OnInit {
         const newCourse = this.generalData['courses'].find(
           (t) => t.title === courseToAdd
         );
-        if (!this.productForm.controls.courses.value.find((s) => s.id === newCourse.id)) {
+        if (
+          !this.productForm.controls.courses.value.find(
+            (s) => s.id === newCourse.id
+          )
+        ) {
           return of(newCourse);
         } else {
           this.courseAlertMessage = 'הקורס כבר ברשימה';
@@ -273,7 +379,11 @@ export class EditProductComponent implements OnInit {
         const newLecturer = this.generalData['lecturers'].find(
           (t) => t.name === lecturerToAdd
         );
-        if (!this.productForm.controls.lecturers.value.find((s) => s.id === newLecturer.id)) {
+        if (
+          !this.productForm.controls.lecturers.value.find(
+            (s) => s.id === newLecturer.id
+          )
+        ) {
           return of(newLecturer);
         } else {
           this.lecturerAlertMessage = 'המנחה כבר ברשימה';
@@ -310,6 +420,7 @@ export class EditProductComponent implements OnInit {
 
   // add new organization to db
   addOrganization() {
+    this.spinner.show();
     const orgData: OrganizationForUpdate = {
       title: this.newEntity['name'],
       organizationTypes: this.newEntity['orgTypes'],
@@ -320,21 +431,22 @@ export class EditProductComponent implements OnInit {
       .subscribe(
         (data: any) => {
           this.generalData['organizations'].push(data);
-          this.productForm.get('organization').setValue(data.id);
+          this.productForm.get('organizationId').setValue(data.id);
           // this.product.organizationTitle = data.title;
           // this.product.organizationId = data.id;
           this.newEntity = null;
-          console.log(data);
-          this.bsModalRef.content.successMessage =
-            'הארגון: ' + data['title'] + ' נוסף בהצלחה';
+          // this.bsModalRef.content.successMessage =
+          //   'הארגון: ' + data['title'] + ' נוסף בהצלחה';
           this.bsModalRef.content.generalData = this.generalData[
             'organizations'
           ].map((x) => x.name);
+          this.productForm.markAsDirty();
+          this.spinner.hide();
         },
         (error) => {
-          console.log(error);
           this.bsModalRef.content.failMessage =
             'הייתה בעיה בשמירת הנתונים, יש לנסות שנית';
+          this.spinner.hide();
         }
       );
   }
@@ -362,6 +474,7 @@ export class EditProductComponent implements OnInit {
 
   // add new student to db
   addStudent() {
+    this.spinner.show();
     this.data.name = this.newEntity['name'];
     this.generalDataService
       .updateStudent(this.authService.decodedToken.nameid, this.data)
@@ -372,17 +485,18 @@ export class EditProductComponent implements OnInit {
           this.productForm.controls.students.updateValueAndValidity();
 
           this.newEntity = null;
-          console.log(data);
-          this.bsModalRef.content.successMessage =
-            'הסטודנט/ית: ' + data['name'] + ' נוסף/ה בהצלחה';
+          // this.bsModalRef.content.successMessage =
+          //   'הסטודנט/ית: ' + data['name'] + ' נוסף/ה בהצלחה';
           this.bsModalRef.content.generalData = this.generalData[
             'students'
           ].map((x) => x.name);
+          this.productForm.markAsDirty();
+          this.spinner.hide();
         },
         (error) => {
-          console.log(error);
           this.bsModalRef.content.failMessage =
             'הייתה בעיה בשמירת הנתונים, יש לנסות שנית';
+          this.spinner.hide();
         }
       );
   }
@@ -410,6 +524,7 @@ export class EditProductComponent implements OnInit {
 
   // add new lecturer to db
   addLecturer() {
+    this.spinner.show();
     this.data.name = this.newEntity['name'];
     this.generalDataService
       .updateLecturer(this.authService.decodedToken.nameid, this.data)
@@ -419,17 +534,18 @@ export class EditProductComponent implements OnInit {
           this.productForm.controls.lecturers.value.push(data);
           this.productForm.controls.lecturers.updateValueAndValidity();
           this.newEntity = null;
-          console.log(data);
-          this.bsModalRef.content.successMessage =
-            'המנחה: ' + data['name'] + ' נוסף/ה בהצלחה';
+          // this.bsModalRef.content.successMessage =
+          //   'המנחה: ' + data['name'] + ' נוסף/ה בהצלחה';
           this.bsModalRef.content.generalData = this.generalData[
             'lecturers'
           ].map((x) => x.name);
+          this.productForm.markAsDirty();
+          this.spinner.hide();
         },
         (error) => {
-          console.log(error);
           this.bsModalRef.content.failMessage =
             'הייתה בעיה בשמירת הנתונים, יש לנסות שנית';
+          this.spinner.hide();
         }
       );
   }
@@ -457,6 +573,7 @@ export class EditProductComponent implements OnInit {
 
   // add new tag to db
   addTag() {
+    this.spinner.show();
     this.data.title = this.newEntity['name'];
     this.generalDataService
       .updateTag(this.authService.decodedToken.nameid, this.data)
@@ -466,17 +583,18 @@ export class EditProductComponent implements OnInit {
           this.productForm.controls.tags.value.push(data);
           this.productForm.controls.tags.updateValueAndValidity();
           this.newEntity = null;
-          console.log(data);
-          this.bsModalRef.content.successMessage =
-            'התגית: ' + data['title'] + ' נוספה בהצלחה';
+          // this.bsModalRef.content.successMessage =
+          //   'התגית: ' + data['title'] + ' נוספה בהצלחה';
           this.bsModalRef.content.generalData = this.generalData['tags'].map(
             (x) => x.title
           );
+          this.productForm.markAsDirty();
+          this.spinner.hide();
         },
         (error) => {
-          console.log(error);
           this.bsModalRef.content.failMessage =
             'הייתה בעיה בשמירת הנתונים, יש לנסות שנית';
+          this.spinner.hide();
         }
       );
   }
@@ -502,13 +620,13 @@ export class EditProductComponent implements OnInit {
 
     this.bsModalRef.content.item.subscribe((res) => {
       this.newEntity = res.data;
-      console.log(res.data);
       this.addCourse();
     });
   }
 
   // add new course to db
   addCourse() {
+    this.spinner.show();
     this.data.title = this.newEntity['name'];
     this.data.number = this.newEntity['number'];
     this.generalDataService
@@ -520,52 +638,117 @@ export class EditProductComponent implements OnInit {
           this.productForm.controls.courses.updateValueAndValidity();
           this.newEntity = null;
 
-          this.bsModalRef.content.successMessage =
-            'הקורס: ' + data['title'] + ' נוסף בהצלחה';
+          // this.bsModalRef.content.successMessage =
+          //   'הקורס: ' + data['title'] + ' נוסף בהצלחה';
           this.bsModalRef.content.generalData = this.generalData['courses'].map(
             (x) => x.title
           );
+          this.productForm.markAsDirty();
+          this.spinner.hide();
         },
         (error) => {
-          console.log(error);
           this.bsModalRef.content.failMessage =
             'הייתה בעיה בשמירת הנתונים, יש לנסות שנית';
+          this.spinner.hide();
         }
       );
   }
 
-  // update product in db
+  // update product in db or save new product if url ends with 'create'
   updateProduct() {
-    console.log(this.productForm.valid);
+    this.spinner.show();
     if (this.productForm.valid) {
       this.product = Object.assign({}, this.productForm.value);
-
       // convert year from date to string
-      console.log(
-        this.productForm.controls.yearOfCreation.value.toString().length
-      );
       if (
         this.productForm.controls.yearOfCreation.value.toString().length > 4
       ) {
         this.product.yearOfCreation = this.productForm.controls.yearOfCreation.value.getFullYear();
       }
-      console.log(this.product);
-      this.productService
-        .updateProduct(
-          this.authService.decodedToken.nameid,
-          +this.route.snapshot.params['id'],
-          this.product
-        )
-        .subscribe(
-          (next) => {
-            console.log('updated!!!');
-            this.productForm.reset(this.product);
-          },
-          (error) => {
-            console.log('not updated :(');
-          }
-        );
+
+      if (this.routeName === 'create') {
+        const productForCreate: ProductForCreate = {
+          title: this.product.title,
+          taskId: this.product.taskId,
+          productTypeId: this.product.productTypeId,
+          organizationId: this.product.organizationId,
+        };
+
+        this.productService
+          .createProduct(this.authService.decodedToken.nameid, productForCreate)
+          .subscribe((e: Product) => {
+            this.product.id = e.id;
+            this.saveProduct(this.product.id);
+          });
+      } else {
+        this.saveProduct(+this.route.snapshot.params['id']);
+      }
     }
+  }
+
+  saveProduct(id) {
+    // saving files and links
+    const target = this.product.media.filter(
+      (m) => m.id === 0 && m.status !== 'Delete'
+    ).length;
+    let counter = 0;
+    if (target > 0) {
+      this.product.media.forEach((media, index) => {
+        if (media.id === 0 && media.status !== 'Delete') {
+          if (media.type === 'file' || media.type === 'image') {
+            this.productService
+              .uploadMedia(id, media.file)
+              .subscribe((e: Media) => {
+                this.product.media[index].id = e.id;
+                this.product.media[index].url = e.url;
+                this.product.media[index].file = null;
+                counter++;
+                if (counter === target) {
+                  this.finalUpdate(id);
+                }
+              });
+          } else {
+            this.productService.uploadLink(id, media).subscribe(
+              (e: Media) => {
+                this.product.media[index].id = e.id;
+                this.product.media[index].url = e.url;
+                this.product.media[index].file = null;
+                this.product.media[index].urlForShow = this.safeURL(e.url);
+                counter++;
+                if (counter === target) {
+                  this.finalUpdate(id);
+                }
+              },
+              (error) => {
+                this.message = 'Could not upload link ' + media.url;
+              }
+            );
+          }
+        }
+      });
+    } else {
+      this.finalUpdate(id);
+    }
+  }
+
+  // update all data of product
+  finalUpdate(id) {
+    this.productService
+      .updateProduct(this.authService.decodedToken.nameid, id, this.product)
+      .subscribe(
+        (next) => {
+          console.log('updated!!!');
+          this.productForm.reset(this.product);
+          if (this.routeName === 'create') {
+            this.router.navigate(['editor/products/' + id]);
+          }
+          this.spinner.hide();
+        },
+        (error) => {
+          console.log('not updated :(');
+          this.spinner.hide();
+        }
+      );
   }
 
   // get files to upload
@@ -581,18 +764,55 @@ export class EditProductComponent implements OnInit {
     this.message = '';
     for (let i = 0; i < this.selectedFiles.length; i++) {
       const file = this.selectedFiles[i];
+      const reader = new FileReader();
       const extentions = ['JPG', 'JPE', 'JPEG', 'GIF', 'PNG', 'PDF'];
-      if (extentions.find((e) => e === file.name.split('.')[1].toUpperCase())) {
-        if (file.size < 1000000) {
-          this.upload(i, file);
+      const fileNameSplit = file.name.split('.');
+
+      reader.onload = (event) => {
+        if (
+          extentions.find(
+            (e) => e === fileNameSplit[fileNameSplit.length - 1].toUpperCase()
+          )
+        ) {
+          if (file.size < 1000000) {
+            const imageUrl = reader.result;
+            const type =
+              fileNameSplit[fileNameSplit.length - 1].toUpperCase() === 'PDF'
+                ? 'file'
+                : 'image';
+            // this.upload(i, file);
+            (this.productForm.get('media') as FormArray).push(
+              this.patchValues(
+                file.name,
+                0,
+                false,
+                'Temp',
+                type,
+                imageUrl,
+                '',
+                file
+              )
+            );
+            this.productForm.markAsDirty();
+          } else {
+            this.alerts.push('הקובץ ' + file.name + ' גדול מ1mb');
+          }
         } else {
-          alert('file is too big');
+          this.alerts.push(
+            'הקובץ ' + file.name + ' אינו בפורמט מתאים'
+          );
         }
-      } else {
-        alert('file type not valid');
-      }
+      };
+      reader.readAsDataURL(file);
     }
     this.resetInputFile();
+  }
+  // reset alerts
+  reset(): void {
+    this.alerts = [];
+  }
+  onClosed(dismissedAlert: any): void {
+    this.alerts = this.alerts.filter((alert) => alert !== dismissedAlert);
   }
 
   // reset upload btn after upload
@@ -601,28 +821,28 @@ export class EditProductComponent implements OnInit {
   }
 
   // upload file to server via service
-  upload(idx, file) {
-    this.productService
-      .uploadMedia(+this.route.snapshot.params['id'], file)
-      .subscribe(
-        (event: Media) => {
-          (this.productForm.get('media') as FormArray).push(
-            this.patchValues(
-              event.mDescription,
-              event.id,
-              event.isMain,
-              event.status,
-              event.type,
-              event.url,
-              event.urlForShow
-            )
-          );
-        },
-        (err) => {
-          this.message = 'Could not upload the file:' + file.name;
-        }
-      );
-  }
+  // upload(idx, file) {
+  //   this.productService
+  //     .uploadMedia(+this.route.snapshot.params['id'], file)
+  //     .subscribe(
+  //       (event: Media) => {
+  //         (this.productForm.get('media') as FormArray).push(
+  //           this.patchValues(
+  //             event.mDescription,
+  //             event.id,
+  //             event.isMain,
+  //             event.status,
+  //             event.type,
+  //             event.url,
+  //             event.urlForShow
+  //           )
+  //         );
+  //       },
+  //       (err) => {
+  //         this.message = 'Could not upload the file:' + file.name;
+  //       }
+  //     );
+  // }
 
   addVideoModal() {
     const initialState = {
@@ -642,10 +862,27 @@ export class EditProductComponent implements OnInit {
     });
 
     this.bsModalRef.content.item.subscribe((res) => {
-      console.log(res);
       res.data.type = 'video';
+      const videoId = this.matchYoutubeUrl(res.data.url);
+      res.data.url = 'https://www.youtube.com/embed/' + videoId;
       this.uploadLink(res.data);
     });
+  }
+
+  checkUrl() {
+    if (
+      this.productForm.get('productUrl').value.length > 0 &&
+      !this.productForm.getError('notUrl')
+    ) {
+      this.sanitizedUrl = this.safeURL(
+        this.productForm.get('productUrl').value
+      );
+    }
+  }
+
+  matchYoutubeUrl(url) {
+    const p = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
+    return url.match(p) ? RegExp.$1 : false;
   }
 
   addLinkModal() {
@@ -665,39 +902,46 @@ export class EditProductComponent implements OnInit {
     });
 
     this.bsModalRef.content.item.subscribe((res) => {
-      console.log(res);
       res.data.type = 'link';
       this.uploadLink(res.data);
     });
   }
 
   uploadLink(link: Media) {
-    this.productService
-      .uploadLink(+this.route.snapshot.params['id'], link)
-      .subscribe(
-        (event: Media) => {
-          event.urlForShow = this.safeURL(event.url);
-          (this.productForm.get('media') as FormArray).push(
-            this.patchValues(
-              event.mDescription,
-              event.id,
-              event.isMain,
-              event.status,
-              event.type,
-              event.url,
-              event.urlForShow
-            )
-          );
-          console.log(this.productForm.get('media'));
-          // this.product.media = this.productForm.get('media').value;
-          // this.product.media.forEach(media => {
-          //   media.urlForShow = this.safeURL(media.url);
-          // });
-        },
-        (error) => {
-          this.message = 'Could not upload link ' + link.url;
-        }
-      );
+    (this.productForm.get('media') as FormArray).push(
+      this.patchValues(
+        link.mDescription,
+        0,
+        false,
+        'Temp',
+        link.type,
+        link.url,
+        this.safeURL(link.url)
+      )
+    );
+    this.productForm.markAsDirty();
+    // this.productService
+    //   .uploadLink(+this.route.snapshot.params['id'], link)
+    //   .subscribe(
+    //     (event: Media) => {
+    //       event.urlForShow = this.safeURL(event.url);
+    //       (this.productForm.get('media') as FormArray).push(
+    //         this.patchValues(
+    //           event.mDescription,
+    //           event.id,
+    //           event.isMain,
+    //           event.status,
+    //           event.type,
+    //           event.url,
+    //           event.urlForShow
+    //         )
+    //       );
+    //       console.log(this.productForm.get('media'));
+    //     },
+    //     (error) => {
+    //       this.message = 'Could not upload link ' + link.url;
+    //     }
+    //   );
   }
 
   // trak media ng-for by item index
@@ -728,19 +972,31 @@ export class EditProductComponent implements OnInit {
   }
 
   // set media to be main
-  setMain(mediaId) {
-    const mediaArray = this.productForm.get('media').value;
-    mediaArray.find((m) => m.id === mediaId).isMain = true;
-    mediaArray
-      .filter((m) => m.id !== mediaId)
-      .forEach((n) => (n.isMain = false));
+  setMain(event) {
+    const btnId = event.target.id.split('_')[1];
+    const mediaArray = this.productForm.get('media') as FormArray;
+    mediaArray.controls.forEach((media, index) => {
+      if (index.toString() !== btnId.toString()) {
+        media.patchValue({ isMain: false });
+      } else {
+        media.patchValue({ isMain: true });
+      }
+    });
+
+    this.productForm.controls.media.updateValueAndValidity();
+    this.productForm.markAsDirty();
+
+    // this.patch(mediaArray);
   }
 
   // delete media
-  DeleteFile(mediaId) {
-    this.productForm.get('media').value.find((m) => m.id === mediaId).status =
-      'Delete';
+  DeleteFile(event) {
+    event.preventDefault();
+    const btnId = event.target.id.split('_')[1];
+    const mediaArray = this.productForm.get('media') as FormArray;
+
+    mediaArray.controls[btnId].patchValue({ status: 'Delete' });
+    this.productForm.controls.media.updateValueAndValidity();
+    this.productForm.markAsDirty();
   }
-
-
 }

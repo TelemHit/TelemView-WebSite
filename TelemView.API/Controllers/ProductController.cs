@@ -32,12 +32,15 @@ namespace TelemView.API.Controllers
             var products = await _repo.GetProducts(productParams);
 
             var productsToReturn = _mapper.Map<IEnumerable<ProductForHomeDto>>(products);
+
+            Response.AddPagination(products.CurrentPage, products.PageSize, products.TotalCount, products.TotalPages);
+
             return Ok(productsToReturn);
             //return Ok(products);
         }
 
         [AllowAnonymous]
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetProduct")]
         public async Task<IActionResult> GetProduct(int id)
         {
             var product = await _repo.GetProduct(id);
@@ -46,57 +49,167 @@ namespace TelemView.API.Controllers
             //return Ok(product);
         }
 
+        [HttpPost("editor/{userId}", Name = "CreateProduct")]
+        public async Task<IActionResult> CreateProduct(int userId, ProductUpdateDto productUpdateDto)
+        {
+
+            var productToAdd = _mapper.Map<Product>(productUpdateDto);
+
+            await _repo.CreateProduct(productToAdd);
+
+            var productToReturn = _mapper.Map<ProductIdDto>(productToAdd);
+
+            var productFromRepo = await _repo.GetProduct(productToReturn.Id);
+            productFromRepo.IsPublish = true;
+            productFromRepo.TimeStamp= DateTime.Now;
+            await _repo.SaveAll();
+
+            return CreatedAtRoute("GetProduct"
+                    , new { userId = userId, id = productToAdd.Id }
+                    , productToReturn);
+
+        }
+
+        [HttpPost("editor/publish/{userId}/{id}")]
+        public async Task<IActionResult> PublishProduct(int userId, int id)
+        {
+            if (await _repo.ProductExists(id))
+            {
+                var productFromRepo = await _repo.GetProduct(id);
+                if (productFromRepo.IsPublish)
+                {
+                    productFromRepo.IsPublish = false;
+                }
+                else
+                {
+                    productFromRepo.IsPublish = true;
+                }
+                if (await _repo.SaveAll())
+                    return NoContent();
+
+                return BadRequest("could not publish");
+            }
+            else
+            {
+                return BadRequest($"no product with id: {id}");
+            }
+        }
+
+        [HttpPost("editor/homePage/{userId}/{id}")]
+        public async Task<IActionResult> ProductOnHomePage(int userId, int id)
+        {
+            if (await _repo.ProductExists(id))
+            {
+                var productFromRepo = await _repo.GetProduct(id);
+                if (productFromRepo.ShowOnHomePage)
+                {
+                    productFromRepo.ShowOnHomePage = false;
+                }
+                else
+                {
+                    productFromRepo.ShowOnHomePage = true;
+                }
+                if (await _repo.SaveAll())
+                    return NoContent();
+
+                return BadRequest("could not set on Home Page");
+            }
+            return BadRequest($"no product with id: {id}");
+        }
+
+
         [HttpPut("{userId}/{id}")]
         public async Task<IActionResult> UpdateProduct(int userId, int id, ProductUpdateDto productUpdateDto)
         {
-            var productFromRepo = await _repo.GetProduct(id);
-            try
+            if (await _repo.ProductExists(id))
             {
-                if (productUpdateDto.Media.Count > 0)
+                var productFromRepo = await _repo.GetProduct(id);
+                try
                 {
-                    ICollection<MediaDto> tempMediaList = new List<MediaDto>(productUpdateDto.Media);
-                    foreach (MediaDto m in tempMediaList)
+                    if (productUpdateDto.Media.Count > 0)
                     {
-                        if (m.Status == "Temp")
+                        ICollection<MediaDto> tempMediaList = new List<MediaDto>(productUpdateDto.Media);
+                        foreach (MediaDto m in tempMediaList)
                         {
-                            m.Status = "Saved";
-                        }
-                        if (m.Status == "Delete")
-                        {
-                            if (m.IsMain)
-                                return BadRequest("You can not delete your main photo");
-
-                            if (m.Type == "image" || m.Type == "file")
+                            if (m.Status == "Temp")
                             {
-                                if (m.Url != null)
-                                {
-                                    var fileName = m.Url;
-                                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\images", fileName);
+                                m.Status = "Saved";
+                            }
+                            if (m.Status == "Delete")
+                            {
+                                if (m.IsMain)
+                                    return BadRequest("You can not delete your main photo");
 
-                                    if (System.IO.File.Exists(filePath))
+                                if (m.Type == "image" || m.Type == "file")
+                                {
+                                    if (m.Url != null)
                                     {
-                                        System.IO.File.Delete(filePath);
+                                        var fileName = m.Url;
+                                        var filePath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\images", fileName);
+
+                                        if (System.IO.File.Exists(filePath))
+                                        {
+                                            System.IO.File.Delete(filePath);
+                                        }
                                     }
                                 }
-                            }
 
-                            productUpdateDto.Media.Remove(m);
+                                productUpdateDto.Media.Remove(m);
+                            }
+                        }
+                    }
+                }
+                catch
+                {
+
+                }
+                productFromRepo.TimeStamp=DateTime.Now;
+                _mapper.Map(productUpdateDto, productFromRepo);
+
+                if (await _repo.SaveAll())
+                    return NoContent();
+
+                throw new Exception($"Updating product {id} failed on save");
+            }
+            throw new Exception($"No product Id: {id}");
+
+        }
+
+        [HttpDelete("editor/{userId}/{id}")]
+        public async Task<IActionResult> DeleteProduct(int userId, int id)
+        {
+
+            var productFromRepo = await _repo.GetProduct(id);
+
+            var mediaFromRepo = productFromRepo.Media;
+
+            foreach (Media m in mediaFromRepo)
+            {
+                if (m.Type == "image" || m.Type == "file")
+                {
+                    if (m.Url != null)
+                    {
+                        var fileName = m.Url;
+                        var filePath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\images", fileName);
+
+                        if (System.IO.File.Exists(filePath))
+                        {
+                            System.IO.File.Delete(filePath);
                         }
                     }
                 }
             }
-            catch
-            {
 
-            }
-
-            _mapper.Map(productUpdateDto, productFromRepo);
+            _repo.Delete(productFromRepo);
 
             if (await _repo.SaveAll())
-                return NoContent();
+            {
+                return Ok();
+            }
+            return BadRequest("Failed to delete the product");
 
-            throw new Exception($"Updating product {id} failed on save");
         }
+
     }
 }
 

@@ -1,46 +1,108 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpEvent, HttpHeaders } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpParams,
+  HttpEvent,
+  HttpHeaders,
+} from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
-import { Product} from '../_models/product';
+import { Product } from '../_models/product';
 import { ActivatedRoute } from '@angular/router';
 import { Media } from '../_models/media';
+import { ProductForCreate } from '../_models/ProductForCreate';
+import { PaginatedResult } from '../_models/pagination'
+import { map } from 'rxjs/operators';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
 export class ProductsService {
-    baseUrl = environment.apiUrl;
+  baseUrl = environment.apiUrl;
 
-    constructor(private http: HttpClient, private route: ActivatedRoute) {}
-    getProducts(productParams?): Observable<Product[]>{
-      let params = new HttpParams();
-      if (productParams != null){
-        if (productParams.params){
-          params = productParams.params;
-          console.log(params);
-        }
+  constructor(private http: HttpClient, private route: ActivatedRoute) {}
+
+  getProducts(productParams?, page?, itemsPerPage?): Observable<PaginatedResult<Product[]>> {
+    const paginatedResults: PaginatedResult<Product[]> = new PaginatedResult<Product[]>();
+    let params = new HttpParams();
+    if (productParams != null) {
+      if (productParams.params) {
+        Object.entries(productParams.params).forEach(([key, value]) => {
+          params = params.append(key, value.toString());
+        });
+
+        console.log(params);
       }
-
-      return this.http.get<Product[]>(this.baseUrl + 'product', {params});
     }
-
-    getProduct(id): Observable<Product>{
-      return this.http.get<Product>(this.baseUrl + 'product/' + id);
+    if (page != null && itemsPerPage != null){
+      params = params.append('pageNumber', page);
+      params = params.append('pageSize', itemsPerPage);
     }
+    console.log(params);
+    return this.http.get<Product[]>(this.baseUrl + 'product', { observe: 'response', params })
+    .pipe(
+      map(response => {
+        paginatedResults.result = response.body;
+        if(response.headers.get('Pagination') != null){
+          paginatedResults.pagination = JSON.parse(response.headers.get('Pagination')) 
+        }
+        return paginatedResults;
+      })
+    );
+  }
 
-    updateProduct(userId: number, id: number, product: Product){
-      return this.http.put(this.baseUrl + 'product/' + userId + '/' + id, product);
-    }
+  getProduct(id): Observable<Product> {
+    return this.http.get<Product>(this.baseUrl + 'product/' + id);
+  }
 
-    uploadMedia(id: number, file: File){
-      const formData: FormData = new FormData();
-      formData.append('file', file);
-      return this.http.post(this.baseUrl + 'editor/product/' + id + '/media', formData, {});
-    }
+  updateProduct(userId: number, id: number, product: Product) {
+    return this.http.put(
+      this.baseUrl + 'product/' + userId + '/' + id,
+      product
+    );
+  }
 
-    uploadLink(id: number, media: Media){
-      return this.http.post(this.baseUrl + 'editor/product/' + id + '/media/link', media, {});
-    }
+  uploadMedia(id: number, file: File) {
+    const formData: FormData = new FormData();
+    formData.append('file', file);
+    return this.http.post(
+      this.baseUrl + 'editor/product/' + id + '/media',
+      formData,
+      {}
+    );
+  }
 
+  uploadLink(id: number, media: Media) {
+    return this.http.post(
+      this.baseUrl + 'editor/product/' + id + '/media/link',
+      media,
+      {}
+    );
+  }
+
+  createProduct(userId: number, product: ProductForCreate) {
+    return this.http.post(
+      this.baseUrl + 'product/editor/' + userId,
+      product,
+      {}
+    );
+  }
+
+  publishProduct(userId: number, id: number){
+    return this.http.post(
+      this.baseUrl + 'product/editor/publish/' + userId + '/' + id, {}
+    );
+  }
+
+  productOnHomePage(userId: number, id: number){
+    return this.http.post(
+      this.baseUrl + 'product/editor/homePage/' + userId + '/' + id, {}
+    );
+  }
+
+  deleteProduct(userId: number, id: number){
+    return this.http.delete(
+      this.baseUrl + 'product/editor/' + userId + '/' + id, {}
+    );
+  }
 }
