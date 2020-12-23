@@ -5,8 +5,15 @@
 .active a{
     color: white;
 }
+a, button{
+    color: #051622;
+}
 nav{
     background-color: white;
     position: static;
     padding-right: 0;
+}
+hr{
+    border-top: 1px solid lightgray;
+    width: 100%;
 }

@@ -136,6 +136,9 @@ namespace TelemView.API.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("HeYearOfCreation")
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("IsApproved")
                         .HasColumnType("INTEGER");
 

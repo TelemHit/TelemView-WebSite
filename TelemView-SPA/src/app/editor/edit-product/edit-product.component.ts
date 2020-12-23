@@ -29,7 +29,6 @@ import { GeneralDataService } from 'src/app/_services/generalData.service';
 import { GeneralData } from 'src/app/_models/generalData';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ModalComponent } from 'src/app/editor/modal/modal.component';
-import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { Tag } from 'src/app/_models/Tag';
 import { Student } from 'src/app/_models/Student';
 import { Course } from 'src/app/_models/Course';
@@ -38,6 +37,7 @@ import { OrganizationForUpdate } from 'src/app/_models/OrganizationForUpdate';
 import { LinkVideoModalComponent } from '../link-video-modal/link-video-modal.component';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NgxSpinnerService } from 'ngx-spinner';
+declare let Hebcal: any;
 
 @Component({
   selector: 'app-edit-product',
@@ -58,7 +58,6 @@ export class EditProductComponent implements OnInit {
   year: Date;
   newEntity = '';
   bsModalRef: BsModalRef;
-  bsConfig: Partial<BsDatepickerConfig>;
   studentAlertMessage: string;
   tagAlertMessage: string;
   courseAlertMessage: string;
@@ -98,6 +97,7 @@ export class EditProductComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    
     this.route.url.subscribe((val) => (this.routeName = val[1].path));
     this.route.data.subscribe((data) => {
       console.log(data.dataforhome);
@@ -109,11 +109,10 @@ export class EditProductComponent implements OnInit {
           }
         });
         this.product = data.product;
-        this.year = new Date(this.product.yearOfCreation, 0);
       }
     });
 
-    if (!this.product && this.routeName !== 'create'){
+    if (!this.product && this.routeName !== 'create') {
       this.router.navigate(['editor/products']);
     }
     // initialize form
@@ -122,13 +121,6 @@ export class EditProductComponent implements OnInit {
       this.initializeValues();
       this.patch(this.product.media);
     }
-    // datepicker configurations
-    this.bsConfig = {
-      containerClass: 'theme-blue',
-      dateInputFormat: 'YYYY',
-      minMode: 'year',
-      maxDate: new Date(),
-    };
   }
 
   initializeValues() {
@@ -158,6 +150,11 @@ export class EditProductComponent implements OnInit {
     if (this.product.yearOfCreation) {
       this.productForm.controls.yearOfCreation.setValue(
         this.product.yearOfCreation
+      );
+    }
+    if (this.product.heYearOfCreation) {
+      this.productForm.controls.heYearOfCreation.setValue(
+        this.product.heYearOfCreation
       );
     }
     if (this.product.degree) {
@@ -205,6 +202,7 @@ export class EditProductComponent implements OnInit {
         students: [[], Validators.required],
         organizationId: ['', Validators.required],
         yearOfCreation: ['', Validators.required],
+        heYearOfCreation: ['', Validators.required],
         degree: ['', Validators.required],
         productTypeId: ['', Validators.required],
         productUrl: ['', Validators.required],
@@ -408,6 +406,7 @@ export class EditProductComponent implements OnInit {
       saveBtnName: 'שמירה',
       generalData: this.generalData['organizations'].map((x) => x.title),
       orgTypes: this.generalData['organizationTypes'],
+      orgTypes_label: 'סוגי ארגונים:',
       alreadyExists: 'הארגון כבר במערכת ולכן אין צורך להוסיפו',
     };
     this.bsModalRef = this.modalService.show(ModalComponent, { initialState });
@@ -427,7 +426,7 @@ export class EditProductComponent implements OnInit {
     };
 
     this.generalDataService
-      .updateOrganization(this.authService.decodedToken.nameid, orgData)
+      .addOrganization(this.authService.decodedToken.nameid, orgData)
       .subscribe(
         (data: any) => {
           this.generalData['organizations'].push(data);
@@ -441,6 +440,7 @@ export class EditProductComponent implements OnInit {
             'organizations'
           ].map((x) => x.name);
           this.productForm.markAsDirty();
+          this.bsModalRef.hide();
           this.spinner.hide();
         },
         (error) => {
@@ -477,7 +477,7 @@ export class EditProductComponent implements OnInit {
     this.spinner.show();
     this.data.name = this.newEntity['name'];
     this.generalDataService
-      .updateStudent(this.authService.decodedToken.nameid, this.data)
+      .addStudent(this.authService.decodedToken.nameid, this.data)
       .subscribe(
         (data: any) => {
           this.generalData['students'].push(data);
@@ -485,8 +485,7 @@ export class EditProductComponent implements OnInit {
           this.productForm.controls.students.updateValueAndValidity();
 
           this.newEntity = null;
-          // this.bsModalRef.content.successMessage =
-          //   'הסטודנט/ית: ' + data['name'] + ' נוסף/ה בהצלחה';
+          this.bsModalRef.hide();
           this.bsModalRef.content.generalData = this.generalData[
             'students'
           ].map((x) => x.name);
@@ -527,7 +526,7 @@ export class EditProductComponent implements OnInit {
     this.spinner.show();
     this.data.name = this.newEntity['name'];
     this.generalDataService
-      .updateLecturer(this.authService.decodedToken.nameid, this.data)
+      .addLecturer(this.authService.decodedToken.nameid, this.data)
       .subscribe(
         (data: any) => {
           this.generalData['lecturers'].push(data);
@@ -540,6 +539,7 @@ export class EditProductComponent implements OnInit {
             'lecturers'
           ].map((x) => x.name);
           this.productForm.markAsDirty();
+          this.bsModalRef.hide();
           this.spinner.hide();
         },
         (error) => {
@@ -576,7 +576,7 @@ export class EditProductComponent implements OnInit {
     this.spinner.show();
     this.data.title = this.newEntity['name'];
     this.generalDataService
-      .updateTag(this.authService.decodedToken.nameid, this.data)
+      .addTag(this.authService.decodedToken.nameid, this.data)
       .subscribe(
         (data: any) => {
           this.generalData['tags'].push(data);
@@ -589,6 +589,7 @@ export class EditProductComponent implements OnInit {
             (x) => x.title
           );
           this.productForm.markAsDirty();
+          this.bsModalRef.hide();
           this.spinner.hide();
         },
         (error) => {
@@ -630,7 +631,7 @@ export class EditProductComponent implements OnInit {
     this.data.title = this.newEntity['name'];
     this.data.number = this.newEntity['number'];
     this.generalDataService
-      .updateCourse(this.authService.decodedToken.nameid, this.data)
+      .AddCourse(this.authService.decodedToken.nameid, this.data)
       .subscribe(
         (data: any) => {
           this.generalData['courses'].push(data);
@@ -644,6 +645,7 @@ export class EditProductComponent implements OnInit {
             (x) => x.title
           );
           this.productForm.markAsDirty();
+          this.bsModalRef.hide();
           this.spinner.hide();
         },
         (error) => {
@@ -659,12 +661,6 @@ export class EditProductComponent implements OnInit {
     this.spinner.show();
     if (this.productForm.valid) {
       this.product = Object.assign({}, this.productForm.value);
-      // convert year from date to string
-      if (
-        this.productForm.controls.yearOfCreation.value.toString().length > 4
-      ) {
-        this.product.yearOfCreation = this.productForm.controls.yearOfCreation.value.getFullYear();
-      }
 
       if (this.routeName === 'create') {
         const productForCreate: ProductForCreate = {
@@ -798,9 +794,7 @@ export class EditProductComponent implements OnInit {
             this.alerts.push('הקובץ ' + file.name + ' גדול מ1mb');
           }
         } else {
-          this.alerts.push(
-            'הקובץ ' + file.name + ' אינו בפורמט מתאים'
-          );
+          this.alerts.push('הקובץ ' + file.name + ' אינו בפורמט מתאים');
         }
       };
       reader.readAsDataURL(file);
@@ -999,4 +993,24 @@ export class EditProductComponent implements OnInit {
     this.productForm.controls.media.updateValueAndValidity();
     this.productForm.markAsDirty();
   }
+
+  // years list creation
+  yearsList() {
+    const currentYear = new Date().getFullYear();
+    let years = [];
+    for (let i = 2010; i <= currentYear; i++) {
+      years.push(i);
+    }
+    return years;
+  }
+
+  heYearsList(){
+    let currentYear = new Hebcal.HDate(new Date).getYearObject().year;
+    let years = [];
+    for (let i = 5771; i <= currentYear; i++) {
+      years.push(Hebcal.gematriya(i, 3));
+    }
+    return years;
+  }
+  
 }

@@ -24,9 +24,9 @@
                 </div>
 
 
-                <div class="table-container mt-4">
+                <div class="table-container mt-4 table-responsive">
                     <p *ngIf="products.length == 0">אין תוצרים לתצוגה, ניתן לנסות חיפוש אחר</p>
-                    <table *ngIf="products.length != 0" class="table-hover table mt-4">
+                    <table *ngIf="products.length != 0" class=" table-hover table mt-4">
                         <thead class="table-light">
                             <tr>
                                 <th scope="col">שם התוצר</th>
@@ -39,23 +39,23 @@
                         </thead>
                         <tbody>
                             <tr class="text-center" *ngFor="let product of this.products">
-                                <th scope="row">{{product.title}}<br/><small>{{product.timeStamp | timeago:live}}</small></th>
-                                <td><a [routerLink]="['/editor/products/', product.id]" class="btn"><i class="fa fa-pencil-square-o"
+                                <th class="align-middle" scope="row">{{product.title}}<br/><small>{{product.timeStamp | timeago:live}}</small></th>
+                                <td class="align-middle"><a [routerLink]="['/editor/products/', product.id]" class="btn"><i class="fa fa-pencil-square-o"
                                             aria-hidden="true"></i></a></td>
-                                <td><a [routerLink]="['/product/',product.id]" class="btn"><i class="fa fa-eye"
+                                <td class="align-middle"><a [routerLink]="['/product/',product.id]" class="btn"><i class="fa fa-eye"
                                             aria-hidden="true"></i></a></td>
-                                <td><button class="btn" type="button" (click)="publishProduct(product.id)">
+                                <td class="align-middle"><button class="btn" type="button" (click)="publishProduct(product.id)">
                                         <i *ngIf="!product.isPublish" class="fa fa-square-o" aria-hidden="true"></i>
                                         <i *ngIf="product.isPublish" class="fa fa-check-square-o"
                                             aria-hidden="true"></i>
                                     </button></td>
-                                <td><button class="btn" type="button" (click)="setOnHomePage(product.id)">
+                                <td class="align-middle"><button class="btn" type="button" (click)="setOnHomePage(product.id)">
                                         <i *ngIf="!product.showOnHomePage" class="fa fa-square-o"
                                             aria-hidden="true"></i>
                                         <i *ngIf="product.showOnHomePage" class="fa fa-check-square-o"
                                             aria-hidden="true"></i>
                                     </button></td>
-                                <td><button class="btn" type="button"
+                                <td class="align-middle"><button class="btn" type="button"
                                         (click)="deleteProduct(product.id, product.title)">
                                         <i class="fa fa-trash-o" aria-hidden="true"></i>
                                     </button></td>

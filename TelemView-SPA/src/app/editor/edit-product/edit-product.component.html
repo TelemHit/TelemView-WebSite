@@ -114,13 +114,32 @@
 
 
             <div class="mb-4 form-group col-lg-6 col-md-8 col-sm-12">
-                <label for="year"><small class="text-danger">* </small>שנת פיתוח</label>
-                <input id="year" formControlName="yearOfCreation" onkeydown="return false" class="form-control"
-                    autocomplete="off" bsDatepicker [bsConfig]="bsConfig" type="text" />
+                <label for="year"><small class="text-danger">* </small>שנת פיתוח (לועזית)</label>
+                <!-- <input id="year" formControlName="yearOfCreation" onkeydown="return false" class="form-control"
+                    autocomplete="off" bsDatepicker [bsConfig]="bsConfig" type="text" /> -->
+                <select id="year" class="custom-select" formControlName="yearOfCreation" [ngClass]="{'is-invalid': productForm.get('yearOfCreation').errors 
+                && productForm.get('yearOfCreation').touched}">
+                    <option value="" disabled>בחירת שנה...</option>
+                    <option *ngFor="let year of yearsList()"  [ngValue]="year">{{year}}</option>
+                </select>
+                <div class="invalid-feedback"
+                    *ngIf="productForm.get('yearOfCreation').errors && productForm.get('yearOfCreation').touched">
+                    יש לבחור שנת פיתוח לועזית</div>
+            </div>
+            <div class="mb-4 form-group col-lg-6 col-md-8 col-sm-12">
+                <label for="heYear"><small class="text-danger">* </small>שנת פיתוח (עברית)</label>
+                <select id="heYear" class="custom-select" formControlName="heYearOfCreation" [ngClass]="{'is-invalid': productForm.get('heYearOfCreation').errors 
+                && productForm.get('heYearOfCreation').touched}">
+                    <option value="" disabled>בחירת שנה...</option>
+                    <option *ngFor="let year of heYearsList()"  [ngValue]="year">{{year}}</option>
+                </select>
+                <div class="invalid-feedback"
+                    *ngIf="productForm.get('heYearOfCreation').errors && productForm.get('heYearOfCreation').touched">
+                    יש לבחור שנת פיתוח עברית</div>
             </div>
 
             <div class="mb-4 form-group col-lg-6 col-md-8 col-sm-12">
-                <label><small class="text-danger">* </small>תואר</label>
+                <label for="degree"><small class="text-danger">* </small>תואר</label>
                 <select id="degree" class="custom-select" formControlName="degree" [ngClass]="{'is-invalid': productForm.get('degree').errors 
                 && productForm.get('degree').touched}">
                     <option value="" disabled>בחירת תואר...</option>

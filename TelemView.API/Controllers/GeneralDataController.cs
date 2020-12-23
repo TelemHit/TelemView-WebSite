@@ -33,89 +33,89 @@ namespace TelemView.API.Controllers
             return Ok(dataToReturn);
         }
 
-        [HttpPut("editor/updateStudent/{userId}")]
-        public async Task<IActionResult> UpdateStudent(DataForUpdateDto dataForUpdateDto)
-        {
-            var studentName = dataForUpdateDto.Name.Trim();
-            if (await _repo.StudentExists(studentName))
-                return BadRequest("student already exists");
+        // [HttpPut("editor/updateStudent/{userId}")]
+        // public async Task<IActionResult> UpdateStudent(DataForUpdateDto dataForUpdateDto)
+        // {
+        //     var studentName = dataForUpdateDto.Name.Trim();
+        //     if (await _repo.StudentExists(studentName))
+        //         return BadRequest("student already exists");
             
 
-            var studentToAdd = new Student
-            {
-                Name = studentName
-            };
-            var studentToReturn = await _repo.AddStudent(studentToAdd);
-            return Ok(studentToReturn);
-        }
+        //     var studentToAdd = new Student
+        //     {
+        //         Name = studentName
+        //     };
+        //     var studentToReturn = await _repo.AddStudent(studentToAdd);
+        //     return Ok(studentToReturn);
+        // }
 
-        [HttpPut("editor/updateLecturer/{userId}")]
-        public async Task<IActionResult> UpdateLecturer(DataForUpdateDto dataForUpdateDto)
-        {
-            var lecturerName = dataForUpdateDto.Name.Trim();
-            if (await _repo.LecturerExists(lecturerName))
-                return BadRequest("lecturer already exists");
+        // [HttpPut("editor/updateLecturer/{userId}")]
+        // public async Task<IActionResult> UpdateLecturer(DataForUpdateDto dataForUpdateDto)
+        // {
+        //     var lecturerName = dataForUpdateDto.Name.Trim();
+        //     if (await _repo.LecturerExists(lecturerName))
+        //         return BadRequest("lecturer already exists");
             
 
-            var lecturerToAdd = new Lecturer
-            {
-                Name = lecturerName
-            };
-            var lecturerToReturn = await _repo.AddLecturer(lecturerToAdd);
-            return Ok(lecturerToReturn);
-        }
+        //     var lecturerToAdd = new Lecturer
+        //     {
+        //         Name = lecturerName
+        //     };
+        //     var lecturerToReturn = await _repo.AddLecturer(lecturerToAdd);
+        //     return Ok(lecturerToReturn);
+        // }
 
-        [HttpPut("editor/updateTag/{userId}")]
-        public async Task<IActionResult> UpdateTag(DataForUpdateDto dataForUpdateDto)
-        {
-            var tagTitle = dataForUpdateDto.Title.Trim();
-            if (await _repo.TagExists(tagTitle))
-                return BadRequest("tag already exists");
+        // [HttpPut("editor/updateTag/{userId}")]
+        // public async Task<IActionResult> UpdateTag(DataForUpdateDto dataForUpdateDto)
+        // {
+        //     var tagTitle = dataForUpdateDto.Title.Trim();
+        //     if (await _repo.TagExists(tagTitle))
+        //         return BadRequest("tag already exists");
 
-            var tagToAdd = new Tag
-            {
-                Title = tagTitle
-            };
-            var tagToReturn = await _repo.AddTag(tagToAdd);
-            return Ok(tagToReturn);
-        }
+        //     var tagToAdd = new Tag
+        //     {
+        //         Title = tagTitle
+        //     };
+        //     var tagToReturn = await _repo.AddTag(tagToAdd);
+        //     return Ok(tagToReturn);
+        // }
 
-        [HttpPut("editor/updateCourse/{userId}")]
-        public async Task<IActionResult> UpdateCourse(DataForUpdateDto dataForUpdateDto)
-        {
-            var courseTitle = dataForUpdateDto.Title.Trim();
-            var courseNumber = dataForUpdateDto.Number;
-            if (await _repo.CourseExists(courseTitle))
-                return BadRequest("course already exists");
+        // [HttpPut("editor/updateCourse/{userId}")]
+        // public async Task<IActionResult> UpdateCourse(DataForUpdateDto dataForUpdateDto)
+        // {
+        //     var courseTitle = dataForUpdateDto.Title.Trim();
+        //     var courseNumber = dataForUpdateDto.Number;
+        //     if (await _repo.CourseExists(courseTitle))
+        //         return BadRequest("course already exists");
 
-            var courseToAdd = new Course
-            {
-                Title = courseTitle,
-                Number = courseNumber
-            };
-            var courseToReturn = await _repo.AddCourse(courseToAdd);
-            return Ok(courseToReturn);
-        }
+        //     var courseToAdd = new Course
+        //     {
+        //         Title = courseTitle,
+        //         Number = courseNumber
+        //     };
+        //     var courseToReturn = await _repo.AddCourse(courseToAdd);
+        //     return Ok(courseToReturn);
+        // }
 
-        [HttpPut("editor/updateOrganization/{userId}")]
-        public async Task<IActionResult> updateOrganization(OrganizationForUpdate organizationForUpdate)
-        {
-            var orgTitle = organizationForUpdate.Title.Trim();
-            var orgTypes = organizationForUpdate.OrganizationTypes.Select(id => id.Id).ToArray();
+        // [HttpPut("editor/updateOrganization/{userId}")]
+        // public async Task<IActionResult> updateOrganization(OrganizationForUpdate organizationForUpdate)
+        // {
+        //     var orgTitle = organizationForUpdate.Title.Trim();
+        //     var orgTypes = organizationForUpdate.OrganizationTypes.Select(id => id.Id).ToArray();
 
-            if (orgTypes.Length == 0)
-                return BadRequest("no types selected");
-            if (await _repo.OrganizationExists(orgTitle))
-                return BadRequest("organization already exists");
+        //     if (orgTypes.Length == 0)
+        //         return BadRequest("no types selected");
+        //     if (await _repo.OrganizationExists(orgTitle))
+        //         return BadRequest("organization already exists");
             
 
-            var organizatinToAdd = new Organization
-            {
-                Title = orgTitle
-            };
+        //     var organizatinToAdd = new Organization
+        //     {
+        //         Title = orgTitle
+        //     };
 
-            var courseToReturn = await _repo.AddOrganization(organizatinToAdd, orgTypes);
-            return Ok(courseToReturn);
-        }
+        //     var courseToReturn = await _repo.AddOrganization(organizatinToAdd, orgTypes);
+        //     return Ok(courseToReturn);
+        // }
     }
 }

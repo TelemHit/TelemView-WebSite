@@ -11,6 +11,7 @@ namespace TelemView.API.Models
         public string Brief { get; set; }
         public string Description { get; set; }
         public int YearOfCreation { get; set; }
+        public string HeYearOfCreation { get; set; }
         public string ProductUrl { get; set; }
         public string Degree { get; set; }
         public bool IsApproved { get; set; }

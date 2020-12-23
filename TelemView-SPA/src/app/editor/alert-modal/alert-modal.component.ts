@@ -8,8 +8,8 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 })
 export class AlertModalComponent implements OnInit {
   title: string;
-  productId: number;
-  productTitle: string;
+  eId: number;
+  eTitle: string;
   alert: string;
   closeBtnName: string;
   approveBtnName: string;

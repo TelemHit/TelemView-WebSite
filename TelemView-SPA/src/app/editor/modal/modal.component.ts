@@ -9,6 +9,7 @@ import {
 } from '@angular/forms';
 import { DataForHome } from 'src/app/_models/dataForHome';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { OrganizationType } from 'src/app/_models/organizationType';
 
 @Component({
   selector: 'app-modal',
@@ -32,9 +33,16 @@ export class ModalComponent implements OnInit {
   addItem: FormGroup;
   generalData: [];
   orgTypes: [];
+  orgCurrentTypes: [];
   alreadyExists: string;
   successMessage: string;
   failMessage: string;
+  isEdit: boolean = false;
+  description = '';
+  isTask: boolean = false;
+  descriptin_label: string;
+  orgTypes_label: string;
+  courseNumber = '';
   @Output() item = new EventEmitter();
 
   constructor(
@@ -44,13 +52,26 @@ export class ModalComponent implements OnInit {
 
   ngOnInit() {
     this.createUpdateForm();
+    
+    if (this.orgCurrentTypes != null && this.orgCurrentTypes.length > 0) {
+      console.log(this.orgCurrentTypes)
+      const formArray: FormArray = this.addItem.get('orgTypes') as FormArray;
+      this.orgCurrentTypes.forEach((ot: OrganizationType) => {
+        formArray.push(new FormControl({ id: ot.id }));
+      });
+    }
   }
+
+isChecked(type){
+  return this.addItem.get('orgTypes').value.find(ot => ot.id === type.id);
+}
 
   createUpdateForm() {
     this.addItem = this.formBuilder.group(
       {
         name: [this.text, Validators.required],
-        number: ['', Validators.pattern('^[0-9]*$')],
+        number: [this.courseNumber, Validators.pattern('^[0-9]*$')],
+        description: [this.description],
         orgTypes: new FormArray([]),
       },
       {
@@ -58,21 +79,23 @@ export class ModalComponent implements OnInit {
           this.checkIfExists.bind(this),
           this.checkIfNumberNeeded.bind(this),
           this.checkIforgTypesNeeded.bind(this),
+          this.checkIfDescriptionNeeded.bind(this),
         ],
       }
     );
   }
 
   onCheckChange(event) {
-    console.log(this.addItem.get('orgTypes'));
     const formArray: FormArray = this.addItem.get('orgTypes') as FormArray;
-
     /* Selected */
     if (event.target.checked) {
       // Add a new control in the arrayForm
-      formArray.push(new FormControl({id: parseInt(event.target.id.split('_')[1], 10)}));
+      formArray.push(
+        new FormControl({ id: parseInt(event.target.id.split('_')[1], 10) })
+      );
+      this.addItem.updateValueAndValidity();
     } else {
-    /* unselected */
+      /* unselected */
       // find the unselected element
       let i = 0;
 
@@ -83,11 +106,15 @@ export class ModalComponent implements OnInit {
           formArray.removeAt(i);
           return;
         }
-
         i++;
       });
     }
     console.log(this.addItem.get('orgTypes'));
+    this.addItem.markAsDirty();
+  }
+
+  checkIfDescriptionNeeded(g: FormGroup) {
+    return this.isTask ? Validators.required(g.controls.description) : null;
   }
 
   checkIforgTypesNeeded(g: FormGroup) {
@@ -97,7 +124,8 @@ export class ModalComponent implements OnInit {
   }
 
   checkIfExists(g: FormGroup) {
-    return this.generalData.find((x) => x === g.get('name').value.trim())
+    return this.generalData.find((x) => x === g.get('name').value.trim()) &&
+      !this.isEdit
       ? { exists: true }
       : null;
   }
@@ -110,7 +138,7 @@ export class ModalComponent implements OnInit {
     this.triggerEvent(form.value);
     // this.addItem.get('name').setValue('');
     // this.closeBtnName = 'סגירה';
-    this.bsModalRef.hide();
+    // this.bsModalRef.hide();
   }
 
   triggerEvent(item: any) {

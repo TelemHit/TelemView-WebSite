@@ -56,6 +56,7 @@ export class ProductsService {
   }
 
   updateProduct(userId: number, id: number, product: Product) {
+    console.log(product)
     return this.http.put(
       this.baseUrl + 'product/' + userId + '/' + id,
       product
@@ -105,4 +106,6 @@ export class ProductsService {
       this.baseUrl + 'product/editor/' + userId + '/' + id, {}
     );
   }
+
+  
 }

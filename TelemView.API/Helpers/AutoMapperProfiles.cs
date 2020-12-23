@@ -173,6 +173,28 @@ namespace TelemView.API.Helpers
             ));
 
             CreateMap<Product, ProductIdDto>();
+
+            CreateMap<ProductTypeDto, ProductType>();
+            CreateMap<TagDto, Tag>();
+            CreateMap<StudentDto, Student>();
+            CreateMap<LecturersDto, Lecturer>();
+            CreateMap<CourseDto, Course>();
+            CreateMap<TaskDto, Task>();
+
+            CreateMap<OrganizationDto, Organization>()
+            .ForMember(dest => dest.OrganizationAndType, opt => opt.MapFrom(
+                src => src.OrganizationTypes
+            ));
+            CreateMap<OrganizationDto, OrganizationsAndTypes>()
+            .ForMember(dest => dest.OrganizationId, opt => opt.MapFrom(
+                            src => src.Id
+            ));
+
+            CreateMap<OrganizationTypeDto, OrganizationType>();
+            CreateMap<OrganizationTypeDto, OrganizationsAndTypes>()
+            .ForMember(dest => dest.OrganizationTypeId, opt => opt.MapFrom(
+                src => src.Id
+            ));
         }
     }
 }

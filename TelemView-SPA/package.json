@@ -25,6 +25,7 @@
     "@nicky-lenaers/ngx-scroll-to": "^9.0.0",
     "bootstrap-v4-rtl": "^4.4.1-2",
     "font-awesome": "^4.7.0",
+    "hebcal": "^2.3.2",
     "ng2-file-upload": "^1.4.0",
     "ngx-bootstrap": "^5.6.2",
     "ngx-chips": "^2.2.1",

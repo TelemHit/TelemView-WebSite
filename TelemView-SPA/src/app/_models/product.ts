@@ -11,6 +11,7 @@ export interface Product {
         title: string;
         brief: string;
         yearOfCreation: number;
+        heYearOfCreation: string;
         degree: string;
         showOnHomePage: boolean;
         taskTitle: string;

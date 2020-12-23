@@ -1,0 +1,35 @@
+<app-nav></app-nav>
+<div class="editor-main-wrapper container-fluid mt-5">
+  <div class="row">
+    <app-side-nav class="col-sm-2 col"></app-side-nav>
+    <div class="main-table col-sm-10 col pt-5">
+      <div class="container">
+        <h1>סוגי ארגונים</h1>
+        <button class="btn btn-primary-dark mt-3" (click)="addOtModal()"><i class="fa fa-plus-square-o mr-2"
+            style="font-size: 18pt;  vertical-align: middle;" aria-hidden="true"></i>
+          הוספת סוג ארגון חדש</button>
+        <div class="table-container mt-4 table-responsive">
+          <table class="table-hover table mt-4">
+            <thead class="table-light">
+              <th scope="col">סוג ארגון</th>
+              <th scope="col" class="text-center">כמות תוצרים</th>
+              <th scope="col" class="text-center">עריכה</th>
+              <th scope="col" class="text-center">מחיקה <i class="fa fa-info-circle" [adaptivePosition]="false" tooltip="ניתן למחוק רק סוג ארגון ללא תוצרים."></i></th>
+            </thead>
+            <tbody>
+              <tr class="text-center" *ngFor="let type of organizationTypes">
+                <th class="align-middle" scope="row">{{type.title}}</th>
+                <td class="align-middle">{{type.counter}}</td>
+                <td class="align-middle"><button class="btn" type="button" (click)="updateOtModal(type)">
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                  </button></td>
+                <td class="align-middle"><button *ngIf="type.counter == 0" class="btn" type="button" (click)="deleteOT(type.id, type.title)">
+                    <i class="fa fa-trash-o" aria-hidden="true"></i>
+                  </button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <ngx-spinner [fullScreen]="true" type="ball-fussion" size="medium" color="#1BA098"></ngx-spinner>

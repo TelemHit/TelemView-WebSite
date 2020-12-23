@@ -9,22 +9,28 @@ namespace TelemView.API.Data
     {
         Task<PagedList<Product>> GetProducts(ProductParams productParams);
         Task<Product> GetProduct(int id);
-        Task <bool> ProductExists(int id);
+        Task<bool> ProductExists(int id);
         Task<DataForHome> GetDataForHome();
         Task<bool> SaveAll();
         void Add<T>(T entity) where T : class;
         void Delete<T>(T entity) where T : class;
         Task<Media> GetMedia(int id);
-        Task<Student> AddStudent(Student student);
-        Task<bool> StudentExists(string name);
-        Task<Lecturer> AddLecturer(Lecturer lecturer);
-        Task<bool> LecturerExists(string name);
-        Task<Tag> AddTag(Tag tag);
-        Task<bool> TagExists(string title);
-        Task<Course> AddCourse(Course course);
-        Task<bool> CourseExists(string title);
-        Task<Organization> AddOrganization(Organization organization, IEnumerable<int> organizationTypes);
-        Task<bool> OrganizationExists(string title);
+        Task<ProductType> GetType(int id);
+        Task<IEnumerable<ProductType>> GetTypes();
+        Task<Student> GetStudent(int id);
+        Task<IEnumerable<Student>> GetStudents();
+        Task<Lecturer> GetLecturer(int id);
+        Task<IEnumerable<Lecturer>> GetLecturers();
+        Task<Tag> GetTag(int id);
+        Task<IEnumerable<Tag>> GetTags();
+        Task<Course> GetCourse(int id);
+        Task<IEnumerable<Course>> GetCourses();
         Task<Product> CreateProduct(Product product);
+        Task<Models.Task> GetTask(int id);
+        Task<IEnumerable<Models.Task>> GetTasks();
+        Task<Organization> GetOrganization(int id);
+        Task<IEnumerable<Organization>> GetOrganizations();
+        Task<OrganizationType> GetOrganizationType(int id);
+        Task<IEnumerable<OrganizationType>> GetOrganizationTypes();
     }
 }

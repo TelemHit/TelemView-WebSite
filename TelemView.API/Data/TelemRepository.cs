@@ -27,7 +27,7 @@ namespace TelemView.API.Data
             .Include(pt => pt.ProductsTags).ThenInclude(t => t.Tag)
             .Include(pc => pc.ProductsCourses).ThenInclude(c => c.Course)
             .Include(ps => ps.ProductStudents).ThenInclude(s => s.Student).OrderByDescending(p => p.TimeStamp).AsQueryable();
-            
+
 
             if (productParams.ProductType != null)
             {
@@ -135,91 +135,9 @@ namespace TelemView.API.Data
             return await _context.Media.FirstOrDefaultAsync(m => m.Id == id);
         }
 
-        public async Task<Student> AddStudent(Student student)
-        {
-            await _context.Students.AddAsync(student);
-            await _context.SaveChangesAsync();
-            return student;
-        }
-
         public async Task<bool> ProductExists(int id)
         {
             if (await _context.Products.AnyAsync(x => x.Id == id))
-                return true;
-
-            return false;
-        }
-        public async Task<bool> StudentExists(string name)
-        {
-            if (await _context.Students.AnyAsync(x => x.Name == name))
-                return true;
-
-            return false;
-        }
-        public async Task<Lecturer> AddLecturer(Lecturer lecturer)
-        {
-            await _context.Lecturers.AddAsync(lecturer);
-            await _context.SaveChangesAsync();
-            return lecturer;
-        }
-
-        public async Task<bool> LecturerExists(string name)
-        {
-            if (await _context.Lecturers.AnyAsync(x => x.Name == name))
-                return true;
-
-            return false;
-        }
-        public async Task<Tag> AddTag(Tag tag)
-        {
-            await _context.Tags.AddAsync(tag);
-            await _context.SaveChangesAsync();
-            return tag;
-        }
-
-        public async Task<bool> TagExists(string title)
-        {
-            if (await _context.Tags.AnyAsync(x => x.Title == title))
-                return true;
-
-            return false;
-        }
-        public async Task<Course> AddCourse(Course course)
-        {
-            await _context.Courses.AddAsync(course);
-            await _context.SaveChangesAsync();
-            return course;
-        }
-
-        public async Task<bool> CourseExists(string title)
-        {
-            if (await _context.Courses.AnyAsync(x => x.Title == title))
-                return true;
-
-            return false;
-        }
-
-        public async Task<Organization> AddOrganization(Organization organization, IEnumerable<int> organizationTypes)
-        {
-            await _context.Organizations.AddAsync(organization);
-            await _context.SaveChangesAsync();
-            foreach (int o in organizationTypes)
-            {
-                OrganizationsAndTypes orgAndType = new OrganizationsAndTypes
-                {
-                    OrganizationId = organization.Id,
-                    OrganizationTypeId = o
-                };
-                await _context.OrganizationsAndTypes.AddAsync(orgAndType);
-            }
-            await _context.SaveChangesAsync();
-
-            return organization;
-        }
-
-        public async Task<bool> OrganizationExists(string title)
-        {
-            if (await _context.Organizations.AnyAsync(x => x.Title == title))
                 return true;
 
             return false;
@@ -230,6 +148,137 @@ namespace TelemView.API.Data
             await _context.Products.AddAsync(product);
             await _context.SaveChangesAsync();
             return product;
+        }
+
+        public async Task<ProductType> GetType(int id)
+        {
+            var type = await _context.ProductTypes
+            .Include(p => p.Products)
+            .FirstOrDefaultAsync(t => t.Id == id);
+
+            return type;
+        }
+
+        public async Task<IEnumerable<ProductType>> GetTypes()
+        {
+            var types = await _context.ProductTypes
+            .Include(p => p.Products).OrderBy(i => i.Title).ToListAsync();
+            return types;
+        }
+        public async Task<Tag> GetTag(int id)
+        {
+            var tag = await _context.Tags
+            .Include(p => p.ProductsTags)
+            .FirstOrDefaultAsync(t => t.Id == id);
+
+            return tag;
+        }
+
+        public async Task<IEnumerable<Tag>> GetTags()
+        {
+            var tags = await _context.Tags
+            .Include(p => p.ProductsTags).OrderBy(i => i.Title).ToListAsync();
+            return tags;
+        }
+        public async Task<Student> GetStudent(int id)
+        {
+            var student = await _context.Students
+            .Include(p => p.ProductStudents)
+            .FirstOrDefaultAsync(t => t.Id == id);
+
+            return student;
+        }
+
+        public async Task<IEnumerable<Student>> GetStudents()
+        {
+            var students = await _context.Students
+            .Include(p => p.ProductStudents).OrderBy(i => i.Name).ToListAsync();
+            return students;
+        }
+        public async Task<Lecturer> GetLecturer(int id)
+        {
+            var lecturer = await _context.Lecturers
+            .Include(p => p.ProductsLecturers)
+            .FirstOrDefaultAsync(t => t.Id == id);
+
+            return lecturer;
+        }
+
+        public async Task<IEnumerable<Lecturer>> GetLecturers()
+        {
+            var lecturers = await _context.Lecturers
+            .Include(p => p.ProductsLecturers).OrderBy(i => i.Name).ToListAsync();
+            return lecturers;
+        }
+
+        public async Task<Course> GetCourse(int id)
+        {
+            var course = await _context.Courses
+            .Include(p => p.ProductsCourses)
+            .FirstOrDefaultAsync(t => t.Id == id);
+
+            return course;
+        }
+
+        public async Task<IEnumerable<Course>> GetCourses()
+        {
+            var courses = await _context.Courses
+            .OrderBy(i => i.Title).Include(p => p.ProductsCourses).ToListAsync();
+            return courses;
+        }
+
+        public async Task<Models.Task> GetTask(int id)
+        {
+            var task = await _context.Tasks
+            .Include(p => p.Products)
+            .FirstOrDefaultAsync(t => t.Id == id);
+
+            return task;
+        }
+
+        public async Task<IEnumerable<Models.Task>> GetTasks()
+        {
+            var tasks = await _context.Tasks
+            .OrderBy(i => i.Title).Include(p => p.Products).ToListAsync();
+            return tasks;
+        }
+
+        public async Task<Organization> GetOrganization(int id)
+        {
+            var organization = await _context.Organizations
+            .Include(p => p.Products)
+            .Include(t => t.OrganizationAndType).ThenInclude(ot => ot.OrganizationType)
+            .FirstOrDefaultAsync(o => o.Id == id);
+
+            return organization;
+        }
+
+        public async Task<IEnumerable<Organization>> GetOrganizations()
+        {
+            var organizations = await _context.Organizations
+            .Include(p => p.Products)
+            .Include(t => t.OrganizationAndType).ThenInclude(ot => ot.OrganizationType)
+            .OrderBy(i => i.Title).ToListAsync();
+
+            return organizations;
+        }
+
+        public async Task<OrganizationType> GetOrganizationType(int id)
+        {
+            var organizationType = await _context.OrganizationTypes
+            .Include(ot => ot.OrganizationAndType).ThenInclude(o => o.Organization).ThenInclude(p => p.Products)
+            .FirstOrDefaultAsync(o => o.Id == id);
+
+            return organizationType;
+        }
+
+        public async Task<IEnumerable<OrganizationType>> GetOrganizationTypes()
+        {
+            var organizationTypes = await _context.OrganizationTypes
+            .Include(ot => ot.OrganizationAndType).ThenInclude(o => o.Organization).ThenInclude(p => p.Products)
+            .OrderBy(i => i.Title).ToListAsync();
+
+            return organizationTypes;
         }
     }
 }

@@ -9,6 +9,7 @@ namespace TelemView.API.Dtos
         public int Id { get; set; }
         public string Title { get; set; }
         public int YearOfCreation { get; set; }
+        public string HeYearOfCreation { get; set; }
         public string ProductUrl { get; set; }
         public string Brief { get; set; }
         public string Degree { get; set; }

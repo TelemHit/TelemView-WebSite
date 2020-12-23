@@ -57,7 +57,22 @@ import { ModalComponent } from './editor/modal/modal.component';
 import { AlertModalComponent } from './editor/alert-modal/alert-modal.component';
 import { LinkVideoModalComponent } from './editor/link-video-modal/link-video-modal.component';
 import { EditorTypesComponent } from './editor/editor-types/editor-types.component';
+import { ProductTypesResolver } from './_resolvers/product-types.resolver';
+import { EditorTasksComponent } from './editor/editor-tasks/editor-tasks.component';
+import { ProductTasksResolver } from './_resolvers/product-tasks.resolver';
+import { OrganizationResolver } from './_resolvers/organization.resolver';
+import { EditorOrganizationsComponent } from './editor/editor-organizations/editor-organizations.component';
+import { OrganizationTypeResolver } from './_resolvers/organization-type.resolver';
+import { EditorOrganizationTypesComponent } from './editor/editor-organization-types/editor-organization-types.component';
+import { TagResolver } from './_resolvers/tag.resolver';
+import { StudentResolver } from './_resolvers/student.resolver';
+import { CourseResolver } from './_resolvers/course.resolver';
+import { LecturerResolver } from './_resolvers/lecturer.resolver';
 
+import { EditorCourseComponent } from './editor/editor-course/editor-course.component';
+import { EditorTagComponent } from './editor/editor-tag/editor-tag.component';
+import { EditorStudentComponent } from './editor/editor-student/editor-student.component';
+import { EditorLecturerComponent } from './editor/editor-lecturer/editor-lecturer.component';
 
 
 export function tokenGetter(){
@@ -90,7 +105,14 @@ export function tokenGetter(){
       ModalComponent,
       AlertModalComponent,
       LinkVideoModalComponent,
-      EditorTypesComponent
+      EditorTypesComponent,
+      EditorTasksComponent,
+      EditorOrganizationsComponent,
+      EditorOrganizationTypesComponent,
+      EditorCourseComponent,
+      EditorTagComponent,
+      EditorStudentComponent,
+      EditorLecturerComponent,
    ],
    imports: [
       BrowserModule,
@@ -138,6 +160,7 @@ export function tokenGetter(){
    providers: [
       ProductsService,
       ProductListResolver,
+      ProductTypesResolver,
       DataForHomeResolver,
       ProductDetailsResolver,
       ProductListEditorResolver,
@@ -146,7 +169,14 @@ export function tokenGetter(){
       AuthGuard,
       PreventUnsavedChangesGuard,
       GeneralDataService,
-      TimeagoIntl
+      TimeagoIntl,
+      ProductTasksResolver,
+      OrganizationResolver,
+      OrganizationTypeResolver,
+      TagResolver,
+      StudentResolver,
+      CourseResolver,
+      LecturerResolver
    ],
    entryComponents: [
       AlertModalComponent,

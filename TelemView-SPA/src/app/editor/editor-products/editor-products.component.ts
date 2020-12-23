@@ -74,8 +74,8 @@ export class EditorProductsComponent implements OnInit {
   deleteProduct(id, title) {
     const initialState = {
       title: 'מחיקת תוצר',
-      productId: id,
-      productTitle: title,
+      eId: id,
+      eTitle: title,
       alert: 'האם ברצונך למחוק את התוצר: ',
     };
     this.bsModalRef = this.modalService.show(AlertModalComponent, {
