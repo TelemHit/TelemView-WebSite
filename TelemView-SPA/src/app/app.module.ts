@@ -26,7 +26,6 @@ import {
 } from 'ngx-timeago';
 import { SwiperModule } from 'ngx-swiper-wrapper';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
-import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 
 
 import { AppComponent } from './app.component';
@@ -148,7 +147,6 @@ export function tokenGetter() {
       },
     }),
     TagInputModule,
-    TypeaheadModule.forRoot(),
     TooltipModule.forRoot(),
     PaginationModule.forRoot(),
     QuillModule.forRoot({
