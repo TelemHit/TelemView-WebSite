@@ -1,14 +1,35 @@
 using Microsoft.EntityFrameworkCore;
 using TelemView.API.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace TelemView.API.Data
 {
-    public class DataContext : DbContext
+    public class DataContext : IdentityDbContext<User, Role, int, IdentityUserClaim<int>,
+    UserRole, IdentityUserLogin<int>, IdentityRoleClaim<int>, IdentityUserToken<int>>
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options){}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<UserRole>(
+            userRole => {
+                userRole.HasKey(ur => new {ur.UserId, ur.RoleId});
+
+                userRole.HasOne(userRole=>userRole.Role)
+                .WithMany(r => r.UserRoles)
+                .HasForeignKey(ur => ur.RoleId)
+                .IsRequired();
+
+                userRole.HasOne(userRole=>userRole.User)
+                .WithMany(r => r.UserRoles)
+                .HasForeignKey(ur => ur.UserId)
+                .IsRequired();
+            }
+        );
+
         modelBuilder.Entity<ProductStudent>().HasKey(sc => new { sc.StudentId, sc.ProductId });
         modelBuilder.Entity<ProductCourse>().HasKey(sc => new { sc.CourseId, sc.ProductId });
         modelBuilder.Entity<ProductLecturer>().HasKey(sc => new { sc.LecturerId, sc.ProductId });
@@ -50,6 +71,5 @@ namespace TelemView.API.Data
         public DbSet<ProductLecturer> ProductsLecturers {get; set;}
         public DbSet<ProductTag> ProductsTags {get; set;}
         public DbSet<OrganizationsAndTypes> OrganizationsAndTypes {get; set;}
-        public DbSet<User> Users { get; set; }
     }
 }

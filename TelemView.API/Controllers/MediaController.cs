@@ -15,7 +15,7 @@ using System.Web;
 
 namespace TelemView.API.Controllers
 {
-    [Authorize]
+    [Authorize(Policy = "Edit")]
     [Route("api/editor/product/{productId}/media")]
     [ApiController]
     public class MediaController : ControllerBase

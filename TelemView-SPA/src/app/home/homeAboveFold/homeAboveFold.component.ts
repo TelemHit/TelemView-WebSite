@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, TemplateRef, HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-homeAboveFold',
@@ -6,8 +6,10 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./homeAboveFold.component.css']
 })
 export class HomeAboveFoldComponent implements OnInit {
+
   @Input() dataforhome;
   @Input() products;
+  
   constructor() { }
 
   ngOnInit() {
@@ -17,5 +19,6 @@ export class HomeAboveFoldComponent implements OnInit {
   scrollToElement(id): void {
    document.getElementById(id).scrollIntoView({behavior: 'smooth', block: 'start', inline: 'nearest'});
   }
+
 
 }

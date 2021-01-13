@@ -10,6 +10,8 @@ import { AlertModalComponent } from '../alert-modal/alert-modal.component';
 import { OrganizationType } from 'src/app/_models/organizationType';
 import { ModalComponent } from '../modal/modal.component';
 import { ProductType } from 'src/app/_models/productType';
+import { AlertifyService } from 'src/app/_services/alertify.service'
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-editor-organizations',
@@ -27,13 +29,16 @@ export class EditorOrganizationsComponent implements OnInit {
     private route: ActivatedRoute,
     private modalService: BsModalService,
     private authService: AuthService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private alertify: AlertifyService,
+    private titleService:Title
   ) {}
 
   ngOnInit() {
     this.route.data.subscribe((data) => {
       this.organizations = data.organizations;
-      console.log(this.organizations);
+      this.titleService.setTitle('Telem View - עריכת ארגונים');
+
     });
     this.generalService
       .getOrganizationTypes(this.authService.decodedToken.nameid)
@@ -62,6 +67,7 @@ export class EditorOrganizationsComponent implements OnInit {
     this.bsModalRef.content.item.subscribe((res) => {
       this.newEntity = res.data;
       this.addOrganization();
+      
     });
   }
 
@@ -89,6 +95,7 @@ export class EditorOrganizationsComponent implements OnInit {
           this.organizations.unshift(data);
           this.clear();
           this.bsModalRef.hide();
+          this.alertify.success('הארגון נוסף בהצלחה');
         },
         (error) => {
           this.bsModalRef.content.failMessage =
@@ -158,13 +165,15 @@ export class EditorOrganizationsComponent implements OnInit {
                 {
                   id: o['id'],
                   title: this.types.find(t => t.id == o['id']).title,
-                  counter: this.types.find(t => t.id == o['id']).counter
+                  counter: this.types.find(t => t.id == o['id']).counter,
+                  filteredCounter: this.types.find(t => t.id == o['id']).filteredCounter
                 }
               )
             })
             
             this.clear();
             this.bsModalRef.hide();
+            this.alertify.success('הארגון עודכן בהצלחה');
           },
           (error) => {
             this.bsModalRef.content.failMessage =
@@ -214,7 +223,6 @@ export class EditorOrganizationsComponent implements OnInit {
       console.log(res.data);
       if (res.data === true) {
         this.finalDeleteOrg(id);
-        this.bsModalRef.hide();
       }
     });
   }
@@ -224,6 +232,13 @@ export class EditorOrganizationsComponent implements OnInit {
       .deleteOrganization(this.authService.decodedToken.nameid, id)
       .subscribe(() => {
         this.organizations = this.organizations.filter((p) => p.id !== id);
+        this.bsModalRef.hide();
+        this.alertify.success('הארגון נמחק בהצלחה');
+      }, 
+      (error) => {
+        this.bsModalRef.hide();
+        this.alertify.error('הייתה בעיה במחיקת הארגון');
       });
   }
+
 }

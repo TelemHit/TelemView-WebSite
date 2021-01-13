@@ -1,0 +1,95 @@
+.home-nav{
+
+    padding: 10px 15px;
+}
+.home-nav-static{
+    padding: 5px 15px;
+    opacity: .9;
+    width: 100%;
+    position: fixed;
+    z-index: 101;
+    background: rgb(20,114,113);
+    background: linear-gradient(0deg, rgba(20,114,113,1) 0%, rgba(5,22,34,1) 100%);
+    box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px, rgba(0, 0, 0, 0.07) 0px 2px 2px, rgba(0, 0, 0, 0.07) 0px 4px 4px, rgba(0, 0, 0, 0.07) 0px 8px 8px, rgba(0, 0, 0, 0.07) 0px 16px 16px;
+    animation: fadeIn ease 0.5s;
+    -webkit-animation: fadeIn ease 0.5s;
+    -moz-animation: fadeIn ease 0.5s;
+    -o-animation: fadeIn ease 0.5s;
+    -ms-animation: fadeIn ease 0.5s;
+    }
+    @keyframes fadeIn {
+        0% {opacity:0;}
+        100% {opacity:1;}
+        }
+        @keyframes fadeOut {
+            100% {opacity:0;}
+            0% {opacity:1;}
+            }
+        .home-nav-static .logo{
+            max-width: 70px;
+        }
+        .logo{
+            max-width: 100px;
+            object-fit: contain;
+            z-index: 1;
+        }
+
+        .modal-header{
+            border-bottom: none;
+            padding-bottom: 0;
+            padding-right: 45px;
+            font-weight: 600;
+            font-size: 1.2em;
+            color: #051622;
+        }
+        .modal-content p{
+            color: #051622;
+            font-weight: 300;
+            font-size: 1.1em;
+        }
+        
+         .modal-dialog{
+            box-shadow: rgba(187, 153, 119, 0.35) 0px 5px 15px;
+            border-radius: .3rem;
+         }
+         .mobileNav{
+            display: none;
+            color: white;
+            justify-self: flex-end;
+        }
+
+        /* mobile */
+         @media only screen and (max-width: 576px) {
+            .tv-nav-right{
+                display: none;
+            }
+
+            .tv-nav-right.nav-mobile-active{
+                display: block;
+                position: absolute;
+                background: white;
+                right: 27px;
+                top: 55px;
+                border-radius: 5px;
+                animation: fadeIn ease 0.5s;
+                -webkit-animation: fadeIn ease 0.5s;
+                -moz-animation: fadeIn ease 0.5s;
+                -o-animation: fadeIn ease 0.5s;
+                -ms-animation: fadeIn ease 0.5s;
+                
+            }
+            .home-nav-static .tv-nav-right.nav-mobile-active{
+                right: 27px;
+                top: 45px;
+            }
+            .tv-nav-right.nav-mobile-active a, .tv-nav-right.nav-mobile-active button{
+                color: black;
+                display: block;
+            }
+            .logo{
+                max-width: 80px;
+            }
+            .mobileNav{
+                display: block;
+            }
+          }

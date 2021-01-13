@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -13,7 +14,7 @@ using TelemView.API.Models;
 
 namespace TelemView.API.Controllers
 {
-    [Authorize]
+    [Authorize(Policy = "Edit")]
     [Route("api/[controller]")]
     [ApiController]
     public class ProductController : ControllerBase
@@ -30,23 +31,64 @@ namespace TelemView.API.Controllers
         public async Task<IActionResult> GetProducts([FromQuery] ProductParams productParams)
         {
             var products = await _repo.GetProducts(productParams);
-
+            var generalDataFromRepo = await _repo.GetDataForHome();
             var productsToReturn = _mapper.Map<IEnumerable<ProductForHomeDto>>(products);
+            var generalDataToReturn = _mapper.Map<DataForHomeDto>(generalDataFromRepo);
+            var itemsBeforePaging = _mapper.Map<IEnumerable<ProductForHomeDto>>(products.AllItems);
+
+            foreach (var year in generalDataToReturn.Years)
+            {
+                year.FilteredCounter = itemsBeforePaging.Where(p => p.YearOfCreation == year.Title).Count();
+            }
+            foreach (var degree in generalDataToReturn.Degree)
+            {
+                degree.FilteredCounter = itemsBeforePaging.Where(p => p.Degree == degree.Title).Count();
+            }
+            foreach (var course in generalDataToReturn.Courses)
+            {
+                course.FilteredCounter = itemsBeforePaging.Where(p => p.Courses.Any(c => c.Id == course.Id)).Count();
+            }
+            foreach (var org in generalDataToReturn.Organizations)
+            {
+                org.FilteredCounter = itemsBeforePaging.Where(p => p.OrganizationId == org.Id).Count();
+            }
+            foreach (var orgType in generalDataToReturn.OrganizationTypes)
+            {
+                orgType.FilteredCounter = itemsBeforePaging.Where(p => p.OrganizationTypes.Any(ot => ot.Id == orgType.Id)).Count();
+            }
+            foreach (var lect in generalDataToReturn.Lecturers)
+            {
+                lect.FilteredCounter = itemsBeforePaging.Where(p => p.Lecturers.Any(l => l.Id == lect.Id)).Count();
+            }
+            foreach (var task in generalDataToReturn.Tasks)
+            {
+                task.FilteredCounter = itemsBeforePaging.Where(p => p.TaskId == task.Id).Count();
+            }
+            foreach (var pt in generalDataToReturn.ProductTypes)
+            {
+                pt.FilteredCounter = itemsBeforePaging.Where(p => p.ProductTypeId == pt.Id).Count();
+            }
+
+            var rootData = new RootForHomeDto();
+            rootData.Products = productsToReturn;
+            rootData.GeneralData = generalDataToReturn;
 
             Response.AddPagination(products.CurrentPage, products.PageSize, products.TotalCount, products.TotalPages);
 
-            return Ok(productsToReturn);
-            //return Ok(products);
+            return Ok(rootData);
         }
 
         [AllowAnonymous]
         [HttpGet("{id}", Name = "GetProduct")]
         public async Task<IActionResult> GetProduct(int id)
         {
-            var product = await _repo.GetProduct(id);
-            var productToReturn = _mapper.Map<ProductDetailsDto>(product);
-            return Ok(productToReturn);
-            //return Ok(product);
+            if (await _repo.ProductExists(id))
+            {
+                var product = await _repo.GetProduct(id);
+                var productToReturn = _mapper.Map<ProductDetailsDto>(product);
+                return Ok(productToReturn);
+            }
+            return BadRequest("product not exists");
         }
 
         [HttpPost("editor/{userId}", Name = "CreateProduct")]
@@ -61,7 +103,7 @@ namespace TelemView.API.Controllers
 
             var productFromRepo = await _repo.GetProduct(productToReturn.Id);
             productFromRepo.IsPublish = true;
-            productFromRepo.TimeStamp= DateTime.Now;
+            productFromRepo.TimeStamp = DateTime.Now;
             await _repo.SaveAll();
 
             return CreatedAtRoute("GetProduct"
@@ -163,7 +205,7 @@ namespace TelemView.API.Controllers
                 {
 
                 }
-                productFromRepo.TimeStamp=DateTime.Now;
+                productFromRepo.TimeStamp = DateTime.Now;
                 _mapper.Map(productUpdateDto, productFromRepo);
 
                 if (await _repo.SaveAll())

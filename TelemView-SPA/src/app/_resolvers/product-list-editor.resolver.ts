@@ -10,7 +10,8 @@ import { ProductsService } from '../_services/products.service';
 @Injectable()
 export class ProductListEditorResolver implements Resolve<Product[]>{
     pageNumber = 1;
-    pageSize = 5;
+    pageSize = 20;
+    hideUnpublished = false;
 
     products: Product[];
 
@@ -18,7 +19,7 @@ export class ProductListEditorResolver implements Resolve<Product[]>{
                 private route: ActivatedRoute){}
 
     resolve(route: ActivatedRouteSnapshot): Observable<Product[]>{
-        return this.productService.getProducts({}, this.pageNumber, this.pageSize).pipe(
+        return this.productService.getProducts({}, this.pageNumber, this.pageSize, this.hideUnpublished).pipe(
             catchError(error => {
                 console.log('problem retrieving data');
                 return of(null);

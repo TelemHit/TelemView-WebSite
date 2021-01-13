@@ -10,6 +10,8 @@ import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { TimeagoIntl } from 'ngx-timeago';
 import {strings as hebrewStrings} from 'ngx-timeago/language-strings/he';
+import { AlertifyService } from 'src/app/_services/alertify.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-editor-products',
@@ -31,7 +33,9 @@ export class EditorProductsComponent implements OnInit {
     private productsService: ProductsService,
     private authService: AuthService,
     private modalService: BsModalService,
-    private intl: TimeagoIntl
+    private intl: TimeagoIntl,
+    private alertify:AlertifyService,
+    private titleService:Title
   ) {
     this.modelChanged.pipe(debounceTime(this.debounceTime)).subscribe(() => {
       this.search();
@@ -45,7 +49,8 @@ export class EditorProductsComponent implements OnInit {
     this.route.data.subscribe((data) => {
       this.products = data.product.result;
       this.pagination = data.product.pagination;
-      console.log(data.product);
+      this.titleService.setTitle('Telem View - עריכת תוצרים');
+
     });
   }
 
@@ -88,7 +93,7 @@ export class EditorProductsComponent implements OnInit {
       console.log(res.data);
       if (res.data === true) {
         this.finalDeleteProduct(id);
-        this.bsModalRef.hide();
+        
       }
     });
   }
@@ -98,7 +103,14 @@ export class EditorProductsComponent implements OnInit {
       .deleteProduct(this.authService.decodedToken.nameid, id)
       .subscribe(() => {
         this.products = this.products.filter((p) => p.id !== id);
-      });
+        this.bsModalRef.hide();
+        this.alertify.success('התוצר נמחק בהצלחה');
+      },
+      (error) => {
+        this.bsModalRef.hide();
+        this.alertify.error('הייתה בעיה במחיקת התוצר');
+      }
+      );
   }
 
   pageChanged(e: any): void{
@@ -107,7 +119,7 @@ export class EditorProductsComponent implements OnInit {
   }
 
   loadProducts(search) {
-    this.productsService.getProducts(search, this.pagination.currentPage, this.pagination.itemsPerPage)
+    this.productsService.getProducts(search, this.pagination.currentPage, this.pagination.itemsPerPage, false)
     .subscribe((res: PaginatedResult<Product[]>) => {
       this.products = res.result;
       this.pagination = res.pagination;

@@ -1,12 +1,10 @@
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
+
 namespace TelemView.API.Models
 {
-    public class User
+    public class User : IdentityUser<int>
     {
-        public int Id { get; set; }
-        public string Email { get; set; }
-        public string Username { get; set; }
-        public string Role { get; set; }
-        public byte[] PasswordHash { get; set; }
-        public byte[] PasswordSalt { get; set; }
+        public virtual ICollection<UserRole> UserRoles { get; set; }
     }
 }

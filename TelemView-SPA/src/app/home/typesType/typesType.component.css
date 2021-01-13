@@ -29,3 +29,16 @@
 #container{
 	height: 50px;
 }
+
+/* tablet */
+@media only screen and (max-width: 992px) {
+    #container{
+		font-size: 1.8rem;
+	}
+}
+/* mobile */
+@media only screen and (max-width: 576px) {
+    #container{
+		font-size: 1.6rem;
+	}
+}

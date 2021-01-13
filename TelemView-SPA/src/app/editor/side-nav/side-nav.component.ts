@@ -17,6 +17,7 @@ export class SideNavComponent implements OnInit {
 
   logOut(){
     localStorage.removeItem('token');
+    this.authservice.decodedToken = null;
     this.router.navigate(['/editor']);
   }
   loggedIn(){

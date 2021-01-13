@@ -18,8 +18,11 @@ namespace TelemView.API.Dtos
         public string ThumbnailUrl { get; set; }
         public string MainPhotoUrl {get; set;}
         public string TaskTitle {get; set; }
+        public int TaskId { get; set; }
         public string ProductTypeTitle {get; set;}
+        public int ProductTypeId { get; set; }
         public string OrganizationTitle { get; set; }
+        public int OrganizationId { get; set; }
         public ICollection<OrganizationTypeDto> OrganizationTypes { get; set; }
         public ICollection<LecturersDto> Lecturers { get; set; }
         public ICollection<TagDto> Tags { get; set; }

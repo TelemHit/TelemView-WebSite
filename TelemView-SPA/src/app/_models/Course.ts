@@ -3,4 +3,5 @@ export interface Course {
     title: string;
     number: number;
     counter: number;
+    filteredCounter: number;
 }

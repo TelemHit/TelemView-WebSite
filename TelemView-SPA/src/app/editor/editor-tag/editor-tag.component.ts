@@ -9,6 +9,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { AlertModalComponent } from '../alert-modal/alert-modal.component';
 import { ModalComponent } from '../modal/modal.component';
 import { Tag } from 'src/app/_models/Tag';
+import { AlertifyService } from 'src/app/_services/alertify.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-editor-tag',
@@ -27,13 +29,15 @@ export class EditorTagComponent implements OnInit {
     private route: ActivatedRoute,
     private modalService: BsModalService,
     private authService: AuthService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private alertify: AlertifyService,
+    private titleService:Title
   ) {}
 
   ngOnInit() {
     this.route.data.subscribe((data) => {
       this.tags = data.tags;
-      console.log(this.tags);
+      this.titleService.setTitle('Telem View - עריכת תגיות');
     });
   }
 
@@ -54,7 +58,6 @@ export class EditorTagComponent implements OnInit {
       console.log(res.data);
       if (res.data === true) {
         this.finalDeleteTag(id);
-        this.bsModalRef.hide();
       }
     });
   }
@@ -64,6 +67,11 @@ export class EditorTagComponent implements OnInit {
       .deleteTag(this.authService.decodedToken.nameid, id)
       .subscribe(() => {
         this.tags = this.tags.filter((p) => p.id !== id);
+        this.bsModalRef.hide();
+        this.alertify.success('התגית נמחקה בהצלחה')
+      }, (error) => {
+        this.bsModalRef.hide();
+        this.alertify.error('הייתה בעיה במחיקת התגית')
       });
   }
 
@@ -96,6 +104,8 @@ export class EditorTagComponent implements OnInit {
           this.tags.unshift(data);
           this.clear();
           this.bsModalRef.hide();
+          this.alertify.success('התגית נוספה בהצלחה')
+
         },
         (error) => {
           this.bsModalRef.content.failMessage =
@@ -138,6 +148,8 @@ export class EditorTagComponent implements OnInit {
           this.tags.find(pt => pt.id == tag.id).title=this.data.title;
           this.clear();
           this.bsModalRef.hide();
+          this.alertify.success('התגית עודכנה בהצלחה')
+
         },
         (error) => {
           this.bsModalRef.content.failMessage =

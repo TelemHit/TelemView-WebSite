@@ -1,8 +1,7 @@
 .background-wrapper{
-    height: 100%;
-    height: calc(100% + 30vh);
-    will-change: transform;
+    height: 460px;
     position: relative;
+    padding: 0;
 }
 .background-inner{
     background: url(../../../assets/images/mainBI.png) no-repeat center center;
@@ -36,28 +35,27 @@
     top: 0;
 }
 
-.logo{
-    max-width: 120px;
-    object-fit: contain;
-    z-index: 1;
-}
+
 .homePage-top{
     left: 0;
     right: 0;
-    padding-top: 40px;
 }
+
+
+
+    
 
 .main-sentence h1{
     margin-bottom: 0;
     font-weight: 600;
     font-size: 3rem;
-    margin-top: 4rem;
+    margin-top: 100px;
 }
 
 .gradient-bottom svg{
     transform: translatex(-50%) scaley(-1);
     width: 100%;
-    height: 100%;
+    height: 101%;
     left: 50%;
     position: relative;
     overflow: hidden;
@@ -68,7 +66,7 @@
     right: 0;
     left: 0;
     width: 100%;
-    height: 100px;
+    height: 120px;
 }
 .arrow-down-animation{
     animation-play-state: paused;
@@ -86,3 +84,30 @@
     0% { transform: translateY(0); }
     100% { transform: translateY(-10px); }
 }
+
+/* tablet */
+@media only screen and (max-width: 992px) {
+    .main-sentence h1 {
+        font-size: 2rem;
+        margin-top: 100px;
+    }
+}
+/* mobile */
+@media only screen and (max-width: 576px) {
+    .main-sentence h1 {
+        margin-bottom: 10px;
+        font-size: 1.8em;
+        margin-top: 80px;
+    }
+    .background-wrapper{
+        height: 440px;
+    }
+    .gradient-bottom svg{
+        height: 75px;
+        
+    }
+    .gradient-bottom{
+        height: 74px;
+    }
+}
+

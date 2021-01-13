@@ -4,5 +4,6 @@ namespace TelemView.API.Dtos
     {
         public int Title { get; set; }
         public int Counter { get; set; }
+        public int FilteredCounter { get; set; }
     }
 }

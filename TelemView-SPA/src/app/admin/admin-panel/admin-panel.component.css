@@ -1,0 +1,14 @@
+ul{
+    list-style-type: none;
+    
+}
+.editor-main-wrapper{
+    background-color: #F8F8F8;
+}
+app-side-nav{
+    padding: 0;
+    background-color: white;
+}
+table{
+    margin: 0 !important;
+}

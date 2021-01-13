@@ -9,6 +9,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { AlertModalComponent } from '../alert-modal/alert-modal.component';
 import { ModalComponent } from '../modal/modal.component';
 import { Course } from 'src/app/_models/Course';
+import { AlertifyService } from 'src/app/_services/alertify.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-editor-course',
@@ -27,13 +29,15 @@ export class EditorCourseComponent implements OnInit {
     private route: ActivatedRoute,
     private modalService: BsModalService,
     private authService: AuthService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private alertify: AlertifyService,
+    private titleService:Title
   ) {}
 
   ngOnInit() {
     this.route.data.subscribe((data) => {
       this.courses = data.courses;
-      console.log(this.courses);
+      this.titleService.setTitle('Telem View - עריכת קורסים');
     });
   }
 
@@ -53,7 +57,6 @@ export class EditorCourseComponent implements OnInit {
     this.bsModalRef.content.confirm.subscribe((res) => {
       if (res.data === true) {
         this.finalDeleteCourse(id);
-        this.bsModalRef.hide();
       }
     });
   }
@@ -63,6 +66,11 @@ export class EditorCourseComponent implements OnInit {
       .deleteCourse(this.authService.decodedToken.nameid, id)
       .subscribe(() => {
         this.courses = this.courses.filter((p) => p.id !== id);
+        this.bsModalRef.hide();
+        this.alertify.success('הקורס נמחק בהצלחה');
+      }, (error) => {
+        this.bsModalRef.hide();
+        this.alertify.error('הייתה בעיה במחיקת הקורס');
       });
   }
 
@@ -100,6 +108,7 @@ export class EditorCourseComponent implements OnInit {
           this.courses.unshift(data);
           this.clear();
           this.bsModalRef.hide();
+          this.alertify.success('הקורס נוסף בהצלחה');
         },
         (error) => {
           this.bsModalRef.content.failMessage =
@@ -144,13 +153,14 @@ export class EditorCourseComponent implements OnInit {
     if(this.newEntity['name'] !== this.courses.find(pt => pt.id == course.id).title
     || this.newEntity['number'] !== this.courses.find(pt => pt.id == course.id).number
     ){
-      this.generalService.updateOrganizationTypes(this.authService.decodedToken.nameid,course.id, this.data)
+      this.generalService.updateCourse(this.authService.decodedToken.nameid,course.id, this.data)
       .subscribe(
         (data: any) => {
           this.courses.find(pt => pt.id == course.id).title=this.data.title;
           this.courses.find(pt => pt.id == course.id).number=this.data.number;
           this.clear();
           this.bsModalRef.hide();
+          this.alertify.success('הקורס עודכן בהצלחה');
         },
         (error) => {
           this.bsModalRef.content.failMessage =

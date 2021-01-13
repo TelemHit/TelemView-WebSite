@@ -1,0 +1,37 @@
+<app-nav></app-nav>
+<div class="editor-main-wrapper container-fluid mt-5">
+  <div class="row">
+    <app-side-nav class="col-sm-2 col"></app-side-nav>
+    <div class="main-table col-sm-10 col pt-5">
+      <div class="container">
+        <h1>ניהול משתמשים</h1>
+        <div class="table-container mt-4 table-responsive">
+          <table class="table-hover table mt-4">
+            <thead class="table-light">
+              <th scope="col">שם משתמש</th>
+              <th scope="col" class="text-center">כתובת מייל</th>
+
+              <th scope="col" class="text-center">הרשאה 
+                <ng-template  #popTemplate><ul class="text-left pl-0" [innerHtml]="html"></ul></ng-template>
+                <i class="fa fa-info-circle" [adaptivePosition]="false" [tooltip]="popTemplate"></i></th>
+              <th scope="col" class="text-center">מחיקה <i class="fa fa-info-circle" [adaptivePosition]="false" tooltip="ניתן למחוק רק משתמש שאינו Admin."></i></th>
+            </thead>
+            <tbody>
+              <tr class="text-center" *ngFor="let user of users">
+                <th class="align-middle" scope="row">{{user.userName}}</th>
+                <td class="align-middle">{{user.email}}</td>
+                <td class="align-middle">
+                  <span *ngFor="let role of user.roles" class="badge badge-pill badge-dark">{{role}}</span>
+                  <button class="btn" type="button" (click)="editRolesModal(user)">
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                  </button></td>
+                <td class="align-middle"><button *ngIf="isAdmin(user)" (click)="deleteUser(user)" class="btn" type="button">
+                    <i class="fa fa-trash-o" aria-hidden="true"></i>
+                  </button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <ngx-spinner [fullScreen]="true" type="ball-fussion" size="medium" color="#1BA098"></ngx-spinner>

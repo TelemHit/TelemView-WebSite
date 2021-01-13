@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { ProductsComponent } from './home/products/products.component';
 import { HomeComponent } from './home/home/home.component';
 import { ProductListResolver } from './_resolvers/product-list.resolver';
 import { DataForHomeResolver } from './_resolvers/data-for-home.resolver';
@@ -28,6 +27,7 @@ import { EditorLecturerComponent } from './editor/editor-lecturer/editor-lecture
 import { LecturerResolver } from './_resolvers/lecturer.resolver';
 import { EditorTagComponent } from './editor/editor-tag/editor-tag.component';
 import { TagResolver } from './_resolvers/tag.resolver';
+import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
 
 export const appRoutes: Routes = [
   { path: 'editor', component: LoginComponent },
@@ -35,6 +35,7 @@ export const appRoutes: Routes = [
     path: 'editor',
     runGuardsAndResolvers: 'always',
     canActivate: [AuthGuard],
+    data: { roles: ['Admin', 'Editor'] },
     children: [
       {
         path: 'products',
@@ -47,7 +48,7 @@ export const appRoutes: Routes = [
         resolve: {
           dataforhome: DataForHomeResolver,
         },
-        canDeactivate: [PreventUnsavedChangesGuard]
+        canDeactivate: [PreventUnsavedChangesGuard],
       },
       {
         path: 'products/:id',
@@ -56,64 +57,69 @@ export const appRoutes: Routes = [
           product: ProductEditorResolver,
           dataforhome: DataForHomeResolver,
         },
-        canDeactivate: [PreventUnsavedChangesGuard]
+        canDeactivate: [PreventUnsavedChangesGuard],
       },
       {
         path: 'types',
         component: EditorTypesComponent,
         resolve: {
           productTypes: ProductTypesResolver,
-        }
+        },
       },
       {
         path: 'tasks',
         component: EditorTasksComponent,
         resolve: {
           tasks: ProductTasksResolver,
-        }
+        },
       },
       {
         path: 'organizations',
         component: EditorOrganizationsComponent,
         resolve: {
           organizations: OrganizationResolver,
-        }
+        },
       },
       {
         path: 'courses',
         component: EditorCourseComponent,
         resolve: {
           courses: CourseResolver,
-        }
+        },
       },
       {
         path: 'organizationtypes',
         component: EditorOrganizationTypesComponent,
         resolve: {
           organizations: OrganizationTypeResolver,
-        }
+        },
       },
       {
         path: 'students',
         component: EditorStudentComponent,
         resolve: {
           students: StudentResolver,
-        }
+        },
       },
       {
         path: 'lecturers',
         component: EditorLecturerComponent,
         resolve: {
           lecturers: LecturerResolver,
-        }
+        },
       },
       {
         path: 'tags',
         component: EditorTagComponent,
         resolve: {
           tags: TagResolver,
-        }
-      }
+        },
+      },
+      {
+        path: 'admin',
+        component: AdminPanelComponent,
+        data: { roles: ['Admin'] },
+      },
     ],
   },
   {
@@ -121,7 +127,6 @@ export const appRoutes: Routes = [
     component: HomeComponent,
     resolve: {
       products: ProductListResolver,
-      dataforhome: DataForHomeResolver,
     },
   },
   {

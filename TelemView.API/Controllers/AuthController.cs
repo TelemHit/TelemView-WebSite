@@ -1,8 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -14,62 +18,94 @@ namespace TelemView.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [AllowAnonymous]
     public class AuthController : ControllerBase
     {
-        private readonly IAuthRepository _repo;
         private readonly IConfiguration _config;
-        public AuthController(IAuthRepository repo, IConfiguration config)
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly IMapper _mapper;
+        public AuthController(IConfiguration config
+        , UserManager<User> userManager, SignInManager<User> signInManager,
+        IMapper mapper)
         {
-            _repo=repo;
-            _config=config;
+            _config = config;
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _mapper = mapper;
         }
         [HttpPost("register")]
         public async Task<IActionResult> Register(UserForRegisterDto userForRegisterDto)
         {
-            userForRegisterDto.Username=userForRegisterDto.Username.ToLower();
-            userForRegisterDto.Email=userForRegisterDto.Email.ToLower();
-            if(await _repo.UserExists(userForRegisterDto.Email))
-                return BadRequest("כתובת המייל כבר קיימת במערכת");
-            
-            var userToCreate=new User{
-                Username=userForRegisterDto.Username,
-                Email=userForRegisterDto.Email,
-                Role="Pending"
+            var userToCreate = new User
+            {
+                UserName = userForRegisterDto.Username,
+                Email = userForRegisterDto.Email
             };
 
-            var createdUser=await _repo.Register(userToCreate, userForRegisterDto.Password);
-            return StatusCode(201);
+            var result = await _userManager.CreateAsync(userToCreate, userForRegisterDto.Password);
+
+
+            if (result.Succeeded)
+            {
+                return StatusCode(201);
+            }
+            return BadRequest(result.Errors);
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(UserForLoginDto userForLoginDto){
-            var userFromRepo=await _repo.Login(userForLoginDto.Email.ToLower(), userForLoginDto.Password);
-            if(userFromRepo==null)
-                return Unauthorized();
+        public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
+        {
+
+            var user = await _userManager.FindByEmailAsync(userForLoginDto.Email);
             
-             var claims=new[]
-             {
-                 new Claim(ClaimTypes.NameIdentifier, userFromRepo.Id.ToString()),
-                 new Claim(ClaimTypes.Name, userFromRepo.Username)
+            if(user == null){
+                return BadRequest("user does not exist");
+            }
+            var result = await _signInManager.CheckPasswordSignInAsync(user, userForLoginDto.Password, false);
+
+            if (result.Succeeded)
+            {
+                return Ok(new
+                {
+                    token = GenerateJwtToken(user).Result
+                });
+            }
+            return Unauthorized();
+        }
+
+        private async Task<string> GenerateJwtToken(User user)
+        {
+            var claims = new List<Claim>
+            {
+                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                 new Claim(ClaimTypes.Name, user.UserName)
              };
 
-            var key=new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
+            var roles = await _userManager.GetRolesAsync(user);
 
-            var creds=new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
 
-            var tokenDescriptor=new SecurityTokenDescriptor{
-                Subject=new ClaimsIdentity(claims),
-                Expires=DateTime.Now.AddDays(1),
-                SigningCredentials=creds
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
+
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.Now.AddDays(1),
+                SigningCredentials = creds
             };
 
-            var tokenHandler=new JwtSecurityTokenHandler();
+            var tokenHandler = new JwtSecurityTokenHandler();
 
-            var token=tokenHandler.CreateToken(tokenDescriptor);
+            var token = tokenHandler.CreateToken(tokenDescriptor);
 
-            return Ok(new{
-                token=tokenHandler.WriteToken(token)
-            });
+            return tokenHandler.WriteToken(token);
         }
     }
 }

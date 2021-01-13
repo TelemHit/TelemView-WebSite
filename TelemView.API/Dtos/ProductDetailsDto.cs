@@ -15,6 +15,7 @@ namespace TelemView.API.Dtos
         public string Degree { get; set; }
         public string TaskTitle {get; set; }
         public int TaskId {get; set; }
+        public string TaskDescription { get; set; }
         public string ProductTypeTitle {get; set;}
         public int ProductTypeId {get; set;}
         public string OrganizationTitle { get; set; }

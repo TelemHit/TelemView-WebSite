@@ -3,4 +3,5 @@ export interface Organization {
     title: string;
     counter: number;
     organizationTypes: [];
+    filteredCounter: number;
 }

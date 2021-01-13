@@ -28,10 +28,13 @@ namespace TelemView.API.Data
             .Include(pc => pc.ProductsCourses).ThenInclude(c => c.Course)
             .Include(ps => ps.ProductStudents).ThenInclude(s => s.Student).OrderByDescending(p => p.TimeStamp).AsQueryable();
 
-
-            if (productParams.ProductType != null)
+            if (productParams.HideUnpublished == true)
             {
-                products = products.Where(p => productParams.ProductType.Contains(p.ProductType.Id));
+                products = products.Where(p => p.IsPublish == true);
+            }
+            if (productParams.ProductTypes != null)
+            {
+                products = products.Where(p => productParams.ProductTypes.Contains(p.ProductType.Id));
             }
             if (productParams.Organizations != null)
             {
@@ -39,19 +42,15 @@ namespace TelemView.API.Data
             }
             if (productParams.Courses != null)
             {
-                products = products.Where(p => p.ProductsCourses.Select(c => c.CourseId).Intersect(productParams.Courses).Any());
+                products = products.Where(p => p.ProductsCourses.Any(pc => productParams.Courses.Contains(pc.CourseId)));
             }
             if (productParams.Lecturers != null)
             {
-                products = products.Where(p => p.ProductsLecturers.Select(c => c.LecturerId).Intersect(productParams.Lecturers).Any());
-            }
-            if (productParams.ProductType != null)
-            {
-                products = products.Where(p => productParams.ProductType.Contains(p.ProductType.Id));
+                products = products.Where(p => p.ProductsLecturers.Any(pl => productParams.Lecturers.Contains(pl.LecturerId)));
             }
             if (productParams.OrganizationTypes != null)
             {
-                products = products.Where(p => p.Organization.OrganizationAndType.Select(o => o.OrganizationTypeId).Intersect(productParams.OrganizationTypes).Any());
+                products = products.Where(p => p.Organization.OrganizationAndType.Any(ot => productParams.OrganizationTypes.Contains(ot.OrganizationTypeId)));
             }
             if (productParams.Tasks != null)
             {
@@ -61,9 +60,9 @@ namespace TelemView.API.Data
             {
                 products = products.Where(p => productParams.Years.Contains(p.YearOfCreation));
             }
-            if (productParams.Degrees != null)
+            if (productParams.Degree != null)
             {
-                products = products.Where(p => productParams.Degrees.Contains(p.Degree));
+                products = products.Where(p => productParams.Degree == p.Degree);
             }
             if (productParams.Search != null)
             {
@@ -279,6 +278,26 @@ namespace TelemView.API.Data
             .OrderBy(i => i.Title).ToListAsync();
 
             return organizationTypes;
+        }
+
+        public async Task<IEnumerable<object>> GetUsers()
+        {
+
+            var userList = await _context.Users
+            .OrderBy(x => x.UserName)
+            .Select(user => new
+            {
+                Id = user.Id,
+                Email = user.Email,
+                UserName = user.UserName,
+                Roles = (from userRole in user.UserRoles
+                         join role in _context.Roles
+                         on userRole.RoleId
+                         equals role.Id
+                         select role.Name).ToList()
+            }).ToListAsync();
+
+            return userList;
         }
     }
 }

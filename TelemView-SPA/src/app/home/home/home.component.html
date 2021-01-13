@@ -1,8 +1,24 @@
 <div class="container-fluid pl-0 pr-0">
-  <app-homeAboveFold class="row" [dataforhome] = "dataforhome['productTypes']" [products] = "products"></app-homeAboveFold>
-  <app-numberOfTypes class="row home_main types-numbers" [dataforhome] = "dataforhome['productTypes']"></app-numberOfTypes>
-  <app-about-faculty></app-about-faculty>
-  <app-multi-filter></app-multi-filter>
-  <app-filters-nav id="our_Products" (clearFilters)="clearAll()" class="home_main row justify-content-center" [dataforhome] = "dataforhome" [productParamsFromHome] ="productParams.params"></app-filters-nav>
-  <app-products class="row" [products] = "products"></app-products>
+  <app-homeAboveFold></app-homeAboveFold>
+  <!-- <app-numberOfTypes class="row home_main types-numbers" [dataforhome] = "dataforhome['productTypes']"></app-numberOfTypes> -->
+  <!-- <app-about-faculty></app-about-faculty> -->
+  <app-multi-filter *ngIf="dataforhome" [data]="dataforhome" [totalProducts]="totalCount"></app-multi-filter>
+  <!-- <app-filters-nav id="our_Products" (clearFilters)="clearAll()" class="home_main row justify-content-center" [dataforhome] = "dataforhome" [productParamsFromHome] ="productParams.params"></app-filters-nav> -->
 </div>
+  <div class="container-fluid gray-bg products-container" infiniteScroll [infiniteScrollDistance]="2"
+    [infiniteScrollThrottle]="50" [scrollWindow]="true" (scrolled)="onScroll()">
+    <p *ngIf="checkIfFilters()" class="text-center search-result">
+      <span *ngIf="totalCount<1">לא נמצאו תוצרים... כדאי לנסות חיפוש אחר</span>
+      <span *ngIf="totalCount==1">נמצא תוצר <strong>אחד</strong></span>
+      <span *ngIf="totalCount>1">נמצאו <strong>{{totalCount}}</strong> תוצרים</span>
+      
+    </p>
+    <app-product-card [products]="products"></app-product-card>
+    <div class="spinner-th">
+      <ngx-spinner [fullScreen]="false" type="ball-fussion" size="medium" color="#1BA098">
+        <p class="loading">התוצרים בדרך אליך...</p>
+      </ngx-spinner>
+      <p *ngIf="cantGetProduct">נראה שיש בעיה בטעינת התוצרים... <br />
+        בבקשה בדקו את החיבור לרשת ונסו לרענן את הדף</p>
+    </div>
+  </div>

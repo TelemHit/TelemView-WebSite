@@ -34,7 +34,10 @@
   <hr />
   <!-- <a class="nav-link" href="#">מטה-דאטה</a>
   <a class="nav-link" href="#">תוצרים לאישור</a> -->
-  <a class="nav-link" href="#">ניהול משתמשים</a>
-  <hr />
+  <li *appHasRole="['Admin']" class="nav-item" routerLinkActive="active">
+    <a class="nav-link" [routerLink]="['/editor/admin']">ניהול משתמשים</a>
+    
+  </li>
+  <hr *appHasRole="['Admin']" />
   <button class="nav-link btn btn-link text-left" (click)="logOut()">התנתקות</button>
 </nav>

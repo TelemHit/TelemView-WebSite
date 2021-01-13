@@ -2,14 +2,31 @@
 we use template form for login action
 we send user name and pasword to the component using ng-form -->
 <app-nav></app-nav>
-<form #loginForm="ngForm" (ngSubmit)="login()" >
-  <div class="form-group">
-    <label for="email">כתובת מייל</label>
-    <input [(ngModel)]="model.email" name="email" required type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="מהי כתובת המייל שלך?">
+<div class="container login-container">
+<h1 class="text-center">התחברות ל-TelemView</h1>
+<form #loginForm="ngForm" class="container" (ngSubmit)="login()" >
+  <div class="row justify-content-center">
+    <div class="form-group col-lg-5 col-md-7 col-sm-8">
+      <label for="email">כתובת מייל</label>
+      <input [(ngModel)]="model.email" name="email" required type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="מהי כתובת המייל שלך?">
+    </div>
   </div>
-  <div class="form-group">
+<div class="row justify-content-center">
+  <div class="form-group col-lg-5 col-md-7 col-sm-8">
     <label for="password">סיסמה</label>
     <input [(ngModel)]="model.password" name="password" required type="password" class="form-control" id="password" placeholder="מהי הסיסמה שלך?">
   </div>
-  <button [disabled]="!loginForm.valid" type="submit" class="btn btn-primary">כניסה לעורך</button>
+</div>
+<div class="text-center text-danger">
+  <p *ngIf="alert!=''">{{alert}}</p>
+  <p *ngIf="rolesAlert">אין לך הרשאות עריכה, יש ליצור קשר עם מנהל המערכת</p>
+</div>
+  <div class="row justify-content-center mt-3">
+    <button [disabled]="!loginForm.valid" type="submit" class="btn btn-primary-dark col-lg-3 col-md-4 col-sm-6">כניסה לעורך
+      <ngx-spinner [fullScreen]="false" type="ball-spin-clockwise" size="small" color="white"></ngx-spinner>
+    </button>
+  </div>
+  <div class="text-center mt-3">
+    <small class="text-center">התבקשת להיכנס למערכך ואין לך פרטי כניסה? יש ליצור קשר עם מנהל המערכת.</small>
+  </div>
 </form>

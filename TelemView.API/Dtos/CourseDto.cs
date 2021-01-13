@@ -6,5 +6,6 @@ namespace TelemView.API.Dtos
         public string Title { get; set; }
         public string Number { get; set; }
         public int Counter {get; set;}
+        public int FilteredCounter { get; set; }
     }
 }

@@ -1,0 +1,42 @@
+<nav class="logo-top home-nav justify-content-between row"
+    [ngClass]="{'home-nav-static': staticNav}">
+    <button class="btn mobileNav" role="menu" (click)="mobileNav=!mobileNav"><i class="fa fa-bars" aria-hidden="true"></i></button>
+      <div class="d-flex align-items-center">
+        <img src="../../../assets/images/Logo.png" alt="לוגו טכנולוגיות למידה" class="logo">
+        <div class="tv-nav-right"
+        [ngClass]="{'nav-mobile-active': mobileNav}">
+        <button type="button" class="btn btn-about" (click)="lgModal.show()">מי אנחנו</button>
+        <a class="btn btn-about" href="https://www.hit.ac.il/telem/overview" target="_blank">לאתר הפקולטה</a>
+      </div>
+      </div>
+      <img src="../../../assets/images/logoHit.png" alt="לוגו HIT" class="logo">
+    </nav>
+<div bsModal #lgModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header container">
+        <h4 id="dialog-sizes-name1" class="modal-title pull-left">מי אנחנו</h4>
+        <button type="button" class="close pull-right" (click)="lgModal.hide()" aria-label="Close">
+          <span aria-hidden="true"><i style="color: #051622;" class="fa fa-times" aria-hidden="true"></i>
+          </span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container pt-1 pb-3">
+          <div class="row align-items-top justify-content-around">
+          <div class="col-lg-6">
+            <p>
+            הפקולטה לטכנולוגיות למידה מכשירה את בוגריה להיות מפתחי פתרונות למידה דיגיטליים ומפתחי הדרכה משולבת טכנולוגיות למידה, ולענות לשלל מצבים וצרכים של מגזרים שונים במשק: המגזר החינוכי, ההשכלה הגבוהה, השוק הארגוני הממשלתי והאזרחי.
+          </p>
+          <a class="btn btn-yellow" href="https://www.hit.ac.il/telem/overview" target="_blank">לאתר הפקולטה</a>
+        </div>
+          <div class="col-lg-5">
+            <img src="../../../assets/images/telem-ven.svg"  alt="התואר הינו שילוב של התחומים: פיתוח הדרכה, פיתוח טכנולוגי ועיצוב מולטימדיה אינטראקטיבית">
+          </div>
+        
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>

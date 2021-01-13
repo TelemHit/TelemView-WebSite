@@ -18,22 +18,25 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { AlertModule } from 'ngx-bootstrap/alert';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
-import { TimeagoModule, TimeagoIntl, TimeagoFormatter, TimeagoCustomFormatter } from 'ngx-timeago';
+import {
+  TimeagoModule,
+  TimeagoIntl,
+  TimeagoFormatter,
+  TimeagoCustomFormatter,
+} from 'ngx-timeago';
+import { SwiperModule } from 'ngx-swiper-wrapper';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 
 
 import { AppComponent } from './app.component';
-import { ProductsComponent } from './home/products/products.component';
 import { ProductCardComponent } from './home/product-card/product-card.component';
 import { HomeComponent } from './home/home/home.component';
 import { PhotoGalleryComponent } from './home/photo-gallery/photo-gallery.component';
 import { NumberOfTypesComponent } from './home/numberOfTypes/numberOfTypes.component';
-import { AnimatedNumberComponent } from './home/animatedNumber/animatedNumber.component';
 import { HomeAboveFoldComponent } from './home/homeAboveFold/homeAboveFold.component';
 import { ProductDetailsComponent } from './productDetails/product-details/product-details.component';
 import { TypesTypeComponent } from './home/typesType/typesType.component';
-import { KeysPipe } from './filters/filters-nav/filters-nav.component';
-import { FiltersNavComponent } from './filters/filters-nav/filters-nav.component';
-import { FilterComponent } from './filters/filter/filter.component';
 import { ProductsService } from './_services/products.service';
 import { appRoutes } from './routes';
 import { ProductListResolver } from './_resolvers/product-list.resolver';
@@ -73,118 +76,131 @@ import { EditorCourseComponent } from './editor/editor-course/editor-course.comp
 import { EditorTagComponent } from './editor/editor-tag/editor-tag.component';
 import { EditorStudentComponent } from './editor/editor-student/editor-student.component';
 import { EditorLecturerComponent } from './editor/editor-lecturer/editor-lecturer.component';
+import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
+import { HasRoleDirective } from './_directives/hasRole.directive';
+import { AdminService } from './_services/admin.service';
+import { UserRoleModalComponent } from './admin/user-role-modal/user-role-modal.component';
+import { PhotoGalleryProductComponent } from './productDetails/photo-gallery-product/photo-gallery-product.component';
+import { ProductsGalleryComponent } from './productDetails/products-gallery/products-gallery.component';
+import { UserNavComponent } from './user-nav/user-nav.component';
 
+export function tokenGetter() {
+  return localStorage.getItem('token');
+}
 
-export function tokenGetter(){
-   return localStorage.getItem('token');
- }
 
 @NgModule({
-   declarations: [
-      AppComponent,
-      ProductsComponent,
-      ProductCardComponent,
-      HomeComponent,
-      PhotoGalleryComponent,
-      NumberOfTypesComponent,
-      AnimatedNumberComponent,
-      HomeAboveFoldComponent,
-      TypesTypeComponent,
-      ProductDetailsComponent,
-      FiltersNavComponent,
-      FilterComponent,
-      KeysPipe,
-      AboutFacultyComponent,
-      MultiFilterComponent,
-      LoginComponent,
-      NavComponent,
-      EditorProductsComponent,
-      SideNavComponent,
-      EditProductComponent,
-      MediaFilterDeletedPipe,
-      ModalComponent,
-      AlertModalComponent,
-      LinkVideoModalComponent,
-      EditorTypesComponent,
-      EditorTasksComponent,
-      EditorOrganizationsComponent,
-      EditorOrganizationTypesComponent,
-      EditorCourseComponent,
-      EditorTagComponent,
-      EditorStudentComponent,
-      EditorLecturerComponent,
+  declarations: [		
+    ProductCardComponent,
+    HomeComponent,
+    PhotoGalleryComponent,
+    NumberOfTypesComponent,
+    HomeAboveFoldComponent,
+    TypesTypeComponent,
+    ProductDetailsComponent,
+    UserNavComponent,
+    ProductsGalleryComponent,
+    AboutFacultyComponent,
+    MultiFilterComponent,
+    LoginComponent,
+    NavComponent,
+    EditorProductsComponent,
+    SideNavComponent,
+    EditProductComponent,
+    MediaFilterDeletedPipe,
+    ModalComponent,
+    AlertModalComponent,
+    LinkVideoModalComponent,
+    EditorTypesComponent,
+    EditorTasksComponent,
+    EditorOrganizationsComponent,
+    EditorOrganizationTypesComponent,
+    EditorCourseComponent,
+    EditorTagComponent,
+    EditorStudentComponent,
+    EditorLecturerComponent,
+    AdminPanelComponent,
+    HasRoleDirective,
+    UserRoleModalComponent,
+    AppComponent,
+    PhotoGalleryProductComponent,
+      UserNavComponent
    ],
-   imports: [
-      BrowserModule,
-      HttpClientModule,
-      RouterModule.forRoot(appRoutes, {
-         anchorScrolling: 'enabled',
-         onSameUrlNavigation: 'reload'
-       }),
-      ScrollToModule.forRoot(),
-      NgxGalleryModule,
-      BrowserAnimationsModule,
-      BsDropdownModule.forRoot(),
-      AlertModule.forRoot(),
-      FormsModule,
-      NgSelectModule,
-      NgxSpinnerModule,
-      TimeagoModule.forRoot(
-         {formatter: { provide: 
-            TimeagoFormatter, useClass: TimeagoCustomFormatter }
-         }),
-      TagInputModule,
-      TooltipModule.forRoot(),
-      PaginationModule.forRoot(),
-      QuillModule.forRoot({
-         modules: {
-            toolbar: [
-              ['bold'],
-              [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-              ['clean']
-            ]
-          }
-      }),
-      BsDatepickerModule.forRoot(),
-      ReactiveFormsModule,
-      CarouselModule.forRoot(),
-      ModalModule.forRoot(),
-      JwtModule.forRoot({
-         config: {
-           tokenGetter,
-           allowedDomains: ['localhost:5000'],
-           disallowedRoutes: ['localhost:5000/api/auth']
-         }
-       })
-   ],
-   providers: [
-      ProductsService,
-      ProductListResolver,
-      ProductTypesResolver,
-      DataForHomeResolver,
-      ProductDetailsResolver,
-      ProductListEditorResolver,
-      ProductEditorResolver,
-      AuthService,
-      AuthGuard,
-      PreventUnsavedChangesGuard,
-      GeneralDataService,
-      TimeagoIntl,
-      ProductTasksResolver,
-      OrganizationResolver,
-      OrganizationTypeResolver,
-      TagResolver,
-      StudentResolver,
-      CourseResolver,
-      LecturerResolver
-   ],
-   entryComponents: [
-      AlertModalComponent,
-      ModalComponent,
-      LinkVideoModalComponent
-   ],
-   bootstrap: [
-      AppComponent
-   ]
+  imports: [
+    BrowserModule,
+    HttpClientModule,
+    RouterModule.forRoot(appRoutes, {
+      onSameUrlNavigation: 'reload'
+    }),
+    ScrollToModule.forRoot(),
+    NgxGalleryModule,
+    BrowserAnimationsModule,
+    BsDropdownModule.forRoot(),
+    AlertModule.forRoot(),
+    FormsModule,
+    SwiperModule,
+    NgSelectModule,
+    NgxSpinnerModule,
+    TimeagoModule.forRoot({
+      formatter: {
+        provide: TimeagoFormatter,
+        useClass: TimeagoCustomFormatter,
+      },
+    }),
+    TagInputModule,
+    TypeaheadModule.forRoot(),
+    TooltipModule.forRoot(),
+    PaginationModule.forRoot(),
+    QuillModule.forRoot({
+      modules: {
+        toolbar: [
+          ['bold'],
+          [{ list: 'ordered' }, { list: 'bullet' }],
+          ['clean'],
+        ],
+      },
+    }),
+    BsDatepickerModule.forRoot(),
+    ReactiveFormsModule,
+    InfiniteScrollModule,
+    CarouselModule.forRoot(),
+    ModalModule.forRoot(),
+    JwtModule.forRoot({
+      config: {
+        tokenGetter,
+        allowedDomains: ['localhost:5000'],
+        disallowedRoutes: ['localhost:5000/api/auth'],
+      },
+    }),
+  ],
+  providers: [
+    ProductsService,
+    ProductListResolver,
+    ProductTypesResolver,
+    DataForHomeResolver,
+    ProductDetailsResolver,
+    ProductListEditorResolver,
+    ProductEditorResolver,
+    AuthService,
+    AuthGuard,
+    PreventUnsavedChangesGuard,
+    GeneralDataService,
+    TimeagoIntl,
+    ProductTasksResolver,
+    OrganizationResolver,
+    OrganizationTypeResolver,
+    TagResolver,
+    StudentResolver,
+    CourseResolver,
+    LecturerResolver,
+    AdminService
+  ],
+  entryComponents: [
+    AlertModalComponent,
+    ModalComponent,
+    LinkVideoModalComponent,
+    UserRoleModalComponent,
+  ],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

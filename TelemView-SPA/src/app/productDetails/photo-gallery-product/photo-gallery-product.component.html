@@ -1,0 +1,18 @@
+<div *ngIf="galleryImages" class="container">
+  <div class="row justify-content-center">
+    <div class="swiper-button-prev-unique-top swiper-nav green col-1 d-flex justify-content-end" ><i class="fa fa-angle-right" aria-hidden="true"></i></div>
+    <swiper [config]="config" [(index)]="index"  class="col-10">
+      <div class="darkBlue-bg" *ngFor="let image of galleryImages">
+        <img *ngIf="image.type == 'image'" [src]="image.url" alt="{{image.title}}" style="display: block; width: 100%;">
+        <iframe *ngIf="image.type != 'image'" [src]="image.url" frameborder="0" title="{{image.title}}"></iframe>
+        <div class="carousel-caption  d-none d-md-block">
+          <p><span class="green-bg">{{image.title}}</span></p>
+        </div>
+      </div>
+    </swiper>
+    
+<div class="swiper-button-next-unique-top swiper-nav green col-1"><i class="fa fa-angle-left" aria-hidden="true"></i></div>
+
+  </div>
+  <div class="swiper-pagination-unique-top row d-flex justify-content-center pt-4"></div>
+</div>

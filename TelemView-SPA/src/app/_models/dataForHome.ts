@@ -19,5 +19,5 @@ export interface DataForHome {
     tasks: Task[];
     productTypes: ProductType[];
     years: Year[];
-    degrees: Degree[];
+    degree: Degree[];
 }

@@ -8,7 +8,9 @@ import {catchError, tap, filter, map, switchMap } from 'rxjs/operators';
 @Injectable()
 export class ProductListResolver implements Resolve<Product[]>{
     products: Product[];
-
+    pageNumber = 1;
+    pageSize = 20;
+    
     constructor(private productsService: ProductsService, private router: Router,
                 private route: ActivatedRoute){}
 

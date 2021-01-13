@@ -1,3 +1,111 @@
-<p>
-  {{product.id}}
-</p>
+
+<article class="container-fluid overflow-hidden">
+  <div class="product-header">
+    <nav class="logo-top d-flex align-items-center justify-content-between">
+      <button type="button" class="btn back-btn btn-about" (click)="backClicked()"><i class="fa fa-home" aria-hidden="true"></i> דף הבית
+      </button>
+      <a routerLink=""><img src="../../../assets/images/Logo.png" alt="לוגו טכנולוגיות למידה" class="logo"></a>
+      <img src="../../../assets/images/logoHit.png" alt="לוגו HIT" class="logo">
+    </nav>
+    <header class="container">
+      <div class="row align-items-center detail-header">
+        <div class="col-lg-10 col-md-8 col-sm-9 mobile-center">
+          <h1 class="gold">{{product.title}}</h1>
+          <ul>
+            <li><span>{{product.yearOfCreation}}</span></li>
+            <li><span>{{product.heYearOfCreation}}</span></li>
+            <li *ngFor="let tag of product.tags"><span>{{tag.title}}</span></li>
+          </ul>
+        </div>
+        <a *ngIf="product.productUrl.length>0" [href]="product.productUrl" target="_blank" class="col-lg-2 col-md-4 col-sm-3 offset btn btn-yellow">התנסות
+          בתוצר</a>
+      </div>
+    </header>
+    <div class="container product-id">
+      <div class="row">
+        <section class="col-sm col-5">
+          <h2 class="green">סוג התוצר</h2>
+          <p>{{product.productTypeTitle}}</p>
+        </section>
+        <section class="col-sm col-5">
+          <h2 class="green">יוצרים</h2>
+          <ul>
+            <li *ngFor="let student of product.students">{{student.name}}</li>
+          </ul>
+        </section>
+        <section class="col-sm col-5">
+          <h2 class="green">לקוח</h2>
+          <p>{{product.organizationTitle}}</p>
+        </section>
+        <section class="col-sm col-5">
+          <h2 class="green">קורס</h2>
+          <ul>
+            <li *ngFor="let course of product.courses">{{course.title}}</li>
+          </ul>
+        </section>
+        <section class="col-sm col-5">
+          <h2 class="green">מנחים</h2>
+          <ul>
+            <li *ngFor="let lecturer of product.lecturers">{{lecturer.name}}</li>
+          </ul>
+        </section>
+      </div>
+    </div>
+  </div>
+  <section class="gray-bg body-section gallery">
+    <h2 class="text-center">הצצה לתוצר</h2>
+    <app-photo-gallery-product [media]="mediaForGalleryArray"></app-photo-gallery-product>
+  </section>
+  <div>
+    <div class="row">
+
+      <div class="col-sm-6 green-bg split-wrapper">
+        <section class="body-section body-section-split container">
+          <div class="row justify-content-center">
+            <div class="col-sm-8">
+              <h2 class="text-center">אודות התוצר</h2>
+              <div class="split-content" [innerHTML]="product.description"></div>
+            </div>
+
+          </div>
+
+        </section>
+      </div>
+
+      <div class="col-sm-6 gold-bg split-wrapper">
+        <section class="body-section body-section-split container">
+          <div class="row justify-content-center">
+            <div class="col-sm-8">
+              <h2 class="text-center">המשימה: {{product.taskTitle}}</h2>
+              <div class="split-content">{{product.taskDescription}}</div>
+            </div>
+          </div>
+        </section>
+      </div>
+      
+
+    </div>
+  </div>
+
+  <section *ngIf="getFiles().length > 0" class="body-section gray-bg body-section-split">
+    <div class="container">
+      <div class="row justify-content-center">
+          <h2>מידע נוסף</h2>
+      </div>
+      <div class="row justify-content-center">
+          <a *ngFor="let file of getFiles()" [href]="file.url" class="btn btn-primary-dark col-lg-2 col-md-3 col-sm-10 col-10" target="_blank">{{file.title}}</a>
+        </div>
+      </div>
+    
+  </section>
+
+</article>
+<aside class="container-fluid overflow-auto darkBlue-bg text-center" >
+  <section class="body-section gallery">
+  <div class="row d-flex justify-content-center">
+    <h2 class="gold">תוצרים נוספים שעשויים לעניין אותך</h2>
+  </div>
+  <app-products-gallery [products]="products"></app-products-gallery>
+  <a type="button"  [routerLink]="['']" class="btn btn-yellow mt-5">חזרה לכל התוצרים</a>
+</section>
+</aside>

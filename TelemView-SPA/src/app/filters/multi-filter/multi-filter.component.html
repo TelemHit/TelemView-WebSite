@@ -1,5 +1,249 @@
-<!--Using ng-option and for loop-->
-<ng-select [(ngModel)]="selectedCar">
-  <ng-option *ngFor="let car of cars" [value]="car.id">{{car.name}}</ng-option>
-</ng-select>
+<section class="container-fluid all-filters-container"
+[ngClass]="{'all-filters-container-front': mobileFilters}" >
+  <div class="container">
 
+
+    <div id="filterSearchDiv" class="row justify-content-center">
+      <h2 class="mobile-show">התוצרים שלנו</h2>
+      <div class="btn-group mobile-show search-filter-mobile-btn" role="group" aria-label="Basic example">
+        <button type="button" (click)="showSearch()" class="btn col-6" [ngxScrollToOffset]="-100"
+          [ngxScrollTo]="'filterSearchDiv'" [ngClass]="{'mobileBtnActive green-bg': mobileSearch}"><i
+            class="fa fa-search"></i> חיפוש</button>
+        <button type="button" (click)="mobileFilters=!mobileFilters; mobileSearch=false" class="btn col-6"
+          [ngClass]="{'mobileBtnActive green-bg': mobileFilters, 'green': filtersActive()}"><i class="fa fa-sliders"
+            aria-hidden="true"></i> סינון</button>
+      </div>
+      <div class="form-group mobile-hide d-flex col-lg-6 col-md-8 col-sm-12" [ngClass]="{'mobileSearch': mobileSearch}">
+        <div class="all-search" [ngClass]="{'state-search-active': isFocused || selectedParams.search[0] }">
+          <label for="searchline" class="search-lbl mobile-hide">חיפוש תוצר</label>
+          <div class="search-line-div d-flex align-items-center">
+            <span class="search-icon"><i class="fa fa-search"></i></span>
+            <input #search [ngxScrollToOffset]="-100" [ngxScrollTo]="'filterSearchDiv'" (keyup)="modelChange()"
+              autocomplete="off" class="form-control align-self-center search-input" id="searchline"
+              (blur)="isFocused = false" (focus)="isFocused = true" placeholder="שם התוצר..." (blur)="isFocused = false"
+              (focus)="isFocused = true" [(ngModel)]="selectedParams.search[0]">
+            <button class="btn clear-icon" [hidden]="!isFocused && ( selectedParams.search[0] == undefined || selectedParams.search[0].length==0) || 
+          isFocused && (selectedParams.search[0] == undefined || selectedParams.search[0].length==0)"
+              (click)="clearSearch()">
+              <i class="fa fa-times-circle"></i></button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="filters-header mobile-hide" [ngClass]="{'mobileFilters': mobileFilters}">
+      <div class="mobile-hide">
+        <div class="clear-all-btn-div" [ngClass]="{'clear-all-btn-div-active': filtersActive()}">
+          <h3 [ngClass]="{'green': filtersActive()}"><i class="fa fa-sliders" aria-hidden="true"></i> מסננים</h3>
+          <button type="button" class="btn filters-btn clear-all-btn" (click)="clearall()"
+            [ngClass]="{'clear-all-btn-active': filtersActive()}">איפוס</button>
+        </div>
+        <span> | </span>
+      </div>
+      <div id="filters-container">
+        <div class="mobile-show filters-back">
+          <div class="d-flex align-items-center">
+          <button type="button" class="btn back-filter-btn" (click)="mobileFilters=false"><i class="fa fa-arrow-right"
+              aria-hidden="true"></i></button>
+          <h3>סינון <span *ngIf="filtersActive() && totalProducts>1">(נמצאו {{totalProducts}} תוצרים)</span>
+            <span *ngIf='filtersActive() && totalProducts==1'>(נמצא תוצר אחד)</span>
+            <span *ngIf='filtersActive() && totalProducts==0'>(לא נמצאו תוצרים)</span></h3>
+        </div>
+          <button type="button" class="btn filters-btn clear-all-btn" (click)="clearall()"
+            [ngClass]="{'clear-all-btn-active': filtersActive()}">איפוס</button>
+        </div>
+        <div class="filters-row">
+
+          <div class="dropdown-container">
+            <label for="productTypes" hidden>סוגי תוצרים <i class="fa fa-angle-down" aria-hidden="true"></i></label>
+            <ng-select #productTypes [items]="data.productTypes" class="custom" placeholder="סוגי תוצרים"
+              [multiple]="true" bindLabel="title" labelForId="productTypes" bindValue="id" [closeOnSelect]="false"
+              [searchable]="false" [(ngModel)]="selectedParams.productTypes" [clearable]="false"
+              (blur)="updateOnBlur('productTypes')">
+              <ng-template ng-header-tmp>
+                <button type="button" class="btn back-filter-btn" (click)="closeSelect(productTypes, 'productTypes')"><i
+                    class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                <h4>סוגי תוצרים</h4>
+              </ng-template>
+              <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected" /> {{item.title}}
+              </ng-template>
+              <ng-template ng-footer-tmp>
+                <button role="button" class="btn" (click)="clear(productTypes, 'productTypes')"
+                  [disabled]="selectedParams.productTypes.length==0">איפוס</button>
+                <button role="button" class="btn btn-primary-dark"
+                  (click)="closeSelect(productTypes, 'productTypes')">סינון</button>
+              </ng-template>
+            </ng-select>
+          </div>
+
+          <div class="dropdown-container">
+            <label for="tasks" hidden>משימות <i class="fa fa-angle-down" aria-hidden="true"></i></label>
+            <ng-select #tasks [items]="data.tasks" [searchable]="false" class="custom" placeholder="משימות"
+              [multiple]="true" bindLabel="title" labelForId="tasks" bindValue="id" [closeOnSelect]="false"
+              [(ngModel)]="selectedParams.tasks" [clearable]="false" (blur)="updateOnBlur('tasks')">
+              <ng-template ng-header-tmp>
+                <button type="button" class="btn back-filter-btn" (click)="closeSelect(tasks, 'tasks')"><i
+                    class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                <h4>משימות</h4>
+              </ng-template>
+              <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected" /> {{item.title}}
+              </ng-template>
+              <ng-template ng-footer-tmp>
+                <button role="button" class="btn" (click)="clear(tasks, 'tasks')"
+                  [disabled]="selectedParams.tasks.length==0">איפוס</button>
+                <button role="button" class="btn btn-primary-dark" (click)="closeSelect(tasks, 'tasks')">סינון</button>
+              </ng-template>
+            </ng-select>
+          </div>
+
+          <div class="dropdown-container">
+            <label for="years" hidden>שנים <i class="fa fa-angle-down" aria-hidden="true"></i></label>
+            <ng-select #years [items]="data.years" [searchable]="false" class="custom" placeholder="שנים"
+              [multiple]="true" bindLabel="title" labelForId="years" bindValue="title" [closeOnSelect]="false"
+              [(ngModel)]="selectedParams.years" [clearable]="false" (blur)="updateOnBlur('years')">
+              <ng-template ng-header-tmp>
+                <button type="button" class="btn back-filter-btn" (click)="closeSelect(years, 'years')"><i
+                    class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                <h4>שנים</h4>
+              </ng-template>
+              <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected" /> {{item.title}}
+              </ng-template>
+              <ng-template ng-footer-tmp>
+                <button role="button" class="btn" (click)="clear(years, 'years')"
+                  [disabled]="selectedParams.years.length==0">איפוס</button>
+                <button role="button" class="btn btn-primary-dark" (click)="closeSelect(years, 'years')">סינון</button>
+              </ng-template>
+            </ng-select>
+          </div>
+
+          <div class="dropdown-container">
+            <label for="organizations" hidden>ארגונים <i class="fa fa-angle-down" aria-hidden="true"></i></label>
+            <ng-select #organizations [items]="data.organizations" class="custom" [searchable]="false"
+              placeholder="ארגונים" [multiple]="true" bindLabel="title" labelForId="organizations" bindValue="id"
+              [closeOnSelect]="false" [(ngModel)]="selectedParams.organizations" [clearable]="false"
+              (blur)="updateOnBlur('organizations')">
+              <ng-template ng-header-tmp>
+                <button type="button" class="btn back-filter-btn" (click)="closeSelect(organizations, 'organizations')"><i
+                    class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                <h4>ארגונים</h4>
+              </ng-template>
+              <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected" /> {{item.title}}
+              </ng-template>
+              <ng-template ng-footer-tmp>
+                <button role="button" class="btn" (click)="clear(organizations, 'organizations')"
+                  [disabled]="selectedParams.organizations.length==0">איפוס</button>
+                <button role="button" class="btn btn-primary-dark"
+                  (click)="closeSelect(organizations, 'organizations')">סינון</button>
+              </ng-template>
+            </ng-select>
+          </div>
+          <button type="button" class="mobile-hide btn filters-btn" (click)="openMoreFilters=!openMoreFilters"><span
+              *ngIf="!openMoreFilters">עוד...</span>
+            <span *ngIf="openMoreFilters">הסתרה</span></button>
+
+
+        </div>
+        <div class="filters-row filters-row-bottom" [ngClass]="{'filters-row-bottom-open': openMoreFilters}">
+
+
+          <div class="dropdown-container">
+            <label for="organizationTypes" hidden>סוגי ארגונים <i class="fa fa-angle-down"
+                aria-hidden="true"></i></label>
+            <ng-select #organizationTypes [items]="data.organizationTypes" class="custom" [searchable]="false"
+              placeholder="סוגי ארגונים" [multiple]="true" bindLabel="title" labelForId="organizationTypes"
+              bindValue="id" [closeOnSelect]="false" [(ngModel)]="selectedParams.organizationTypes" [clearable]="false"
+              (blur)="updateOnBlur('organizationTypes')">
+              <ng-template ng-header-tmp>
+                <button type="button" class="btn back-filter-btn" (click)="closeSelect(organizationTypes, 'organizationTypes')"><i
+                    class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                <h4>סוגי ארגונים</h4>
+              </ng-template>
+              <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected" /> {{item.title}}
+              </ng-template>
+              <ng-template ng-footer-tmp>
+                <button role="button" class="btn" (click)="clear(organizationTypes, 'organizationTypes')"
+                  [disabled]="selectedParams.organizationTypes.length==0">איפוס</button>
+                <button role="button" class="btn btn-primary-dark"
+                  (click)="closeSelect(organizationTypes, 'organizationTypes')">סינון</button>
+              </ng-template>
+            </ng-select>
+          </div>
+
+          <div class="dropdown-container">
+            <label for="courses" hidden>קורסים <i class="fa fa-angle-down" aria-hidden="true"></i></label>
+            <ng-select #courses [items]="data.courses" [searchable]="false" class="custom" placeholder="קורסים"
+              [multiple]="true" bindLabel="title" labelForId="courses" bindValue="id" [closeOnSelect]="false"
+              [(ngModel)]="selectedParams.courses" [clearable]="false" (blur)="updateOnBlur('courses')">
+              <ng-template ng-header-tmp>
+                <button type="button" class="btn back-filter-btn" (click)="closeSelect(courses, 'courses')"><i
+                    class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                <h4>קורסים</h4>
+              </ng-template>
+              <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected" /> {{item.title}}
+              </ng-template>
+              <ng-template ng-footer-tmp>
+                <button role="button" class="btn" (click)="clear(courses, 'courses')"
+                  [disabled]="selectedParams.courses.length==0">איפוס</button>
+                <button role="button" class="btn btn-primary-dark"
+                  (click)="closeSelect(courses, 'courses')">סינון</button>
+              </ng-template>
+            </ng-select>
+          </div>
+
+          <div class="dropdown-container">
+            <label for="lecturers" hidden>מרצים <i class="fa fa-angle-down" aria-hidden="true"></i></label>
+            <ng-select #lecturers [items]="data.lecturers" [searchable]="false" class="custom" placeholder="מרצים"
+              [multiple]="true" bindLabel="name" labelForId="lecturers" bindValue="id" [closeOnSelect]="false"
+              [(ngModel)]="selectedParams.lecturers" [clearable]="false" (blur)="updateOnBlur('lecturers')">
+              <ng-template ng-header-tmp>
+                <button type="button" class="btn back-filter-btn" (click)="closeSelect(lecturers, 'lecturers')"><i
+                    class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                <h4>מרצים</h4>
+              </ng-template>
+              <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected" /> {{item.name}}
+              </ng-template>
+              <ng-template ng-footer-tmp>
+                <button role="button" class="btn" (click)="clear(lecturers, 'lecturers')"
+                  [disabled]="selectedParams.lecturers.length==0">איפוס</button>
+                <button role="button" class="btn btn-primary-dark"
+                  (click)="closeSelect(lecturers, 'lecturers')">סינון</button>
+              </ng-template>
+            </ng-select>
+          </div>
+
+          <div class="dropdown-container">
+            <label for="degree" hidden>תואר <i class="fa fa-angle-down" aria-hidden="true"></i></label>
+            <ng-select #degree [items]="data.degree" [multiple]="true" [searchable]="false" class="custom"
+              placeholder="תואר" bindLabel="title" labelForId="degree" bindValue="title" [closeOnSelect]="false"
+              [(ngModel)]="selectedParams.degree" [clearable]="false" (blur)="updateOnBlur('degree')">
+              <ng-template ng-header-tmp>
+                <button type="button" class="btn back-filter-btn" (click)="closeSelect(degree, 'degree')"><i
+                    class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                <h4>תואר</h4>
+              </ng-template>
+              <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected" /> {{item.title}}
+              </ng-template>
+              <ng-template ng-footer-tmp>
+                <button role="button" class="btn" (click)="clear(degree, 'degree')"
+                  [disabled]="selectedParams.degree.length==0">איפוס</button>
+                <button role="button" class="btn btn-primary-dark"
+                  (click)="closeSelect(degree, 'degree')">סינון</button>
+
+              </ng-template>
+            </ng-select>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>

@@ -10,7 +10,7 @@ using TelemView.API.Models;
 
 namespace TelemView.API.Controllers
 {
-    [Authorize]
+    [Authorize(Policy = "Edit")]
     [Route("api/[controller]")]
     [ApiController]
     public class GeneralDataController : ControllerBase

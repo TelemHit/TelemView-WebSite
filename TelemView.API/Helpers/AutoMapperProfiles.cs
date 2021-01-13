@@ -195,6 +195,7 @@ namespace TelemView.API.Helpers
             .ForMember(dest => dest.OrganizationTypeId, opt => opt.MapFrom(
                 src => src.Id
             ));
+
         }
     }
 }

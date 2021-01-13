@@ -1,10 +1,12 @@
 using System;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using TelemView.API.Data;
+using TelemView.API.Models;
 
 namespace TelemView.API
 {
@@ -21,8 +23,9 @@ namespace TelemView.API
                 try
                 {
                     var context = services.GetRequiredService<DataContext>();
+                    var roleManager = services.GetRequiredService<RoleManager<Role>>();
                     context.Database.Migrate();
-                    Seed.SeedProducts(context);
+                    Seed.SeedProducts(context, roleManager);
                 }
                 catch (Exception ex){
                     var logger = services.GetRequiredService<ILogger<Program>>();

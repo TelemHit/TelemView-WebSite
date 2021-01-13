@@ -15,6 +15,7 @@ export interface Product {
         degree: string;
         showOnHomePage: boolean;
         taskTitle: string;
+        taskDescription: string;
         isPublish: boolean;
         taskId: number;
         productTypeTitle: string;
@@ -23,6 +24,7 @@ export interface Product {
         organizationId: number;
         productUrl: string;
         organizationTypeTitle: string;
+        mainPhotoUrl: string;
         lecturers: Lecturer[];
         students: Student[];
         courses: Course[];

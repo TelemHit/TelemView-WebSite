@@ -26,4 +26,6 @@ export class AppComponent implements OnInit {
   loggedIn(){
     this.loggedInApp = this.authService.loggedIn();
   }
+
+
 }

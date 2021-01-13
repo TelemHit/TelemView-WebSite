@@ -3,4 +3,5 @@ export interface Task {
     title: string;
     counter: number;
     description?: string;
+    filteredCounter: number;
 }

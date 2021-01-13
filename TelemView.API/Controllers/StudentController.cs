@@ -11,7 +11,7 @@ using TelemView.API.Models;
 
 namespace TelemView.API.Controllers
 {
-    [Authorize]
+    [Authorize(Policy = "Edit")]
     [Route("api/[controller]/{userId}")]
     [ApiController]
     public class StudentController : ControllerBase

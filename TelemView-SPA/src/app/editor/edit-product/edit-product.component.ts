@@ -35,8 +35,9 @@ import { Course } from 'src/app/_models/Course';
 import { Lecturer } from 'src/app/_models/lecturer';
 import { OrganizationForUpdate } from 'src/app/_models/OrganizationForUpdate';
 import { LinkVideoModalComponent } from '../link-video-modal/link-video-modal.component';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, Title } from '@angular/platform-browser';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { AlertifyService } from 'src/app/_services/alertify.service';
 declare let Hebcal: any;
 
 @Component({
@@ -93,7 +94,9 @@ export class EditProductComponent implements OnInit {
     private formBuilder: FormBuilder,
     private sanitizer: DomSanitizer,
     private router: Router,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private alertify: AlertifyService,
+    private titleService:Title
   ) {}
 
   ngOnInit() {
@@ -102,6 +105,7 @@ export class EditProductComponent implements OnInit {
     this.route.data.subscribe((data) => {
       console.log(data.dataforhome);
       this.generalData = data.dataforhome;
+      this.titleService.setTitle('Telem View - עריכת תוצר');
       if (this.routeName !== 'create' && data.product) {
         data.product.media.forEach((media) => {
           if (media.type === 'video') {
@@ -205,7 +209,7 @@ export class EditProductComponent implements OnInit {
         heYearOfCreation: ['', Validators.required],
         degree: ['', Validators.required],
         productTypeId: ['', Validators.required],
-        productUrl: ['', Validators.required],
+        productUrl: [''],
         courses: [[], Validators.required],
         lecturers: [[], Validators.required],
         media: this.formBuilder.array([]),
@@ -241,11 +245,17 @@ export class EditProductComponent implements OnInit {
 
   // Check if url
   isUrl(g: FormGroup) {
-    return /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(
-      g.controls.productUrl.value
-    )
-      ? null
-      : { notUrl: true };
+    if(g.controls.productUrl.value.length>0){
+      return /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(
+        g.controls.productUrl.value
+      ) 
+        ? null
+        : { notUrl: true };
+    }
+    else{
+      return null
+    }
+
   }
 
   // make url safe for angular
@@ -384,7 +394,7 @@ export class EditProductComponent implements OnInit {
         ) {
           return of(newLecturer);
         } else {
-          this.lecturerAlertMessage = 'המנחה כבר ברשימה';
+          this.lecturerAlertMessage = 'המרצה כבר ברשימה';
           setTimeout(() => {
             this.lecturerAlertMessage = '';
           }, 3000);
@@ -442,6 +452,7 @@ export class EditProductComponent implements OnInit {
           this.productForm.markAsDirty();
           this.bsModalRef.hide();
           this.spinner.hide();
+          this.alertify.success('הארגון נוסף בהצלחה');
         },
         (error) => {
           this.bsModalRef.content.failMessage =
@@ -491,6 +502,7 @@ export class EditProductComponent implements OnInit {
           ].map((x) => x.name);
           this.productForm.markAsDirty();
           this.spinner.hide();
+          this.alertify.success('הסטודנט/ית נוספ/ה בהצלחה');
         },
         (error) => {
           this.bsModalRef.content.failMessage =
@@ -504,14 +516,14 @@ export class EditProductComponent implements OnInit {
   addLecturerModal(lecturerName: string) {
     const initialState = {
       input: true,
-      label: 'האם ברצונך להוסיף למערכת את המנחה:',
-      placeHolder: 'שם המנחה',
+      label: 'האם ברצונך להוסיף למערכת את המרצה:',
+      placeHolder: 'שם המרצה',
       text: lecturerName,
-      title: 'הוספת מנחה חדש/ה',
+      title: 'הוספת מרצה חדש/ה',
       closeBtnName: 'ביטול',
       saveBtnName: 'שמירה',
       generalData: this.generalData['lecturers'].map((x) => x.name),
-      alreadyExists: 'המנחה כבר במערכת ולכן אין צורך להוסיפו/ה',
+      alreadyExists: 'המרצה כבר במערכת ולכן אין צורך להוסיפו/ה',
     };
     this.bsModalRef = this.modalService.show(ModalComponent, { initialState });
 
@@ -534,13 +546,14 @@ export class EditProductComponent implements OnInit {
           this.productForm.controls.lecturers.updateValueAndValidity();
           this.newEntity = null;
           // this.bsModalRef.content.successMessage =
-          //   'המנחה: ' + data['name'] + ' נוסף/ה בהצלחה';
+          //   'המרצה: ' + data['name'] + ' נוסף/ה בהצלחה';
           this.bsModalRef.content.generalData = this.generalData[
             'lecturers'
           ].map((x) => x.name);
           this.productForm.markAsDirty();
           this.bsModalRef.hide();
           this.spinner.hide();
+          this.alertify.success('המרצה נוספ/ה בהצלחה');
         },
         (error) => {
           this.bsModalRef.content.failMessage =
@@ -591,6 +604,7 @@ export class EditProductComponent implements OnInit {
           this.productForm.markAsDirty();
           this.bsModalRef.hide();
           this.spinner.hide();
+          this.alertify.success('התגית נוספה בהצלחה');
         },
         (error) => {
           this.bsModalRef.content.failMessage =
@@ -647,6 +661,7 @@ export class EditProductComponent implements OnInit {
           this.productForm.markAsDirty();
           this.bsModalRef.hide();
           this.spinner.hide();
+          this.alertify.success('הקורס נוסף בהצלחה');
         },
         (error) => {
           this.bsModalRef.content.failMessage =
@@ -739,6 +754,8 @@ export class EditProductComponent implements OnInit {
             this.router.navigate(['editor/products/' + id]);
           }
           this.spinner.hide();
+          this.alertify.success('התוצר נשמר בהצלחה');
+          this.router.navigate(['/editor/products']);
         },
         (error) => {
           console.log('not updated :(');

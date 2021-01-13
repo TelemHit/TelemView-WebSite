@@ -10,6 +10,8 @@ import { AlertModalComponent } from '../alert-modal/alert-modal.component';
 import { ModalComponent } from '../modal/modal.component';
 import { Lecturer } from 'src/app/_models/lecturer';
 import { Student } from 'src/app/_models/Student';
+import { AlertifyService } from 'src/app/_services/alertify.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-editor-student',
@@ -28,13 +30,16 @@ export class EditorStudentComponent implements OnInit {
     private route: ActivatedRoute,
     private modalService: BsModalService,
     private authService: AuthService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private alertify: AlertifyService,
+    private titleService:Title
   ) {}
 
   ngOnInit() {
     this.route.data.subscribe((data) => {
       this.students = data.students;
-      console.log(this.students);
+      this.titleService.setTitle('Telem View - עריכת סטודנטים');
+
     });
   }
 
@@ -55,7 +60,7 @@ export class EditorStudentComponent implements OnInit {
       console.log(res.data);
       if (res.data === true) {
         this.finalDeleteStudent(id);
-        this.bsModalRef.hide();
+        
       }
     });
   }
@@ -65,6 +70,11 @@ export class EditorStudentComponent implements OnInit {
       .deleteStudent(this.authService.decodedToken.nameid, id)
       .subscribe(() => {
         this.students = this.students.filter((p) => p.id !== id);
+        this.bsModalRef.hide();
+        this.alertify.success('הסטודנט/ית נמחק/ה בהצלחה');
+      }, (error) => {
+        this.bsModalRef.hide();
+        this.alertify.error('הייתה בעיה במחיקת הסטודנט/ית');
       });
   }
 
@@ -97,6 +107,7 @@ export class EditorStudentComponent implements OnInit {
           this.students.unshift(data);
           this.clear();
           this.bsModalRef.hide();
+          this.alertify.success('הסטודנט/ית נוסף/ה בהצלחה');
         },
         (error) => {
           this.bsModalRef.content.failMessage =
@@ -140,6 +151,8 @@ export class EditorStudentComponent implements OnInit {
           this.students.find(pt => pt.id == student.id).name=this.data.name;
           this.clear();
           this.bsModalRef.hide();
+          this.alertify.success('הסטודנט/ית עודכן/ה בהצלחה');
+
         },
         (error) => {
           this.bsModalRef.content.failMessage =

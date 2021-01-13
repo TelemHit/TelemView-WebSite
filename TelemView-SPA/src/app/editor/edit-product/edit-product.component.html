@@ -166,16 +166,14 @@
             </div>
 
             <div class="mb-4 form-group col-lg-6 col-md-8 col-sm-12">
-                <label for="url"><small class="text-danger">* </small>קישור</label>
+                <label for="url">קישור</label>
                 <input id="url" (input)="checkUrl()" formControlName="productUrl" class="form-control" type="text"
-                    [ngClass]="{'is-invalid': productForm.get('productUrl').errors 
-                && productForm.get('productUrl').touched ||
-                productForm.hasError('notUrl') 
+                    [ngClass]="{'is-invalid': productForm.hasError('notUrl') 
                 && productForm.get('productUrl').value.length > 0
             }" />
-                <div class="invalid-feedback"
+                <!-- <div class="invalid-feedback"
                     *ngIf="productForm.get('productUrl').hasError('required') && productForm.get('productUrl').touched">
-                    יש להזין קישור לתוצר</div>
+                    יש להזין קישור לתוצר</div> -->
                 <div class="invalid-feedback"
                     *ngIf="productForm.hasError('notUrl') && productForm.get('productUrl').value.length > 0">
                     יש להזין כתובת url תקינה</div>
@@ -184,10 +182,8 @@
             </div>
 
         </section>
-
-
         <section class="container mb-5">
-            <h2>קורסים ומנחים</h2>
+            <h2>קורסים ומרצים</h2>
 
             <div class="mb-4 form-group col-lg-6 col-md-8 col-sm-12">
                 <label><small class="text-danger">* </small>קורסים</label>
@@ -223,7 +219,7 @@
                 <label><small class="text-danger">* </small>מנחים</label>
                 <div class="alert-danger" *ngIf="lecturerAlertMessage">{{lecturerAlertMessage}}</div>
                 <tag-input formControlName="lecturers" [identifyBy]="'id'" [displayBy]="'name'" theme='bootstrap'
-                    [onlyFromAutocomplete]="false" [secondaryPlaceholder]="'שם המנחה'" [placeholder]="'הוספת מנחה'"
+                    [onlyFromAutocomplete]="false" [secondaryPlaceholder]="'שם המרצה'" [placeholder]="'הוספת מרצה'"
                     [separatorKeys]="','" [pasteSplitPattern]="','" [addOnPaste]="true" [onAdding]="onAddedLecturerFunc"
                     [clearOnBlur]="true" [ngClass]="{'is-invalid': productForm.get('lecturers').errors 
                     && productForm.get('lecturers').touched}">
@@ -233,7 +229,7 @@
                 </tag-input>
                 <div class="invalid-feedback d-block"
                     *ngIf="productForm.get('lecturers').errors && productForm.get('lecturers').touched">
-                    יש לבחור לפחות מנחה אחד/ת</div>
+                    יש לבחור לפחות מרצה אחד/ת</div>
             </div>
 
         </section>

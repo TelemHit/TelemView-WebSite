@@ -9,6 +9,8 @@ import { AuthService } from 'src/app/_services/auth.service';
 import { ModalComponent } from '../modal/modal.component';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { GeneralData } from 'src/app/_models/generalData';
+import { AlertifyService } from 'src/app/_services/alertify.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-editor-types',
@@ -26,13 +28,16 @@ export class EditorTypesComponent implements OnInit {
     private route: ActivatedRoute,
     private modalService: BsModalService,
     private authService: AuthService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private alertify: AlertifyService,
+    private titleService:Title
   ) {}
 
   ngOnInit() {
     this.route.data.subscribe((data) => {
       this.productTypes = data.productTypes;
-      console.log(data.productTypes);
+      this.titleService.setTitle('Telem View - עריכת סוגי תוצרים');
+
     });
   }
 
@@ -53,7 +58,7 @@ export class EditorTypesComponent implements OnInit {
       console.log(res.data);
       if (res.data === true) {
         this.finalDeletept(id);
-        this.bsModalRef.hide();
+        
       }
     });
   }
@@ -62,7 +67,13 @@ export class EditorTypesComponent implements OnInit {
     this.generalService
       .deleteProductType(this.authService.decodedToken.nameid, id)
       .subscribe(() => {
+        this.bsModalRef.hide();
         this.productTypes = this.productTypes.filter((p) => p.id !== id);
+        this.alertify.success('סוג התוצר נמחק בהצלחה');
+      },
+      (error) => {
+        this.bsModalRef.hide();
+        this.alertify.error('הייתה בעיה במחיקת סוג התוצר');
       });
   }
 
@@ -95,6 +106,7 @@ export class EditorTypesComponent implements OnInit {
           this.productTypes.unshift(data);
           this.clear();
           this.bsModalRef.hide();
+          this.alertify.success('סוג התוצר נוסף בהצלחה');
         },
         (error) => {
           this.bsModalRef.content.failMessage =
@@ -137,6 +149,7 @@ export class EditorTypesComponent implements OnInit {
           this.productTypes.find(pt => pt.id == type.id).title=this.data.title;
           this.clear();
           this.bsModalRef.hide();
+          this.alertify.success('סוג התוצר עודכן בהצלחה');
         },
         (error) => {
           this.bsModalRef.content.failMessage =

@@ -14,5 +14,6 @@ namespace TelemView.API.Dtos
          public ICollection<ProductTypeDto> ProductTypes { get; set; }
          public ICollection<YearDto> Years { get; set; }
          public ICollection<DegreeDto> Degree { get; set; }
+         public ICollection<ProductForHomeDto> Product { get; set; }
     }
 }

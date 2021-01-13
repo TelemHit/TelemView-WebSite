@@ -8,14 +8,15 @@ import { AuthService } from 'src/app/_services/auth.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AlertModalComponent } from '../alert-modal/alert-modal.component';
 import { ModalComponent } from '../modal/modal.component';
+import { AlertifyService } from 'src/app/_services/alertify.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-editor-organization-types',
   templateUrl: './editor-organization-types.component.html',
-  styleUrls: ['./editor-organization-types.component.css']
+  styleUrls: ['./editor-organization-types.component.css'],
 })
 export class EditorOrganizationTypesComponent implements OnInit {
-
   organizationTypes: OrganizationType[];
   bsModalRef: BsModalRef;
   newEntity: string;
@@ -26,13 +27,15 @@ export class EditorOrganizationTypesComponent implements OnInit {
     private route: ActivatedRoute,
     private modalService: BsModalService,
     private authService: AuthService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private alertify: AlertifyService,
+    private titleService:Title
   ) {}
 
   ngOnInit() {
     this.route.data.subscribe((data) => {
       this.organizationTypes = data.organizations;
-      console.log(this.organizationTypes);
+      this.titleService.setTitle('Telem View - עריכת סוגי ארגונים');
     });
   }
 
@@ -53,7 +56,6 @@ export class EditorOrganizationTypesComponent implements OnInit {
       console.log(res.data);
       if (res.data === true) {
         this.finalDeleteOt(id);
-        this.bsModalRef.hide();
       }
     });
   }
@@ -61,9 +63,19 @@ export class EditorOrganizationTypesComponent implements OnInit {
   finalDeleteOt(id: number) {
     this.generalService
       .deleteOrganizationTypes(this.authService.decodedToken.nameid, id)
-      .subscribe(() => {
-        this.organizationTypes = this.organizationTypes.filter((p) => p.id !== id);
-      });
+      .subscribe(
+        () => {
+          this.organizationTypes = this.organizationTypes.filter(
+            (p) => p.id !== id
+          );
+          this.bsModalRef.hide();
+          this.alertify.success('סוג הארגון נמחק בהצלחה');
+        },
+        (error) => {
+          this.bsModalRef.hide();
+          this.alertify.error('הייתה בעיה במחיקת סוג הארגון');
+        }
+      );
   }
 
   addOtModal() {
@@ -75,7 +87,7 @@ export class EditorOrganizationTypesComponent implements OnInit {
       isOrganization: false,
       closeBtnName: 'ביטול',
       saveBtnName: 'שמירה',
-      generalData: this.organizationTypes.map(pt => pt.title),
+      generalData: this.organizationTypes.map((pt) => pt.title),
       alreadyExists: 'סוג הארגון כבר במערכת ולכן אין צורך להוסיפו',
     };
     this.bsModalRef = this.modalService.show(ModalComponent, { initialState });
@@ -95,11 +107,12 @@ export class EditorOrganizationTypesComponent implements OnInit {
           this.organizationTypes.unshift(data);
           this.clear();
           this.bsModalRef.hide();
+          this.alertify.success('סוג הארגון נוסף בהצלחה');
         },
         (error) => {
           this.bsModalRef.content.failMessage =
             'הייתה בעיה בשמירת הנתונים, יש לנסות שנית';
-            this.clear();
+          this.clear();
         }
       );
   }
@@ -114,9 +127,9 @@ export class EditorOrganizationTypesComponent implements OnInit {
       isOrganization: false,
       closeBtnName: 'ביטול',
       saveBtnName: 'שמירה',
-      generalData: this.organizationTypes.map(pt => pt.title),
+      generalData: this.organizationTypes.map((pt) => pt.title),
       alreadyExists: 'סוג הארגון כבר במערכת',
-      isEdit: true
+      isEdit: true,
     };
     this.bsModalRef = this.modalService.show(ModalComponent, { initialState });
 
@@ -129,28 +142,40 @@ export class EditorOrganizationTypesComponent implements OnInit {
     this.spinner.show();
     this.data.title = this.newEntity['name'];
     this.data.id = type.id;
-    
-    if(this.newEntity['name'] !== this.organizationTypes.find(pt => pt.id == type.id).title){
-      this.generalService.updateOrganizationTypes(this.authService.decodedToken.nameid,type.id, this.data)
-      .subscribe(
-        (data: any) => {
-          this.organizationTypes.find(pt => pt.id == type.id).title=this.data.title;
-          this.clear();
-          this.bsModalRef.hide();
-        },
-        (error) => {
-          this.bsModalRef.content.failMessage =
-            'הייתה בעיה בשמירת הנתונים, יש לנסות שנית';
-          this.clear();
-        });
-    } else{
+
+    if (
+      this.newEntity['name'] !==
+      this.organizationTypes.find((pt) => pt.id == type.id).title
+    ) {
+      this.generalService
+        .updateOrganizationTypes(
+          this.authService.decodedToken.nameid,
+          type.id,
+          this.data
+        )
+        .subscribe(
+          (data: any) => {
+            this.organizationTypes.find(
+              (pt) => pt.id == type.id
+            ).title = this.data.title;
+            this.clear();
+            this.bsModalRef.hide();
+            this.alertify.success('סוג הארגון עודכן בהצלחה');
+          },
+          (error) => {
+            this.bsModalRef.content.failMessage =
+              'הייתה בעיה בשמירת הנתונים, יש לנסות שנית';
+            this.clear();
+          }
+        );
+    } else {
       this.clear();
       this.bsModalRef.hide();
     }
   }
 
-  clear(){
-    this.data={};
+  clear() {
+    this.data = {};
     this.newEntity = null;
     this.spinner.hide();
   }

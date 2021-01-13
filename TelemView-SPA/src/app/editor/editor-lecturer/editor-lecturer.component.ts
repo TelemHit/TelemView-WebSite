@@ -9,6 +9,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { AlertModalComponent } from '../alert-modal/alert-modal.component';
 import { ModalComponent } from '../modal/modal.component';
 import { Lecturer } from 'src/app/_models/lecturer';
+import { AlertifyService } from 'src/app/_services/alertify.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-editor-lecturer',
@@ -27,13 +29,15 @@ export class EditorLecturerComponent implements OnInit {
     private route: ActivatedRoute,
     private modalService: BsModalService,
     private authService: AuthService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private alertify: AlertifyService,
+    private titleService:Title
   ) {}
 
   ngOnInit() {
     this.route.data.subscribe((data) => {
       this.lecturers = data.lecturers;
-      console.log(this.lecturers);
+      this.titleService.setTitle('Telem View - עריכת מרצים');
     });
   }
 
@@ -54,7 +58,6 @@ export class EditorLecturerComponent implements OnInit {
       console.log(res.data);
       if (res.data === true) {
         this.finalDeleteLecturer(id);
-        this.bsModalRef.hide();
       }
     });
   }
@@ -64,6 +67,11 @@ export class EditorLecturerComponent implements OnInit {
       .deleteLecturer(this.authService.decodedToken.nameid, id)
       .subscribe(() => {
         this.lecturers = this.lecturers.filter((p) => p.id !== id);
+        this.bsModalRef.hide();
+        this.alertify.success('המרצה נמחק/ה בהצלחה');
+      },(error) => {
+        this.bsModalRef.hide();
+        this.alertify.error('הייתה בעיה במחיקת המרצה');
       });
   }
 
@@ -96,6 +104,8 @@ export class EditorLecturerComponent implements OnInit {
           this.lecturers.unshift(data);
           this.clear();
           this.bsModalRef.hide();
+          this.alertify.success('המרצה נוסף/ה בהצלחה');
+
         },
         (error) => {
           this.bsModalRef.content.failMessage =
@@ -139,6 +149,8 @@ export class EditorLecturerComponent implements OnInit {
           this.lecturers.find(pt => pt.id == lect.id).name=this.data.name;
           this.clear();
           this.bsModalRef.hide();
+          this.alertify.success('המרצה עודכן/ה בהצלחה');
+
         },
         (error) => {
           this.bsModalRef.content.failMessage =

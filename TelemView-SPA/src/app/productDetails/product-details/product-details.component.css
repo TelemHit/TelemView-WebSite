@@ -1,0 +1,155 @@
+.container-fluid {
+  padding: 0;
+}
+.product-header {
+  background: rgb(20, 114, 113);
+  background: linear-gradient(
+    0deg,
+    rgba(20, 114, 113, 1) 0%,
+    rgba(5, 22, 34, 1) 100%
+  );
+  padding-bottom: 40px;
+}
+.product-id {
+  background: #e8e8e8;
+  border-radius: 10px;
+  padding: 15px;
+  margin-top: 70px;
+}
+.product-id section {
+  border-radius: 10px;
+  background: white;
+  margin-right: 15px;
+  padding: 15px;
+  text-align: center;
+}
+.product-id section:last-child {
+  margin-left: 15px;
+}
+h1 {
+  font-weight: 600;
+  font-size: 2.5em;
+  margin-bottom: 0.3rem;
+}
+
+.product-header ul {
+  list-style-type: none;
+  padding: 0;
+}
+.product-header header ul li span{
+    padding-right: 10px;
+}
+.product-header header ul li {
+  float: right;
+  color: white;
+  margin-left: 8px;
+  font-weight: 200;
+}
+.product-header header ul li::before {
+  content: "#";
+  position: absolute;
+}
+
+.product-id section h2 {
+  font-weight: 600;
+  font-size: 1.1em;
+  margin-bottom: 0.2rem;
+}
+.product-id section * {
+  font-weight: 300;
+  font-size: 1em;
+  margin-bottom: 0;
+  line-height: 1.4;
+}
+
+.body-section h2 {
+  padding-top: 50px;
+  margin-bottom: 50px;
+  font-weight: 600;
+  font-size: 2em;
+}
+.body-section-split h2 {
+  margin-bottom: 30px;
+}
+.body-section-split {
+  padding-bottom: 50px;
+}
+.gallery {
+  padding-bottom: 60px;
+}
+.split-content {
+  font-size: 1.2em;
+}
+
+.split-wrapper {
+  padding-bottom: 50px;
+}
+.logo-top img {
+  max-width: 80px;
+  object-fit: contain;
+}
+.logo-top {
+  padding: 10px 15px;
+  margin-bottom: 20px;
+}
+.back-btn{
+    /* display: none; */
+    color: white;
+    padding: 0;
+}
+/* mobile */
+@media only screen and (max-width: 576px) {
+  .logo-top img,
+  .logo-top a {
+    width: 70px;
+  }
+  .product-header{
+    padding: 0 5px 10px 5px;
+  }
+  h1 {
+    font-size: 1.8em;
+  }
+  .detail-header {
+    display: flex;
+    justify-content: center;
+  }
+  .mobile-center {
+    text-align: center;
+  }
+  .detail-header .mobile-center {
+    margin-bottom: 40px;
+  }
+  .mobile-center ul {
+    display: flex;
+    justify-content: center;
+  }
+  .btn-yellow {
+    width: 80% !important;
+  }
+  .product-id {
+    border-radius: 5px;
+  }
+  .product-id .row {
+    justify-content: center;
+  }
+  .product-id .row section {
+    margin: 5px;
+  }
+  .body-section h2{
+    font-size: 1.6em;
+  }
+  .split-content{
+      font-size: 1em;
+  }
+  .split-wrapper{
+      padding-bottom: 0;
+  }
+  aside.container-fluid{
+      padding: 0 15px;
+  }
+  .back-btn{
+      color: white;
+      display: block;
+  }
+
+}

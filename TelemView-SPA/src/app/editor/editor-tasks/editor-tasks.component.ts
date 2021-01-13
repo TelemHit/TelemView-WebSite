@@ -10,6 +10,8 @@ import { ModalComponent } from '../modal/modal.component';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { GeneralData } from 'src/app/_models/generalData';
 import { Task } from 'src/app/_models/task';
+import { AlertifyService } from 'src/app/_services/alertify.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-editor-tasks',
@@ -27,13 +29,16 @@ export class EditorTasksComponent implements OnInit {
     private route: ActivatedRoute,
     private modalService: BsModalService,
     private authService: AuthService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private alertify: AlertifyService,
+    private titleService:Title
   ) {}
 
   ngOnInit() {
     this.route.data.subscribe((data) => {
       this.Tasks = data.tasks;
-      console.log(this.Tasks);
+      this.titleService.setTitle('Telem View - עריכת משימות');
+
     });
   }
 
@@ -54,7 +59,7 @@ export class EditorTasksComponent implements OnInit {
       console.log(res.data);
       if (res.data === true) {
         this.finalDeleteTask(id);
-        this.bsModalRef.hide();
+        
       }
     });
   }
@@ -64,6 +69,11 @@ export class EditorTasksComponent implements OnInit {
       .deleteTask(this.authService.decodedToken.nameid, id)
       .subscribe(() => {
         this.Tasks = this.Tasks.filter((p) => p.id !== id);
+        this.bsModalRef.hide();
+        this.alertify.success('המשימה נמחקה בהצלחה')
+      }, (error) => {
+        this.bsModalRef.hide();
+        this.alertify.error('הייתה בעיה במחיקת המשימה')
       });
   }
 
@@ -99,6 +109,8 @@ export class EditorTasksComponent implements OnInit {
           this.Tasks.unshift(data);
           this.clear();
           this.bsModalRef.hide();
+          this.alertify.success('המשימה נוספה בהצלחה')
+
         },
         (error) => {
           this.bsModalRef.content.failMessage =
@@ -154,6 +166,7 @@ export class EditorTasksComponent implements OnInit {
             ).description = this.data.description;
             this.clear();
             this.bsModalRef.hide();
+            this.alertify.success('המשימה עודכנה בהצלחה')
           },
           (error) => {
             this.bsModalRef.content.failMessage =
