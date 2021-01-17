@@ -6,7 +6,7 @@ import { DomSanitizer, Title } from '@angular/platform-browser';
 import { environment } from 'src/environments/environment';
 import { PaginatedResult } from 'src/app/_models/pagination';
 import { Route } from '@angular/compiler/src/core';
-import {Location} from '@angular/common';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-product-details',
@@ -26,13 +26,13 @@ export class ProductDetailsComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private router: Router,
     private _location: Location,
-    private titleService:Title
-    ) {}
+    private titleService: Title
+  ) {}
 
   ngOnInit() {
     this.route.data.subscribe((data) => {
       this.product = data['product'];
-      this.titleService.setTitle('Telem View - '+this.product.title);
+      this.titleService.setTitle('Telem View - ' + this.product.title);
       this.mediaForGallery();
       this.getProducts();
       let scrollToTop = window.setInterval(() => {
@@ -43,7 +43,7 @@ export class ProductDetailsComponent implements OnInit {
           window.clearInterval(scrollToTop);
         }
       }, 8);
-    },);
+    });
   }
 
   backClicked() {
@@ -53,19 +53,27 @@ export class ProductDetailsComponent implements OnInit {
     } else {
       params = {};
     }
-    this.router.navigate(['.'], {queryParams: params})
+    this.router.navigate(['.'], { queryParams: params });
   }
 
   getProducts() {
-    this.products=[];
+    this.products = [];
     let params;
     if (localStorage.getItem('userParams') != null) {
-      params = JSON.parse(localStorage.getItem('userParams'));
-    } else {
-      params = {};
-    }
-    this.addProducts(params);
-    console.log(params);
+      let params=JSON.parse(localStorage.getItem('userParams'));
+      if (Object.keys(params).length !== 0 && params.constructor === Object) {
+        for (const [key, value] of Object.entries(params)) { 
+            // make sure param is not empty
+            if (params[key].length != 0) {
+              this.addProducts(params);
+              console.log("has params");
+              break;
+            }
+        }
+        
+      }
+    }    
+
     let typeParams = {
       productTypes: this.product.productTypeId.toString(),
     };
@@ -77,12 +85,12 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   addProducts(params) {
-    
-    this.productService.getProducts(params, 0, 10).subscribe(
+    this.productService.getProducts(params, 1, 10).subscribe(
       (res: PaginatedResult<Product[]>) => {
+        console.log(res.pagination);
         let productsArray = res.result.filter((p) => p.id != this.product.id);
         productsArray.forEach((p) => {
-          if(this.products.find(r => r.id == p.id)==undefined){
+          if (this.products.find((r) => r.id == p.id) == undefined) {
             p.mainPhotoUrl = this.imageslUrl + p.mainPhotoUrl;
             this.products.push(p);
           }

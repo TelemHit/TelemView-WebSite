@@ -19,7 +19,6 @@ we send user name and pasword to the component using ng-form -->
 </div>
 <div class="text-center text-danger">
   <p *ngIf="alert!=''">{{alert}}</p>
-  <p *ngIf="rolesAlert">אין לך הרשאות עריכה, יש ליצור קשר עם מנהל המערכת</p>
 </div>
   <div class="row justify-content-center mt-3">
     <button [disabled]="!loginForm.valid" type="submit" class="btn btn-primary-dark col-lg-3 col-md-4 col-sm-6">כניסה לעורך

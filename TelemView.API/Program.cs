@@ -15,7 +15,7 @@ namespace TelemView.API
         public static void Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
-            //creating scope to reach DataContext before running the host
+            // creating scope to reach DataContext before running the host
             using (var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;

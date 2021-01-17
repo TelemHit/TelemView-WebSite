@@ -6,7 +6,7 @@ namespace TelemView.API.Models
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        public ICollection<OrganizationsAndTypes> OrganizationAndType { get; set; }
-        public ICollection<Product> Products { get; set; }
+        public virtual ICollection<OrganizationsAndTypes> OrganizationAndType { get; set; }
+        public virtual ICollection<Product> Products { get; set; }
     }
 }

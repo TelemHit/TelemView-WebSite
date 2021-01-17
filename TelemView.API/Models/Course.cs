@@ -7,6 +7,6 @@ namespace TelemView.API.Models
         public int Id { get; set; }
         public string Title { get; set; }
         public int Number { get; set; }
-        public IList<ProductCourse> ProductsCourses { get; set; }
+        public virtual ICollection<ProductCourse> ProductsCourses { get; set; }
     }
 }

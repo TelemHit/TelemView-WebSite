@@ -18,16 +18,16 @@ namespace TelemView.API.Models
         public bool IsPublish { get; set; } 
         public bool ShowOnHomePage { get; set; }
         public string ThumbnailUrl { get; set; }
-        public Task Task {get; set;}
+        public virtual Task Task {get; set;}
         public int TaskId {get; set;}
-        public ProductType ProductType {get; set;}
+        public virtual ProductType ProductType {get; set;}
         public int ProductTypeId {get; set;}
-        public Organization Organization { get; set; }
+        public virtual Organization Organization { get; set; }
         public int OrganizationId { get; set; }
-        public ICollection<Media> Media { get; set; }
-        public ICollection<ProductStudent> ProductStudents { get; set; }
-        public ICollection<ProductTag> ProductsTags { get; set; }
-        public ICollection<ProductLecturer> ProductsLecturers { get; set; }
-        public ICollection<ProductCourse> ProductsCourses { get; set; }
+        public virtual ICollection<Media> Media { get; set; }
+        public virtual ICollection<ProductStudent> ProductStudents { get; set; }
+        public virtual ICollection<ProductTag> ProductsTags { get; set; }
+        public virtual ICollection<ProductLecturer> ProductsLecturers { get; set; }
+        public virtual ICollection<ProductCourse> ProductsCourses { get; set; }
     }
 }

@@ -1,13 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +22,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using TelemView.API.Data;
+using TelemView.API.Helpers;
 using TelemView.API.Models;
 
 namespace TelemView.API
@@ -32,7 +36,25 @@ namespace TelemView.API
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureDevelopmentServices(IServiceCollection services)
+        {
+            services.AddDbContext<DataContext>(x =>
+            {
+                x.UseLazyLoadingProxies();
+                x.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
+            });
+            ConfigureServices(services);
+        }
+
+        public void ConfigureProductionServices(IServiceCollection services)
+        {
+            services.AddDbContext<DataContext>(x =>
+            {
+                x.UseLazyLoadingProxies();
+                x.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+            });
+            ConfigureServices(services);
+        }
         public void ConfigureServices(IServiceCollection services)
         {
             IdentityBuilder builder = services.AddIdentityCore<User>(opt =>
@@ -67,7 +89,6 @@ namespace TelemView.API
                 options.AddPolicy("Edit", policy => policy.RequireRole("Admin", "Editor"));
             });
 
-            services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
             //Replace System.Text.Json with Newtonsoft.MVC
 
             services.AddCors();
@@ -94,22 +115,37 @@ namespace TelemView.API
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseExceptionHandler(builder =>
+                {
+                    builder.Run(async context =>
+                    {
+                        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-            //app.UseHttpsRedirection();
-
-            app.UseStaticFiles();
+                        var error = context.Features.Get<IExceptionHandlerFeature>();
+                        if (error != null)
+                        {
+                            context.Response.AddApplicationError(error.Error.Message);
+                            await context.Response.WriteAsync(error.Error.Message);
+                        }
+                    });
+                });
+            }
 
             app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
-            app.UseAuthentication();
-
-            app.UseAuthorization();
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapFallbackToController("Index", "Fallback");
             });
         }
     }

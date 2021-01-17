@@ -4,23 +4,19 @@ import { AuthService } from '../_services/auth.service';
 import { TmplAstRecursiveVisitor } from '@angular/compiler';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthGuard implements CanActivate {
-  constructor(private authService: AuthService, private router: Router){}
+  constructor(private authService: AuthService, private router: Router) {}
   canActivate(next: ActivatedRouteSnapshot): boolean {
     const roles = next.firstChild.data['roles'] as Array<string>;
-    if (roles){
-      const match = this.authService.RoleMatch(roles);
-      if(match){
-        return true;
+    if (this.authService.loggedIn()) {
+      if (roles) {
+        const match = this.authService.RoleMatch(roles);
+        if (match) {
+          return true;
+        } 
       }
-      else{
-        this.router.navigate(['editor']);
-      }
-    }
-    if (this.authService.loggedIn()){
-      return true;
     }
 
     this.router.navigate(['editor']);

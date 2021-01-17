@@ -19,14 +19,7 @@ namespace TelemView.API.Data
         public async Task<PagedList<Product>> GetProducts(ProductParams productParams)
         {
             var products = _context.Products
-            .Include(t => t.Task)
-            .Include(pt => pt.ProductType)
-            .Include(o => o.Organization).ThenInclude(t => t.OrganizationAndType).ThenInclude(ot => ot.OrganizationType)
-            .Include(m => m.Media)
-            .Include(pl => pl.ProductsLecturers).ThenInclude(l => l.Lecturer)
-            .Include(pt => pt.ProductsTags).ThenInclude(t => t.Tag)
-            .Include(pc => pc.ProductsCourses).ThenInclude(c => c.Course)
-            .Include(ps => ps.ProductStudents).ThenInclude(s => s.Student).OrderByDescending(p => p.TimeStamp).AsQueryable();
+            .OrderByDescending(p => p.TimeStamp).AsQueryable();
 
             if (productParams.HideUnpublished == true)
             {
@@ -76,15 +69,6 @@ namespace TelemView.API.Data
         public async Task<Product> GetProduct(int id)
         {
             var product = await _context.Products
-            .Include(m => m.Media)
-            .Include(t => t.Task)
-            .Include(pt => pt.ProductType)
-            .Include(o => o.Organization).ThenInclude(ot => ot.OrganizationAndType).ThenInclude(t => t.OrganizationType)
-            .Include(m => m.Media)
-            .Include(pl => pl.ProductsLecturers).ThenInclude(l => l.Lecturer)
-            .Include(pt => pt.ProductsTags).ThenInclude(t => t.Tag)
-            .Include(pc => pc.ProductsCourses).ThenInclude(c => c.Course)
-            .Include(ps => ps.ProductStudents).ThenInclude(s => s.Student)
             .FirstOrDefaultAsync(u => u.Id == id);
             return product;
         }
@@ -92,14 +76,14 @@ namespace TelemView.API.Data
         public async Task<DataForHome> GetDataForHome()
         {
             var dataForHome = new DataForHome();
-            dataForHome.Organizations = await _context.Organizations.Include(ot => ot.OrganizationAndType).ThenInclude(t => t.OrganizationType).Include(p => p.Products).OrderBy(o => o.Title).ToListAsync();
-            dataForHome.OrganizationTypes = await _context.OrganizationTypes.Include(ot => ot.OrganizationAndType).ThenInclude(o => o.Organization).ThenInclude(p => p.Products).OrderBy(o => o.Title).ToListAsync();
-            dataForHome.Students = await _context.Students.Include(p => p.ProductStudents).ThenInclude(p => p.Product).OrderBy(o => o.Name).ToListAsync();
-            dataForHome.Tags = await _context.Tags.Include(p => p.ProductsTags).ThenInclude(p => p.Product).OrderBy(o => o.Title).ToListAsync();
-            dataForHome.Tasks = await _context.Tasks.Include(p => p.Products).OrderBy(o => o.Title).ToListAsync();
-            dataForHome.ProductTypes = await _context.ProductTypes.Include(p => p.Products).OrderBy(o => o.Title).ToListAsync();
-            dataForHome.Lecturers = await _context.Lecturers.Include(p => p.ProductsLecturers).ThenInclude(p => p.Product).OrderBy(o => o.Name).ToListAsync();
-            dataForHome.Courses = await _context.Courses.Include(p => p.ProductsCourses).ThenInclude(p => p.Product).OrderBy(o => o.Title).ToListAsync();
+            dataForHome.Organizations = await _context.Organizations.ToListAsync();
+            dataForHome.OrganizationTypes = await _context.OrganizationTypes.OrderBy(o => o.Title).ToListAsync();
+            dataForHome.Students = await _context.Students.OrderBy(o => o.Name).ToListAsync();
+            dataForHome.Tags = await _context.Tags.OrderBy(o => o.Title).ToListAsync();
+            dataForHome.Tasks = await _context.Tasks.OrderBy(o => o.Title).ToListAsync();
+            dataForHome.ProductTypes = await _context.ProductTypes.OrderBy(o => o.Title).ToListAsync();
+            dataForHome.Lecturers = await _context.Lecturers.OrderBy(o => o.Name).ToListAsync();
+            dataForHome.Courses = await _context.Courses.OrderBy(o => o.Title).ToListAsync();
             dataForHome.Years = await _context.Products.GroupBy(p => p.YearOfCreation).Select(y => new Year
             {
                 Title = y.Key,
@@ -152,7 +136,6 @@ namespace TelemView.API.Data
         public async Task<ProductType> GetType(int id)
         {
             var type = await _context.ProductTypes
-            .Include(p => p.Products)
             .FirstOrDefaultAsync(t => t.Id == id);
 
             return type;
@@ -161,13 +144,12 @@ namespace TelemView.API.Data
         public async Task<IEnumerable<ProductType>> GetTypes()
         {
             var types = await _context.ProductTypes
-            .Include(p => p.Products).OrderBy(i => i.Title).ToListAsync();
+            .OrderBy(i => i.Title).ToListAsync();
             return types;
         }
         public async Task<Tag> GetTag(int id)
         {
             var tag = await _context.Tags
-            .Include(p => p.ProductsTags)
             .FirstOrDefaultAsync(t => t.Id == id);
 
             return tag;
@@ -176,13 +158,12 @@ namespace TelemView.API.Data
         public async Task<IEnumerable<Tag>> GetTags()
         {
             var tags = await _context.Tags
-            .Include(p => p.ProductsTags).OrderBy(i => i.Title).ToListAsync();
+            .OrderBy(i => i.Title).ToListAsync();
             return tags;
         }
         public async Task<Student> GetStudent(int id)
         {
             var student = await _context.Students
-            .Include(p => p.ProductStudents)
             .FirstOrDefaultAsync(t => t.Id == id);
 
             return student;
@@ -191,13 +172,12 @@ namespace TelemView.API.Data
         public async Task<IEnumerable<Student>> GetStudents()
         {
             var students = await _context.Students
-            .Include(p => p.ProductStudents).OrderBy(i => i.Name).ToListAsync();
+            .OrderBy(i => i.Name).ToListAsync();
             return students;
         }
         public async Task<Lecturer> GetLecturer(int id)
         {
             var lecturer = await _context.Lecturers
-            .Include(p => p.ProductsLecturers)
             .FirstOrDefaultAsync(t => t.Id == id);
 
             return lecturer;
@@ -206,14 +186,13 @@ namespace TelemView.API.Data
         public async Task<IEnumerable<Lecturer>> GetLecturers()
         {
             var lecturers = await _context.Lecturers
-            .Include(p => p.ProductsLecturers).OrderBy(i => i.Name).ToListAsync();
+           .OrderBy(i => i.Name).ToListAsync();
             return lecturers;
         }
 
         public async Task<Course> GetCourse(int id)
         {
             var course = await _context.Courses
-            .Include(p => p.ProductsCourses)
             .FirstOrDefaultAsync(t => t.Id == id);
 
             return course;
@@ -222,14 +201,14 @@ namespace TelemView.API.Data
         public async Task<IEnumerable<Course>> GetCourses()
         {
             var courses = await _context.Courses
-            .OrderBy(i => i.Title).Include(p => p.ProductsCourses).ToListAsync();
+            .OrderBy(i => i.Title).ToListAsync();
             return courses;
         }
 
         public async Task<Models.Task> GetTask(int id)
         {
             var task = await _context.Tasks
-            .Include(p => p.Products)
+            
             .FirstOrDefaultAsync(t => t.Id == id);
 
             return task;
@@ -238,15 +217,13 @@ namespace TelemView.API.Data
         public async Task<IEnumerable<Models.Task>> GetTasks()
         {
             var tasks = await _context.Tasks
-            .OrderBy(i => i.Title).Include(p => p.Products).ToListAsync();
+            .OrderBy(i => i.Title).ToListAsync();
             return tasks;
         }
 
         public async Task<Organization> GetOrganization(int id)
         {
             var organization = await _context.Organizations
-            .Include(p => p.Products)
-            .Include(t => t.OrganizationAndType).ThenInclude(ot => ot.OrganizationType)
             .FirstOrDefaultAsync(o => o.Id == id);
 
             return organization;
@@ -255,8 +232,6 @@ namespace TelemView.API.Data
         public async Task<IEnumerable<Organization>> GetOrganizations()
         {
             var organizations = await _context.Organizations
-            .Include(p => p.Products)
-            .Include(t => t.OrganizationAndType).ThenInclude(ot => ot.OrganizationType)
             .OrderBy(i => i.Title).ToListAsync();
 
             return organizations;
@@ -265,7 +240,6 @@ namespace TelemView.API.Data
         public async Task<OrganizationType> GetOrganizationType(int id)
         {
             var organizationType = await _context.OrganizationTypes
-            .Include(ot => ot.OrganizationAndType).ThenInclude(o => o.Organization).ThenInclude(p => p.Products)
             .FirstOrDefaultAsync(o => o.Id == id);
 
             return organizationType;
@@ -274,7 +248,6 @@ namespace TelemView.API.Data
         public async Task<IEnumerable<OrganizationType>> GetOrganizationTypes()
         {
             var organizationTypes = await _context.OrganizationTypes
-            .Include(ot => ot.OrganizationAndType).ThenInclude(o => o.Organization).ThenInclude(p => p.Products)
             .OrderBy(i => i.Title).ToListAsync();
 
             return organizationTypes;

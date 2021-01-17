@@ -45,7 +45,7 @@ export class LoginComponent implements OnInit {
           });
         }
         setTimeout(t => {
-          this.rolesAlert = true;
+          this.alert="אין לך הרשאות עריכה, יש ליצור קשר עם מנהל המערכת"
           this.spinner.hide();
         }, 1000)
       },
