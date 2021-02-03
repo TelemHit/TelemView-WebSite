@@ -1,5 +1,6 @@
 namespace TelemView.API.Helpers
 {
+    //class for pagination headers
     public class PaginationHeader
     {
         public int CurrentPage { get; set; }

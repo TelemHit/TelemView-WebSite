@@ -1,6 +1,6 @@
 
 using System.Collections.Generic;
-
+//dto for organization
 namespace TelemView.API.Dtos
 {
     public class OrganizationDto

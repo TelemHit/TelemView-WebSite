@@ -9,6 +9,7 @@ using TelemView.API.Data;
 using TelemView.API.Dtos;
 using TelemView.API.Models;
 
+//this controller responsible for Lecturers table
 namespace TelemView.API.Controllers
 {
     [Authorize(Policy = "Edit")]
@@ -24,6 +25,7 @@ namespace TelemView.API.Controllers
             _repo = repo;
         }
 
+        //get all Lecturers
         [HttpGet]
         public async Task<IActionResult> GetLecturers(int userId)
         {
@@ -37,6 +39,7 @@ namespace TelemView.API.Controllers
             return Ok(lecturersToReturn);
         }
 
+        //get specific Lecturer
         [HttpGet("{id}", Name = "GetLecturer")]
         public async Task<IActionResult> GetLecturer(int userId, int id)
         {
@@ -50,6 +53,7 @@ namespace TelemView.API.Controllers
             return Ok(lecturerToReturn);
         }
 
+        //update Lecturer
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateLecturer(int id, int userId, LecturersDto lecturersDto)
         {
@@ -66,6 +70,7 @@ namespace TelemView.API.Controllers
             throw new Exception($"Updating lecturer {id} failed on save");
         }
 
+        //delete Lecturer
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteLecturer(int id, int userId)
         {
@@ -87,6 +92,7 @@ namespace TelemView.API.Controllers
             return BadRequest("Failed to delete the lecturer");
         }
 
+        //add new Lecturer
         [HttpPost]
         public async Task<IActionResult> AddLecturer(int userId, LecturersDto lecturersDto)
         {
@@ -100,7 +106,7 @@ namespace TelemView.API.Controllers
                     return BadRequest($"lecturer {lecturer.Name} already exists");
             }
 
-            lecturersDto.Name=lecturersDto.Name.Trim();
+            lecturersDto.Name = lecturersDto.Name.Trim();
             var newLecturer = _mapper.Map<Lecturer>(lecturersDto);
             _repo.Add(newLecturer);
             if (await _repo.SaveAll())

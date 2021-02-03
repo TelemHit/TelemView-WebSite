@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { NgxGalleryModule } from '@kolkov/ngx-gallery';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
@@ -17,6 +17,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { AlertModule } from 'ngx-bootstrap/alert';
+import { TabsModule } from 'ngx-bootstrap/tabs';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import {
   TimeagoModule,
@@ -31,18 +32,18 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { AppComponent } from './app.component';
 import { ProductCardComponent } from './home/product-card/product-card.component';
 import { HomeComponent } from './home/home/home.component';
-import { PhotoGalleryComponent } from './home/photo-gallery/photo-gallery.component';
-import { NumberOfTypesComponent } from './home/numberOfTypes/numberOfTypes.component';
-import { HomeAboveFoldComponent } from './home/homeAboveFold/homeAboveFold.component';
+import { HomeHeaderComponent } from './home/home-header/home-header.component';
 import { ProductDetailsComponent } from './productDetails/product-details/product-details.component';
-import { TypesTypeComponent } from './home/typesType/typesType.component';
+import { TypesTypeComponent } from './home/types-type/types-type.component';
 import { ProductsService } from './_services/products.service';
+import { PasswordConfirmationValidatorService } from './_services/password-confirmation-validator.service';
+import { ErrorHandlerService } from './_services/error-handler.service';
+
 import { appRoutes } from './routes';
 import { ProductListResolver } from './_resolvers/product-list.resolver';
-import { DataForHomeResolver } from './_resolvers/data-for-home.resolver';
+import { GeneralDataResolver } from './_resolvers/general-data.resolver';
 import { ProductDetailsResolver } from './_resolvers/product-details.resolver';
-import { AboutFacultyComponent } from './home/about-faculty/about-faculty.component';
-import { MultiFilterComponent } from './filters/multi-filter/multi-filter.component';
+import { MultiFilterComponent } from './home/multi-filter/multi-filter.component';
 import { LoginComponent } from './editor/login/login.component';
 import { NavComponent } from './editor/nav/nav.component';
 import { EditorProductsComponent } from './editor/editor-products/editor-products.component';
@@ -52,7 +53,7 @@ import { SideNavComponent } from './editor/side-nav/side-nav.component';
 import { ProductListEditorResolver } from './_resolvers/product-list-editor.resolver';
 import { ProductEditorResolver } from './_resolvers/product-editor.resolver';
 import { EditProductComponent } from './editor/edit-product/edit-product.component';
-import { MediaFilterDeletedPipe } from './_pipes/mediaFilterDeleted.pipe';
+import { HasProductsPipe } from './_pipes/hasProductsPipe.pipe';
 import { GeneralDataService } from './_services/generalData.service';
 import { AuthService } from './_services/auth.service';
 import { ModalComponent } from './editor/modal/modal.component';
@@ -82,6 +83,11 @@ import { UserRoleModalComponent } from './admin/user-role-modal/user-role-modal.
 import { PhotoGalleryProductComponent } from './productDetails/photo-gallery-product/photo-gallery-product.component';
 import { ProductsGalleryComponent } from './productDetails/products-gallery/products-gallery.component';
 import { UserNavComponent } from './user-nav/user-nav.component';
+import { RegisterUserComponent } from './admin/register-user/register-user.component';
+import { ForgotPasswordComponent } from './editor/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './editor/reset-password/reset-password.component';
+import { EmailConfirmationComponent } from './editor/email-confirmation/email-confirmation.component';
+import{ CustomEncoder } from './_services/custom-encoder'
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -90,23 +96,23 @@ export function tokenGetter() {
 
 @NgModule({
   declarations: [		
+    ResetPasswordComponent,
     ProductCardComponent,
+    ForgotPasswordComponent,
     HomeComponent,
-    PhotoGalleryComponent,
-    NumberOfTypesComponent,
-    HomeAboveFoldComponent,
+    HomeHeaderComponent,
     TypesTypeComponent,
+    RegisterUserComponent,
     ProductDetailsComponent,
     UserNavComponent,
     ProductsGalleryComponent,
-    AboutFacultyComponent,
     MultiFilterComponent,
     LoginComponent,
     NavComponent,
     EditorProductsComponent,
     SideNavComponent,
     EditProductComponent,
-    MediaFilterDeletedPipe,
+    HasProductsPipe,
     ModalComponent,
     AlertModalComponent,
     LinkVideoModalComponent,
@@ -119,6 +125,7 @@ export function tokenGetter() {
     EditorStudentComponent,
     EditorLecturerComponent,
     AdminPanelComponent,
+    EmailConfirmationComponent,
     HasRoleDirective,
     UserRoleModalComponent,
     AppComponent,
@@ -136,6 +143,7 @@ export function tokenGetter() {
     BrowserAnimationsModule,
     BsDropdownModule.forRoot(),
     AlertModule.forRoot(),
+    TabsModule.forRoot(),
     FormsModule,
     SwiperModule,
     NgSelectModule,
@@ -175,11 +183,18 @@ export function tokenGetter() {
     ProductsService,
     ProductListResolver,
     ProductTypesResolver,
-    DataForHomeResolver,
+    GeneralDataResolver,
     ProductDetailsResolver,
     ProductListEditorResolver,
+    PasswordConfirmationValidatorService,
     ProductEditorResolver,
     AuthService,
+    CustomEncoder,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ErrorHandlerService,
+      multi: true
+    },
     AuthGuard,
     PreventUnsavedChangesGuard,
     GeneralDataService,

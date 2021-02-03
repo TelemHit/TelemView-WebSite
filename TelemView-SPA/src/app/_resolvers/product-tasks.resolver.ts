@@ -6,6 +6,8 @@ import {catchError, tap, filter, map, switchMap } from 'rxjs/operators';
 import { AuthService } from '../_services/auth.service';
 import { Task } from '../_models/task';
 
+//resolve Tasks for Edit Tasks page
+
 @Injectable()
 export class ProductTasksResolver implements Resolve<Task[]>{
     products: Task[];

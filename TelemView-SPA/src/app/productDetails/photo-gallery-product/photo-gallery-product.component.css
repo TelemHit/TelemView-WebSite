@@ -45,31 +45,86 @@ slide iframe,
   display: flex;
   align-items: center;
   cursor: pointer;
-  outline:none;
+  outline: none;
 }
 .swiper-nav i {
   font-size: 3em;
 }
-.swiper-nav.swiper-button-disabled{
+.swiper-nav:hover i, .swiper-nav:focus i{
+  padding: 0px 10px;
+  border-radius: 5px;
+  transition: all 0.2s ease;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
+}
+.swiper-nav.swiper-button-disabled {
   opacity: 0;
   cursor: context-menu;
 }
 
+.largeImage {
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 0;
+  padding: 0.2rem 0.5rem;
+}
+.largeImage:focus,
+.largeImage:hover{
+  background-color: rgba(0, 0, 0, 0.8);
+  transition: all .2s ease;
+}
+.bigImage {
+  display: none;
+}
+.bigImage.bigImage-visible {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1001;
+  background-color: rgba(0, 0, 0, 0.4);
+  animation: opacityOn 0.1s normal forwards;
+}
+
+@keyframes opacityOn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.bigImage.bigImage-visible img {
+  max-width: 95vw;
+  max-height: 95vh;
+}
+.bigImage.bigImage-visible div {
+  position: relative;
+}
+
 /* tablet */
 @media only screen and (max-width: 992px) {
-  slide img, slide iframe, .swiper-slide iframe, .swiper-slide img{
+  slide img,
+  slide iframe,
+  .swiper-slide iframe,
+  .swiper-slide img {
     height: 350px;
   }
 }
 /* mobile */
 @media only screen and (max-width: 576px) {
-slide img, slide iframe, .swiper-slide iframe, .swiper-slide img{
-  height: 250px;
+  slide img,
+  slide iframe,
+  .swiper-slide iframe,
+  .swiper-slide img {
+    height: 250px;
+  }
+  .swiper-nav {
+    padding: 0;
+  }
 }
-.swiper-nav{
-  padding: 0;
-}
-
-
-}
-

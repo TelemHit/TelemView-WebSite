@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using TelemView.API.Helpers;
 using TelemView.API.Models;
 
+//the main repository of the project
+//controls all data managment except Authorazation which controled by dotnet core Identity
 namespace TelemView.API.Data
 {
     public class TelemRepository : ITelemRepository
@@ -16,11 +18,15 @@ namespace TelemView.API.Data
             _context = context;
         }
 
+        //get all products from DB
         public async Task<PagedList<Product>> GetProducts(ProductParams productParams)
         {
+            //get products as queryable because we query it later for paging
             var products = _context.Products
             .OrderByDescending(p => p.TimeStamp).AsQueryable();
 
+            //get products according to user parameters
+            //this include filters, search and if user is in edit mode or not
             if (productParams.HideUnpublished == true)
             {
                 products = products.Where(p => p.IsPublish == true);
@@ -55,17 +61,18 @@ namespace TelemView.API.Data
             }
             if (productParams.Degree != null)
             {
-                products = products.Where(p => productParams.Degree == p.Degree);
+                products = products.Where(p => productParams.Degree.Contains(p.Degree));
             }
             if (productParams.Search != null)
             {
                 products = products.Where(p => p.Title.ToLower().Trim().Contains(productParams.Search.ToLower().Trim()));
             }
 
+            //we return paged data - each time only part of data according to user paging parameters
             return await PagedList<Product>.CreateAsync(products, productParams.PageNumber, productParams.PageSize);
         }
 
-
+        //get specific product
         public async Task<Product> GetProduct(int id)
         {
             var product = await _context.Products
@@ -73,51 +80,57 @@ namespace TelemView.API.Data
             return product;
         }
 
-        public async Task<DataForHome> GetDataForHome()
+        //get data for filters and Edit product page
+        public async Task<GeneralData> GetGeneralData()
         {
-            var dataForHome = new DataForHome();
-            dataForHome.Organizations = await _context.Organizations.ToListAsync();
-            dataForHome.OrganizationTypes = await _context.OrganizationTypes.OrderBy(o => o.Title).ToListAsync();
-            dataForHome.Students = await _context.Students.OrderBy(o => o.Name).ToListAsync();
-            dataForHome.Tags = await _context.Tags.OrderBy(o => o.Title).ToListAsync();
-            dataForHome.Tasks = await _context.Tasks.OrderBy(o => o.Title).ToListAsync();
-            dataForHome.ProductTypes = await _context.ProductTypes.OrderBy(o => o.Title).ToListAsync();
-            dataForHome.Lecturers = await _context.Lecturers.OrderBy(o => o.Name).ToListAsync();
-            dataForHome.Courses = await _context.Courses.OrderBy(o => o.Title).ToListAsync();
-            dataForHome.Years = await _context.Products.GroupBy(p => p.YearOfCreation).Select(y => new Year
+            var generalData = new GeneralData();
+            generalData.Organizations = await _context.Organizations.ToListAsync();
+            generalData.OrganizationTypes = await _context.OrganizationTypes.OrderBy(o => o.Title).ToListAsync();
+            generalData.Students = await _context.Students.OrderBy(o => o.Name).ToListAsync();
+            generalData.Tags = await _context.Tags.OrderBy(o => o.Title).ToListAsync();
+            generalData.Tasks = await _context.Tasks.OrderBy(o => o.Title).ToListAsync();
+            generalData.ProductTypes = await _context.ProductTypes.OrderBy(o => o.Title).ToListAsync();
+            generalData.Lecturers = await _context.Lecturers.OrderBy(o => o.Name).ToListAsync();
+            generalData.Courses = await _context.Courses.OrderBy(o => o.Title).ToListAsync();
+            generalData.Years = await _context.Products.GroupBy(p => p.YearOfCreation).Select(y => new Year
             {
                 Title = y.Key,
                 Counter = y.Count()
             }).OrderBy(o => o.Title).ToListAsync();
-            dataForHome.Degree = await _context.Products.GroupBy(p => p.Degree).Select(y => new Degree
+            generalData.Degree = await _context.Products.GroupBy(p => p.Degree).Select(y => new Degree
             {
                 Title = y.Key,
                 Counter = y.Count()
             }).ToListAsync();
 
-            return dataForHome;
+            return generalData;
         }
 
+        //save data
         public async Task<bool> SaveAll()
         {
             return await _context.SaveChangesAsync() > 0;
         }
 
+        //add new entity
         public void Add<T>(T entity) where T : class
         {
             _context.Add(entity);
         }
 
+        //delete entity
         public void Delete<T>(T entity) where T : class
         {
             _context.Remove(entity);
         }
 
+        //get specific media
         public async Task<Media> GetMedia(int id)
         {
             return await _context.Media.FirstOrDefaultAsync(m => m.Id == id);
         }
 
+        //checks if product exist
         public async Task<bool> ProductExists(int id)
         {
             if (await _context.Products.AnyAsync(x => x.Id == id))
@@ -126,6 +139,8 @@ namespace TelemView.API.Data
             return false;
         }
 
+        //add new product to database
+        //we first create product and then add all media to it
         public async Task<Product> CreateProduct(Product product)
         {
             await _context.Products.AddAsync(product);
@@ -133,6 +148,7 @@ namespace TelemView.API.Data
             return product;
         }
 
+        //get product type
         public async Task<ProductType> GetType(int id)
         {
             var type = await _context.ProductTypes
@@ -141,12 +157,15 @@ namespace TelemView.API.Data
             return type;
         }
 
+        //get all product types
         public async Task<IEnumerable<ProductType>> GetTypes()
         {
             var types = await _context.ProductTypes
             .OrderBy(i => i.Title).ToListAsync();
             return types;
         }
+
+        //get tag
         public async Task<Tag> GetTag(int id)
         {
             var tag = await _context.Tags
@@ -155,12 +174,15 @@ namespace TelemView.API.Data
             return tag;
         }
 
+        //get tags
         public async Task<IEnumerable<Tag>> GetTags()
         {
             var tags = await _context.Tags
             .OrderBy(i => i.Title).ToListAsync();
             return tags;
         }
+
+        //get student
         public async Task<Student> GetStudent(int id)
         {
             var student = await _context.Students
@@ -169,12 +191,15 @@ namespace TelemView.API.Data
             return student;
         }
 
+        //get students
         public async Task<IEnumerable<Student>> GetStudents()
         {
             var students = await _context.Students
             .OrderBy(i => i.Name).ToListAsync();
             return students;
         }
+
+        //get lecturer
         public async Task<Lecturer> GetLecturer(int id)
         {
             var lecturer = await _context.Lecturers
@@ -183,6 +208,7 @@ namespace TelemView.API.Data
             return lecturer;
         }
 
+        //get lecturers
         public async Task<IEnumerable<Lecturer>> GetLecturers()
         {
             var lecturers = await _context.Lecturers
@@ -190,6 +216,7 @@ namespace TelemView.API.Data
             return lecturers;
         }
 
+        //get course
         public async Task<Course> GetCourse(int id)
         {
             var course = await _context.Courses
@@ -198,6 +225,7 @@ namespace TelemView.API.Data
             return course;
         }
 
+        //get courses
         public async Task<IEnumerable<Course>> GetCourses()
         {
             var courses = await _context.Courses
@@ -205,15 +233,17 @@ namespace TelemView.API.Data
             return courses;
         }
 
+        //get task
         public async Task<Models.Task> GetTask(int id)
         {
             var task = await _context.Tasks
-            
+
             .FirstOrDefaultAsync(t => t.Id == id);
 
             return task;
         }
 
+        //get tasks
         public async Task<IEnumerable<Models.Task>> GetTasks()
         {
             var tasks = await _context.Tasks
@@ -221,6 +251,7 @@ namespace TelemView.API.Data
             return tasks;
         }
 
+        //get organization
         public async Task<Organization> GetOrganization(int id)
         {
             var organization = await _context.Organizations
@@ -229,6 +260,7 @@ namespace TelemView.API.Data
             return organization;
         }
 
+        //get organizations
         public async Task<IEnumerable<Organization>> GetOrganizations()
         {
             var organizations = await _context.Organizations
@@ -237,6 +269,7 @@ namespace TelemView.API.Data
             return organizations;
         }
 
+        //get organization type
         public async Task<OrganizationType> GetOrganizationType(int id)
         {
             var organizationType = await _context.OrganizationTypes
@@ -245,6 +278,7 @@ namespace TelemView.API.Data
             return organizationType;
         }
 
+        //get organization types
         public async Task<IEnumerable<OrganizationType>> GetOrganizationTypes()
         {
             var organizationTypes = await _context.OrganizationTypes
@@ -253,6 +287,7 @@ namespace TelemView.API.Data
             return organizationTypes;
         }
 
+        //get users
         public async Task<IEnumerable<object>> GetUsers()
         {
 
@@ -262,7 +297,10 @@ namespace TelemView.API.Data
             {
                 Id = user.Id,
                 Email = user.Email,
+                EmailConfirmation = user.EmailConfirmed,
                 UserName = user.UserName,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
                 Roles = (from userRole in user.UserRoles
                          join role in _context.Roles
                          on userRole.RoleId

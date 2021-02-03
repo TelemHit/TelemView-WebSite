@@ -6,6 +6,8 @@ import {catchError, tap, filter, map, switchMap } from 'rxjs/operators';
 import { AuthService } from '../_services/auth.service';
 import { Organization } from '../_models/organization';
 
+//resolve Organizations for Organizations edit page
+
 @Injectable()
 
 

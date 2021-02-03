@@ -1,3 +1,5 @@
+//Tags list in the editor
+
 import { Component, OnInit } from '@angular/core';
 import { OrganizationType } from 'src/app/_models/organizationType';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
@@ -40,7 +42,7 @@ export class EditorTagComponent implements OnInit {
       this.titleService.setTitle('Telem View - עריכת תגיות');
     });
   }
-
+  //open delete modal
   deleteTag(id, title) {
     const initialState = {
       title: 'מחיקת תגית',
@@ -61,7 +63,7 @@ export class EditorTagComponent implements OnInit {
       }
     });
   }
-
+ //delete after Approve
   finalDeleteTag(id: number) {
     this.generalService
       .deleteTag(this.authService.decodedToken.nameid, id)
@@ -74,7 +76,7 @@ export class EditorTagComponent implements OnInit {
         this.alertify.error('הייתה בעיה במחיקת התגית')
       });
   }
-
+//open add modal
   addTagModal() {
     const initialState = {
       input: false,
@@ -94,6 +96,7 @@ export class EditorTagComponent implements OnInit {
       this.addTag();
     });
   }
+  //add after Approve
   addTag() {
     this.spinner.show();
     this.data.title = this.newEntity['name'];
@@ -114,7 +117,7 @@ export class EditorTagComponent implements OnInit {
         }
       );
   }
-
+//open update modal
   updateTagModal(tag) {
     const initialState = {
       input: false,
@@ -136,6 +139,7 @@ export class EditorTagComponent implements OnInit {
       this.updateTag(tag);
     });
   }
+  //update after Approve
   updateTag(tag) {
     this.spinner.show();
     this.data.title = this.newEntity['name'];
@@ -161,7 +165,7 @@ export class EditorTagComponent implements OnInit {
       this.bsModalRef.hide();
     }
   }
-
+//clear variables
   clear(){
     this.data={};
     this.newEntity = null;

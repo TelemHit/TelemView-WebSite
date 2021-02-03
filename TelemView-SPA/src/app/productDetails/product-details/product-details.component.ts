@@ -1,3 +1,4 @@
+//product page
 import { Component, OnInit } from '@angular/core';
 import { Product } from 'src/app/_models/product';
 import { ProductsService } from 'src/app/_services/products.service';
@@ -19,6 +20,7 @@ export class ProductDetailsComponent implements OnInit {
   imageslUrl = environment.imageslUrl;
   ngxScrollToOffset: 0;
   mediaForGalleryArray = [];
+  filesArray = [];
 
   constructor(
     private productService: ProductsService,
@@ -30,11 +32,13 @@ export class ProductDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    //get product according to id
     this.route.data.subscribe((data) => {
       this.product = data['product'];
       this.titleService.setTitle('Telem View - ' + this.product.title);
       this.mediaForGallery();
       this.getProducts();
+      this.getFiles();
       let scrollToTop = window.setInterval(() => {
         let pos = window.pageYOffset;
         if (pos > 0) {
@@ -46,6 +50,7 @@ export class ProductDetailsComponent implements OnInit {
     });
   }
 
+  // back to home, preserve filters
   backClicked() {
     let params;
     if (localStorage.getItem('userParams') != null) {
@@ -56,23 +61,23 @@ export class ProductDetailsComponent implements OnInit {
     this.router.navigate(['.'], { queryParams: params });
   }
 
+  //get products for More products part
+  //we get products of same filters, same type and same year
   getProducts() {
     this.products = [];
     let params;
     if (localStorage.getItem('userParams') != null) {
-      let params=JSON.parse(localStorage.getItem('userParams'));
+      let params = JSON.parse(localStorage.getItem('userParams'));
       if (Object.keys(params).length !== 0 && params.constructor === Object) {
-        for (const [key, value] of Object.entries(params)) { 
-            // make sure param is not empty
-            if (params[key].length != 0) {
-              this.addProducts(params);
-              console.log("has params");
-              break;
-            }
+        for (const [key, value] of Object.entries(params)) {
+          // make sure param is not empty
+          if (params[key].length != 0) {
+            this.addProducts(params);
+            break;
+          }
         }
-        
       }
-    }    
+    }
 
     let typeParams = {
       productTypes: this.product.productTypeId.toString(),
@@ -84,6 +89,7 @@ export class ProductDetailsComponent implements OnInit {
     this.addProducts(years);
   }
 
+  //load the products
   addProducts(params) {
     this.productService.getProducts(params, 1, 10).subscribe(
       (res: PaginatedResult<Product[]>) => {
@@ -101,31 +107,40 @@ export class ProductDetailsComponent implements OnInit {
       }
     );
   }
+
   // make url safe for angular
   safeURL(videoURL) {
     return this.sanitizer.bypassSecurityTrustResourceUrl(videoURL);
   }
 
+  // prepare media for gallery show
   mediaForGallery() {
     const mediaForGallery = this.product.media.filter(
-      (m) => m.type.toLowerCase() != 'file'
+      (m) => m.type.toLowerCase() != 'file' && m.type.toLowerCase() != 'link'
     );
     console.log(mediaForGallery);
     this.mediaForGalleryArray = mediaForGallery;
   }
 
+  // get files and links for More info part
   getFiles() {
     const files = this.product.media.filter(
-      (m) => m.type.toLowerCase() == 'file'
+      (m) => m.type.toLowerCase() == 'file' || m.type.toLowerCase() == 'link'
     );
     const newFiles = [];
     files.forEach((file) => {
+      let url;
+      if (file.type == 'file') {
+        url = this.safeURL(this.imageslUrl + file.url);
+      } else {
+        url = this.safeURL(file.url);
+      }
       newFiles.push({
-        url: this.safeURL(this.imageslUrl + file.url),
+        url: url,
         title: file.mDescription,
         id: file.id,
       });
     });
-    return newFiles;
+    this.filesArray = newFiles;
   }
 }

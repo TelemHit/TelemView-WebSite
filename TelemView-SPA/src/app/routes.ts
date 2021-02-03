@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './home/home/home.component';
 import { ProductListResolver } from './_resolvers/product-list.resolver';
-import { DataForHomeResolver } from './_resolvers/data-for-home.resolver';
+import { GeneralDataResolver } from './_resolvers/general-data.resolver';
 import { ProductDetailsComponent } from './productDetails/product-details/product-details.component';
 import { ProductDetailsResolver } from './_resolvers/product-details.resolver';
 import { LoginComponent } from './editor/login/login.component';
@@ -28,9 +28,15 @@ import { LecturerResolver } from './_resolvers/lecturer.resolver';
 import { EditorTagComponent } from './editor/editor-tag/editor-tag.component';
 import { TagResolver } from './_resolvers/tag.resolver';
 import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
+import { ForgotPasswordComponent } from './editor/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './editor/reset-password/reset-password.component';
+import { EmailConfirmationComponent } from './editor/email-confirmation/email-confirmation.component';
 
 export const appRoutes: Routes = [
   { path: 'editor', component: LoginComponent },
+  { path: 'forgotpassword', component: ForgotPasswordComponent },
+  { path: 'resetpassword', component: ResetPasswordComponent },
+  { path: 'emailconfirmation', component: EmailConfirmationComponent },
   {
     path: 'editor',
     runGuardsAndResolvers: 'always',
@@ -46,7 +52,7 @@ export const appRoutes: Routes = [
         path: 'products/create',
         component: EditProductComponent,
         resolve: {
-          dataforhome: DataForHomeResolver,
+          generalData: GeneralDataResolver,
         },
         canDeactivate: [PreventUnsavedChangesGuard],
       },
@@ -55,7 +61,7 @@ export const appRoutes: Routes = [
         component: EditProductComponent,
         resolve: {
           product: ProductEditorResolver,
-          dataforhome: DataForHomeResolver,
+          generalData: GeneralDataResolver,
         },
         canDeactivate: [PreventUnsavedChangesGuard],
       },

@@ -54,7 +54,7 @@
                     [clearOnBlur]="true" [ngClass]="{'is-invalid': productForm.get('tags').errors 
                     && productForm.get('tags').touched}">
                     <tag-input-dropdown [showDropdownIfEmpty]="true" [autocompleteItems]="generalData['tags']"
-                        [identifyBy]="'id'" [displayBy]="'title'" [keepOpen]="false">
+                        [identifyBy]="'id'" [displayBy]="'title'" [keepOpen]="false" [dynamicUpdate]="false">
                     </tag-input-dropdown>
                 </tag-input>
                 <div class="invalid-feedback d-block"
@@ -84,7 +84,7 @@
                     [onAdding]="onAddedStudentFunc" [clearOnBlur]="true" [ngClass]="{'is-invalid': productForm.get('students').errors 
                     && productForm.get('students').touched}">
                     <tag-input-dropdown [showDropdownIfEmpty]="true" [autocompleteItems]="generalData['students']"
-                        [keepOpen]="false" [identifyBy]="'id'" [displayBy]="'name'">
+                        [keepOpen]="false" [identifyBy]="'id'" [displayBy]="'name'" [dynamicUpdate]="false">
                     </tag-input-dropdown>
                 </tag-input>
                 <div class="invalid-feedback d-block"
@@ -108,19 +108,18 @@
                 <div class="d-flex justify-content-end mt-3">
                     <button type="button" class="btn btn-primary-dark" (click)="addOrganizationModal()"
                         tooltip="יצירת ארגון שאינו קיים ברשימה.">הוספת ארגון
-                        חדש</button></div>
+                        חדש</button>
+                </div>
             </div>
 
 
 
             <div class="mb-4 form-group col-lg-6 col-md-8 col-sm-12">
                 <label for="year"><small class="text-danger">* </small>שנת פיתוח (לועזית)</label>
-                <!-- <input id="year" formControlName="yearOfCreation" onkeydown="return false" class="form-control"
-                    autocomplete="off" bsDatepicker [bsConfig]="bsConfig" type="text" /> -->
                 <select id="year" class="custom-select" formControlName="yearOfCreation" [ngClass]="{'is-invalid': productForm.get('yearOfCreation').errors 
                 && productForm.get('yearOfCreation').touched}">
                     <option value="" disabled>בחירת שנה...</option>
-                    <option *ngFor="let year of yearsList()"  [ngValue]="year">{{year}}</option>
+                    <option *ngFor="let year of yearsList()" [ngValue]="year">{{year}}</option>
                 </select>
                 <div class="invalid-feedback"
                     *ngIf="productForm.get('yearOfCreation').errors && productForm.get('yearOfCreation').touched">
@@ -131,7 +130,7 @@
                 <select id="heYear" class="custom-select" formControlName="heYearOfCreation" [ngClass]="{'is-invalid': productForm.get('heYearOfCreation').errors 
                 && productForm.get('heYearOfCreation').touched}">
                     <option value="" disabled>בחירת שנה...</option>
-                    <option *ngFor="let year of heYearsList()"  [ngValue]="year">{{year}}</option>
+                    <option *ngFor="let year of heYearsList()" [ngValue]="year">{{year}}</option>
                 </select>
                 <div class="invalid-feedback"
                     *ngIf="productForm.get('heYearOfCreation').errors && productForm.get('heYearOfCreation').touched">
@@ -169,11 +168,7 @@
                 <label for="url">קישור</label>
                 <input id="url" (input)="checkUrl()" formControlName="productUrl" class="form-control" type="text"
                     [ngClass]="{'is-invalid': productForm.hasError('notUrl') 
-                && productForm.get('productUrl').value.length > 0
-            }" />
-                <!-- <div class="invalid-feedback"
-                    *ngIf="productForm.get('productUrl').hasError('required') && productForm.get('productUrl').touched">
-                    יש להזין קישור לתוצר</div> -->
+                && productForm.get('productUrl').value.length > 0}" />
                 <div class="invalid-feedback"
                     *ngIf="productForm.hasError('notUrl') && productForm.get('productUrl').value.length > 0">
                     יש להזין כתובת url תקינה</div>
@@ -195,7 +190,7 @@
                     theme='bootstrap' [clearOnBlur]="true" [ngClass]="{'is-invalid': productForm.get('courses').errors 
                     && productForm.get('courses').touched}">
                     <tag-input-dropdown [showDropdownIfEmpty]="true" [autocompleteItems]="generalData['courses']"
-                        [identifyBy]="'id'" [displayBy]="'title'" [keepOpen]="false">
+                        [identifyBy]="'id'" [displayBy]="'title'" [keepOpen]="false" [dynamicUpdate]="false">
                     </tag-input-dropdown>
                 </tag-input>
                 <div class="invalid-feedback d-block"
@@ -224,7 +219,7 @@
                     [clearOnBlur]="true" [ngClass]="{'is-invalid': productForm.get('lecturers').errors 
                     && productForm.get('lecturers').touched}">
                     <tag-input-dropdown [showDropdownIfEmpty]="true" [autocompleteItems]="generalData['lecturers']"
-                        [identifyBy]="'id'" [displayBy]="'name'" [keepOpen]="false">
+                        [identifyBy]="'id'" [displayBy]="'name'" [keepOpen]="false" [dynamicUpdate]="false">
                     </tag-input-dropdown>
                 </tag-input>
                 <div class="invalid-feedback d-block"
@@ -266,28 +261,35 @@
                     <div
                         *ngFor="let media of productForm.controls.media.value; let index = index;trackBy:trackByIndex; ">
                         <div *ngIf="media.status != 'Delete'" [formGroupName]="index" class="mt-4 media-card">
+                            <!-- show saved image -->
                             <img id="media_{{index}}" *ngIf="media.type=='image' && media.id != 0"
                                 src="{{basicUrl}}{{media.url}}" class="img-thumbnail p-1" alt="{{media.mDescription}}">
+                            <!-- show new image -->
                             <img id="media_{{index}}" *ngIf="media.type=='image' && media.id == 0" src="{{media.url}}"
                                 class="img-thumbnail p-1" alt="{{media.mDescription}}">
-
+                            <!-- show files -->
                             <a id="media_{{index}}" *ngIf="media.type=='file'" href="{{basicUrl}}{{media.url}}"
-                                target="_blank"><img src="../../../assets/images/pdf_icon.svg" class="img-thumbnail p-1"
+                                target="_blank"><img src="assets/images/pdf_icon.svg" class="img-thumbnail p-1"
                                     alt="{{media.mDescription}}"></a>
+                            <!-- show links -->
                             <a id="media_{{index}}" *ngIf="media.type=='link'" href="{{media.url}}" target="_blank"><img
-                                    src="../../../assets/images/www_icon.svg" class="img-thumbnail p-1"
+                                    src="assets/images/www_icon.svg" class="img-thumbnail p-1"
                                     alt="{{media.mDescription}}"></a>
+                            <!-- show video -->
                             <iframe *ngIf="media.type=='video'" [src]="media.urlForShow" class="img-thumbnail p-1"
                                 title="{{media.mDescription}}"></iframe>
                             <div class="input-group">
+                                <!-- main image -->
                                 <button tooltip="קביעת התמונה הראשית שתופיע בדף הבית." id="isMain_{{index}}"
                                     *ngIf="media.type=='image'" type="button" class="btn btn-sm"
                                     [disabled]="media.isMain"
                                     [ngClass]="media.isMain ? 'btn-success active' : 'btn-secondary'"
                                     (click)="setMain($event)"><i class="fa fa-flag"></i></button>
+                                <!-- delete -->
                                 <button tooltip="מחיקת התמונה." id="delete_{{index}}" *ngIf="!media.isMain"
                                     type="button" [disabled]="media.isMain" (click)="DeleteFile($event)"
                                     class="btn btn-sm btn-danger"><i class="fa fa-trash-o"></i></button>
+                                <!-- description -->
                                 <input type="text" class="form-control" formControlName="mDescription" />
                             </div>
 

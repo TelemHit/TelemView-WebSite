@@ -1,6 +1,8 @@
 import { Directive, Input, ViewContainerRef, TemplateRef, OnInit } from '@angular/core';
 import { AuthService } from '../_services/auth.service';
 
+//directive shows user management section only if role is admin
+
 @Directive({
   selector: '[appHasRole]'
 })
@@ -24,10 +26,10 @@ isVisible = false;
         if(!this.isVisible){
           this.isVisible = true;
           this.viewContainerRef.createEmbeddedView(this.templateRef);
-        } else {
-          this.isVisible = false;
-          this.viewContainerRef.clear();
-        }
+        } 
+      } else {
+        this.isVisible = false;
+        this.viewContainerRef.clear();
       }
     }
 }

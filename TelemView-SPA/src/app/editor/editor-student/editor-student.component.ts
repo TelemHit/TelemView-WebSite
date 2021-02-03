@@ -1,3 +1,5 @@
+//Students list in the editor
+
 import { Component, OnInit } from '@angular/core';
 import { OrganizationType } from 'src/app/_models/organizationType';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
@@ -42,7 +44,7 @@ export class EditorStudentComponent implements OnInit {
 
     });
   }
-
+  //open delete modal
   deleteStudent(id, title) {
     const initialState = {
       title: 'מחיקת סטודנט/ית',
@@ -64,7 +66,7 @@ export class EditorStudentComponent implements OnInit {
       }
     });
   }
-
+  //delete after Approve
   finalDeleteStudent(id: number) {
     this.generalService
       .deleteStudent(this.authService.decodedToken.nameid, id)
@@ -77,7 +79,7 @@ export class EditorStudentComponent implements OnInit {
         this.alertify.error('הייתה בעיה במחיקת הסטודנט/ית');
       });
   }
-
+  //open add modal
   addStudentModal() {
     const initialState = {
       input: false,
@@ -97,6 +99,7 @@ export class EditorStudentComponent implements OnInit {
       this.addStudent();
     });
   }
+    //add after Approve
   addStudent() {
     this.spinner.show();
     this.data.name = this.newEntity['name'];
@@ -116,7 +119,7 @@ export class EditorStudentComponent implements OnInit {
         }
       );
   }
-
+  //open update modal
   updateStudentModal(student) {
     const initialState = {
       input: false,
@@ -138,7 +141,7 @@ export class EditorStudentComponent implements OnInit {
       this.updateStudent(student);
     });
   }
-
+  //update after Approve
   updateStudent(student) {
     this.spinner.show();
     this.data.name = this.newEntity['name'];
@@ -164,7 +167,7 @@ export class EditorStudentComponent implements OnInit {
       this.bsModalRef.hide();
     }
   }
-
+  //clear variables
   clear(){
     this.data={};
     this.newEntity = null;

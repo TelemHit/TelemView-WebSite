@@ -9,6 +9,7 @@ using TelemView.API.Data;
 using TelemView.API.Dtos;
 using TelemView.API.Models;
 
+//this controller responsible for Organizations table
 namespace TelemView.API.Controllers
 {
     [Authorize(Policy = "Edit")]
@@ -24,6 +25,7 @@ namespace TelemView.API.Controllers
             _repo = repo;
         }
 
+        //get all Organizations
         [HttpGet]
         public async Task<IActionResult> GetOrganizations(int userId)
         {
@@ -37,6 +39,7 @@ namespace TelemView.API.Controllers
             return Ok(organizationsToReturn);
         }
 
+        //get specific Organization
         [HttpGet("{id}", Name = "GetOrganization")]
         public async Task<IActionResult> GetOrganization(int userId, int id)
         {
@@ -50,6 +53,7 @@ namespace TelemView.API.Controllers
             return Ok(organizationToReturn);
         }
 
+        //update Organization
         [HttpPut("{id}")]
         public async Task<IActionResult> updateOrganization(int id, int userId, OrganizationDto organizationDto)
         {
@@ -66,6 +70,7 @@ namespace TelemView.API.Controllers
             throw new Exception($"Updating organization {id} failed on save");
         }
 
+        //delete Organization
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOrganization(int id, int userId)
         {
@@ -87,6 +92,7 @@ namespace TelemView.API.Controllers
             return BadRequest("Failed to delete the organization");
         }
 
+        //add new Organization
         [HttpPost]
         public async Task<IActionResult> AddOrganization(int userId, OrganizationDto organizationDto)
         {

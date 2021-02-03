@@ -1,5 +1,7 @@
 namespace TelemView.API.Helpers
 {
+    //helper class that organaize all parameters from the user
+    //that include filters and pagination
     public class ProductParams
     {
         public bool HideUnpublished { get; set; } = true;
@@ -10,7 +12,7 @@ namespace TelemView.API.Helpers
         public int[] OrganizationTypes { get; set; }
         public int[] Tasks { get; set; }
         public int[] Years { get; set; }
-        public string Degree { get; set; }
+        public string[] Degree { get; set; }
         public string Search {get; set; }
         private const int MaxPageSize = 50;
         public int PageNumber { get; set; } = 1;

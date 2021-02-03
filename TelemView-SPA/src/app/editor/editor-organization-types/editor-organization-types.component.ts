@@ -1,3 +1,4 @@
+//organization-types list in the editor
 import { Component, OnInit } from '@angular/core';
 import { OrganizationType } from 'src/app/_models/organizationType';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
@@ -39,6 +40,7 @@ export class EditorOrganizationTypesComponent implements OnInit {
     });
   }
 
+    //open delete modal
   deleteOT(id, title) {
     const initialState = {
       title: 'מחיקת סוג ארגון',
@@ -60,6 +62,7 @@ export class EditorOrganizationTypesComponent implements OnInit {
     });
   }
 
+    //delete after Approve
   finalDeleteOt(id: number) {
     this.generalService
       .deleteOrganizationTypes(this.authService.decodedToken.nameid, id)
@@ -78,6 +81,7 @@ export class EditorOrganizationTypesComponent implements OnInit {
       );
   }
 
+   //open add modal
   addOtModal() {
     const initialState = {
       input: false,
@@ -97,6 +101,8 @@ export class EditorOrganizationTypesComponent implements OnInit {
       this.addOt();
     });
   }
+
+  //add after Approve
   addOt() {
     this.spinner.show();
     this.data.title = this.newEntity['name'];
@@ -117,6 +123,7 @@ export class EditorOrganizationTypesComponent implements OnInit {
       );
   }
 
+   //open update modal
   updateOtModal(type) {
     const initialState = {
       input: false,
@@ -138,6 +145,8 @@ export class EditorOrganizationTypesComponent implements OnInit {
       this.updateOt(type);
     });
   }
+
+  //update after Approve
   updateOt(type) {
     this.spinner.show();
     this.data.title = this.newEntity['name'];
@@ -174,6 +183,7 @@ export class EditorOrganizationTypesComponent implements OnInit {
     }
   }
 
+   //clear variables
   clear() {
     this.data = {};
     this.newEntity = null;

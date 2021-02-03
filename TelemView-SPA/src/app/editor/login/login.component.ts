@@ -1,3 +1,4 @@
+//login
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/_services/auth.service';
 import { Router } from '@angular/router';
@@ -22,12 +23,14 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    //check if user logged in
     if (this.authService.loggedIn) {
       this.router.navigate(['editor/products']);
     }
     this.titleService.setTitle('Telem View - כניסת עורך');
   }
 
+  //login user
   login() {
     this.spinner.show();
     this.authService.login(this.model).subscribe(
@@ -42,23 +45,24 @@ export class LoginComponent implements OnInit {
             if (userRoles.includes(element)) {
               this.router.navigate(['editor/products']);
             }
+            else{
+              setTimeout(t => {
+                this.alert="אין לך הרשאות עריכה, יש ליצור קשר עם מנהל המערכת"
+                this.spinner.hide();
+              }, 1000)
+            }
           });
+        } else{
+          setTimeout(t => {
+            this.alert="אין לך הרשאות עריכה, יש ליצור קשר עם מנהל המערכת"
+            this.spinner.hide();
+          }, 1000)
         }
-        setTimeout(t => {
-          this.alert="אין לך הרשאות עריכה, יש ליצור קשר עם מנהל המערכת"
-          this.spinner.hide();
-        }, 1000)
+        
       },
       (error) => {
         this.spinner.hide();
-        console.log(error);
-        if (error.error == 'user does not exist') {
-          this.alert = 'כתובת המייל שהזנת לא קיימת במערכת';
-        } else if (error.status == 401) {
-          this.alert = 'הסיסמה שהזנת שגויה';
-        } else {
-          this.alert = 'הייתה בעיה בהתחברות, יש לנסות שנית';
-        }
+        this.alert=error;
       }
     );
   }

@@ -1,3 +1,4 @@
+//dto for product type
 namespace TelemView.API.Dtos
 {
     public class ProductTypeDto

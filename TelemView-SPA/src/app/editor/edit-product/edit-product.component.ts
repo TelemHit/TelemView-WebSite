@@ -1,3 +1,5 @@
+//edit product form component
+
 import {
   Component,
   OnInit,
@@ -18,7 +20,7 @@ import {
   AbstractControl,
 } from '@angular/forms';
 import { AuthService } from 'src/app/_services/auth.service';
-import { DataForHome } from 'src/app/_models/dataForHome';
+import { DataForEdit } from 'src/app/_models/dataForEdit';
 import { ProductForCreate } from 'src/app/_models/productForCreate';
 import { Media } from 'src/app/_models/media';
 import { repeatWhen } from 'rxjs/operators';
@@ -47,7 +49,7 @@ declare let Hebcal: any;
 })
 export class EditProductComponent implements OnInit {
   product: Product;
-  generalData: DataForHome[];
+  generalData: DataForEdit[];
   orgSelectedValue: number;
   selectedFiles: FileList;
   progressInfos = [];
@@ -100,11 +102,11 @@ export class EditProductComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    
+    //get data of product
     this.route.url.subscribe((val) => (this.routeName = val[1].path));
     this.route.data.subscribe((data) => {
-      console.log(data.dataforhome);
-      this.generalData = data.dataforhome;
+      console.log(data.generalData);
+      this.generalData = data.generalData;
       this.titleService.setTitle('Telem View - עריכת תוצר');
       if (this.routeName !== 'create' && data.product) {
         data.product.media.forEach((media) => {
@@ -127,6 +129,7 @@ export class EditProductComponent implements OnInit {
     }
   }
 
+  // initialize form values
   initializeValues() {
     if (this.product.title) {
       this.productForm.controls.title.setValue(this.product.title);
@@ -677,6 +680,7 @@ export class EditProductComponent implements OnInit {
     if (this.productForm.valid) {
       this.product = Object.assign({}, this.productForm.value);
 
+      //if new product - create with initial data and then save all
       if (this.routeName === 'create') {
         const productForCreate: ProductForCreate = {
           title: this.product.title,
@@ -689,6 +693,7 @@ export class EditProductComponent implements OnInit {
           .createProduct(this.authService.decodedToken.nameid, productForCreate)
           .subscribe((e: Product) => {
             this.product.id = e.id;
+            //save the rest of the data
             this.saveProduct(this.product.id);
           });
       } else {
@@ -697,6 +702,7 @@ export class EditProductComponent implements OnInit {
     }
   }
 
+  //save product
   saveProduct(id) {
     // saving files and links
     const target = this.product.media.filter(
@@ -793,7 +799,6 @@ export class EditProductComponent implements OnInit {
               fileNameSplit[fileNameSplit.length - 1].toUpperCase() === 'PDF'
                 ? 'file'
                 : 'image';
-            // this.upload(i, file);
             (this.productForm.get('media') as FormArray).push(
               this.patchValues(
                 file.name,
@@ -831,30 +836,7 @@ export class EditProductComponent implements OnInit {
     this.mediaUpload.nativeElement.value = '';
   }
 
-  // upload file to server via service
-  // upload(idx, file) {
-  //   this.productService
-  //     .uploadMedia(+this.route.snapshot.params['id'], file)
-  //     .subscribe(
-  //       (event: Media) => {
-  //         (this.productForm.get('media') as FormArray).push(
-  //           this.patchValues(
-  //             event.mDescription,
-  //             event.id,
-  //             event.isMain,
-  //             event.status,
-  //             event.type,
-  //             event.url,
-  //             event.urlForShow
-  //           )
-  //         );
-  //       },
-  //       (err) => {
-  //         this.message = 'Could not upload the file:' + file.name;
-  //       }
-  //     );
-  // }
-
+//add video
   addVideoModal() {
     const initialState = {
       label: 'לינק לסרטון ב: YouTube',
@@ -880,6 +862,7 @@ export class EditProductComponent implements OnInit {
     });
   }
 
+  //if product link is valid show it in iframe
   checkUrl() {
     if (
       this.productForm.get('productUrl').value.length > 0 &&
@@ -891,11 +874,13 @@ export class EditProductComponent implements OnInit {
     }
   }
 
+  //check if url is youtube
   matchYoutubeUrl(url) {
     const p = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
     return url.match(p) ? RegExp.$1 : false;
   }
 
+  //add link modal
   addLinkModal() {
     const initialState = {
       label: 'URL של האתר',
@@ -918,6 +903,7 @@ export class EditProductComponent implements OnInit {
     });
   }
 
+  //upload new link
   uploadLink(link: Media) {
     (this.productForm.get('media') as FormArray).push(
       this.patchValues(
@@ -931,28 +917,6 @@ export class EditProductComponent implements OnInit {
       )
     );
     this.productForm.markAsDirty();
-    // this.productService
-    //   .uploadLink(+this.route.snapshot.params['id'], link)
-    //   .subscribe(
-    //     (event: Media) => {
-    //       event.urlForShow = this.safeURL(event.url);
-    //       (this.productForm.get('media') as FormArray).push(
-    //         this.patchValues(
-    //           event.mDescription,
-    //           event.id,
-    //           event.isMain,
-    //           event.status,
-    //           event.type,
-    //           event.url,
-    //           event.urlForShow
-    //         )
-    //       );
-    //       console.log(this.productForm.get('media'));
-    //     },
-    //     (error) => {
-    //       this.message = 'Could not upload link ' + link.url;
-    //     }
-    //   );
   }
 
   // trak media ng-for by item index
@@ -996,8 +960,6 @@ export class EditProductComponent implements OnInit {
 
     this.productForm.controls.media.updateValueAndValidity();
     this.productForm.markAsDirty();
-
-    // this.patch(mediaArray);
   }
 
   // delete media
@@ -1020,7 +982,8 @@ export class EditProductComponent implements OnInit {
     }
     return years;
   }
-
+  // hebrew years list creation
+  //we use Hebcal library
   heYearsList(){
     let currentYear = new Hebcal.HDate(new Date).getYearObject().year;
     let years = [];

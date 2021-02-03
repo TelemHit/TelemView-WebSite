@@ -1,3 +1,4 @@
+//lecturers list in the editor
 import { Component, OnInit } from '@angular/core';
 import { OrganizationType } from 'src/app/_models/organizationType';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
@@ -41,6 +42,7 @@ export class EditorLecturerComponent implements OnInit {
     });
   }
 
+    //open delete modal
   deleteLecturer(id, title) {
     const initialState = {
       title: 'מחיקת מרצה',
@@ -62,6 +64,7 @@ export class EditorLecturerComponent implements OnInit {
     });
   }
 
+    //delete after Approve
   finalDeleteLecturer(id: number) {
     this.generalService
       .deleteLecturer(this.authService.decodedToken.nameid, id)
@@ -75,6 +78,7 @@ export class EditorLecturerComponent implements OnInit {
       });
   }
 
+    //open add modal
   addLecturerModal() {
     const initialState = {
       input: false,
@@ -94,6 +98,8 @@ export class EditorLecturerComponent implements OnInit {
       this.addLecturer();
     });
   }
+
+    //add after Approve
   addLecturer() {
     this.spinner.show();
     this.data.name = this.newEntity['name'];
@@ -115,6 +121,7 @@ export class EditorLecturerComponent implements OnInit {
       );
   }
 
+    //open update modal
   updateLecturerModal(lect) {
     const initialState = {
       input: false,
@@ -137,6 +144,7 @@ export class EditorLecturerComponent implements OnInit {
     });
   }
 
+    //update after Approve
   updateLecturer(lect) {
     this.spinner.show();
     this.data.name = this.newEntity['name'];
@@ -163,6 +171,7 @@ export class EditorLecturerComponent implements OnInit {
     }
   }
 
+    //clear variables
   clear(){
     this.data={};
     this.newEntity = null;

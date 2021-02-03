@@ -6,6 +6,8 @@ import {catchError, tap, filter, map, switchMap } from 'rxjs/operators';
 import { AuthService } from '../_services/auth.service';
 import { Tag } from '../_models/Tag';
 
+//resolve Tags for Edit Tags page
+
 @Injectable()
 
 

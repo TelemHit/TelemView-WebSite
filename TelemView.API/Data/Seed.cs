@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
 using TelemView.API.Models;
 
+//if table is empty we seed initial data to work with
+//it uses the ProductSeedData.json
+//its not perfect, seed only part of the data
 namespace TelemView.API.Data
 {
     public class Seed

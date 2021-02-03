@@ -6,3 +6,13 @@ nav{
 nav *{
     color: white !important;
 }
+.logo{
+    max-width: 170px;
+}
+
+        /* mobile */
+        @media only screen and (max-width: 576px) {
+            .logo{
+                max-width: 120px;
+            }
+        }

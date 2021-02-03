@@ -1,6 +1,7 @@
+
 using System;
 using Microsoft.AspNetCore.Http;
-
+//dto for new Link we create in database
 namespace TelemView.API.Dtos
 {
     public class LinkForCreationDto

@@ -12,6 +12,7 @@ using TelemView.API.Dtos;
 using TelemView.API.Helpers;
 using TelemView.API.Models;
 
+//this controller responsible for Products table
 namespace TelemView.API.Controllers
 {
     [Authorize(Policy = "Edit")]
@@ -28,56 +29,64 @@ namespace TelemView.API.Controllers
         }
         [AllowAnonymous]
         [HttpGet]
+
+        //get all products
         public async Task<IActionResult> GetProducts([FromQuery] ProductParams productParams)
         {
+            //get products and general data for filters and lists
             var products = await _repo.GetProducts(productParams);
-            var generalDataFromRepo = await _repo.GetDataForHome();
+            var generalDataFromRepo = await _repo.GetGeneralData();
             var productsToReturn = _mapper.Map<IEnumerable<ProductForHomeDto>>(products);
             var generalDataToReturn = _mapper.Map<DataForHomeDto>(generalDataFromRepo);
-            var itemsBeforePaging = _mapper.Map<IEnumerable<ProductForHomeDto>>(products.AllItems);
+            //get all products without paging for calculation of counters
+            // var itemsBeforePaging = _mapper.Map<IEnumerable<ProductForHomeDto>>(products.AllItems);
 
-            foreach (var year in generalDataToReturn.Years)
-            {
-                year.FilteredCounter = itemsBeforePaging.Where(p => p.YearOfCreation == year.Title).Count();
-            }
-            foreach (var degree in generalDataToReturn.Degree)
-            {
-                degree.FilteredCounter = itemsBeforePaging.Where(p => p.Degree == degree.Title).Count();
-            }
-            foreach (var course in generalDataToReturn.Courses)
-            {
-                course.FilteredCounter = itemsBeforePaging.Where(p => p.Courses.Any(c => c.Id == course.Id)).Count();
-            }
-            foreach (var org in generalDataToReturn.Organizations)
-            {
-                org.FilteredCounter = itemsBeforePaging.Where(p => p.OrganizationId == org.Id).Count();
-            }
-            foreach (var orgType in generalDataToReturn.OrganizationTypes)
-            {
-                orgType.FilteredCounter = itemsBeforePaging.Where(p => p.OrganizationTypes.Any(ot => ot.Id == orgType.Id)).Count();
-            }
-            foreach (var lect in generalDataToReturn.Lecturers)
-            {
-                lect.FilteredCounter = itemsBeforePaging.Where(p => p.Lecturers.Any(l => l.Id == lect.Id)).Count();
-            }
-            foreach (var task in generalDataToReturn.Tasks)
-            {
-                task.FilteredCounter = itemsBeforePaging.Where(p => p.TaskId == task.Id).Count();
-            }
-            foreach (var pt in generalDataToReturn.ProductTypes)
-            {
-                pt.FilteredCounter = itemsBeforePaging.Where(p => p.ProductTypeId == pt.Id).Count();
-            }
+            //calculate filters for current products list - currently not in use
+            // foreach (var year in generalDataToReturn.Years)
+            // {
+            //     year.FilteredCounter = itemsBeforePaging.Where(p => p.YearOfCreation == year.Title).Count();
+            // }
+            // foreach (var degree in generalDataToReturn.Degree)
+            // {
+            //     degree.FilteredCounter = itemsBeforePaging.Where(p => p.Degree == degree.Title).Count();
+            // }
+            // foreach (var course in generalDataToReturn.Courses)
+            // {
+            //     course.FilteredCounter = itemsBeforePaging.Where(p => p.Courses.Any(c => c.Id == course.Id)).Count();
+            // }
+            // foreach (var org in generalDataToReturn.Organizations)
+            // {
+            //     org.FilteredCounter = itemsBeforePaging.Where(p => p.OrganizationId == org.Id).Count();
+            // }
+            // foreach (var orgType in generalDataToReturn.OrganizationTypes)
+            // {
+            //     orgType.FilteredCounter = itemsBeforePaging.Where(p => p.OrganizationTypes.Any(ot => ot.Id == orgType.Id)).Count();
+            // }
+            // foreach (var lect in generalDataToReturn.Lecturers)
+            // {
+            //     lect.FilteredCounter = itemsBeforePaging.Where(p => p.Lecturers.Any(l => l.Id == lect.Id)).Count();
+            // }
+            // foreach (var task in generalDataToReturn.Tasks)
+            // {
+            //     task.FilteredCounter = itemsBeforePaging.Where(p => p.TaskId == task.Id).Count();
+            // }
+            // foreach (var pt in generalDataToReturn.ProductTypes)
+            // {
+            //     pt.FilteredCounter = itemsBeforePaging.Where(p => p.ProductTypeId == pt.Id).Count();
+            // }
 
+            //set all data in one class
             var rootData = new RootForHomeDto();
             rootData.Products = productsToReturn;
             rootData.GeneralData = generalDataToReturn;
 
+            //add pagination headers
             Response.AddPagination(products.CurrentPage, products.PageSize, products.TotalCount, products.TotalPages);
 
             return Ok(rootData);
         }
 
+        //get specific product
         [AllowAnonymous]
         [HttpGet("{id}", Name = "GetProduct")]
         public async Task<IActionResult> GetProduct(int id)
@@ -91,27 +100,27 @@ namespace TelemView.API.Controllers
             return BadRequest("product not exists");
         }
 
+        //create new product
         [HttpPost("editor/{userId}", Name = "CreateProduct")]
         public async Task<IActionResult> CreateProduct(int userId, ProductUpdateDto productUpdateDto)
         {
 
             var productToAdd = _mapper.Map<Product>(productUpdateDto);
-
+            //by default product is publish
+            productToAdd.IsPublish = true;
+            productToAdd.TimeStamp = DateTime.Now;
             await _repo.CreateProduct(productToAdd);
 
             var productToReturn = _mapper.Map<ProductIdDto>(productToAdd);
 
-            var productFromRepo = await _repo.GetProduct(productToReturn.Id);
-            productFromRepo.IsPublish = true;
-            productFromRepo.TimeStamp = DateTime.Now;
             await _repo.SaveAll();
 
             return CreatedAtRoute("GetProduct"
                     , new { userId = userId, id = productToAdd.Id }
                     , productToReturn);
-
         }
 
+        //set publish product column
         [HttpPost("editor/publish/{userId}/{id}")]
         public async Task<IActionResult> PublishProduct(int userId, int id)
         {
@@ -137,6 +146,7 @@ namespace TelemView.API.Controllers
             }
         }
 
+        //show product on home page - currently not in use
         [HttpPost("editor/homePage/{userId}/{id}")]
         public async Task<IActionResult> ProductOnHomePage(int userId, int id)
         {
@@ -159,7 +169,7 @@ namespace TelemView.API.Controllers
             return BadRequest($"no product with id: {id}");
         }
 
-
+        //update product
         [HttpPut("{userId}/{id}")]
         public async Task<IActionResult> UpdateProduct(int userId, int id, ProductUpdateDto productUpdateDto)
         {
@@ -217,6 +227,7 @@ namespace TelemView.API.Controllers
 
         }
 
+        //delete product
         [HttpDelete("editor/{userId}/{id}")]
         public async Task<IActionResult> DeleteProduct(int userId, int id)
         {

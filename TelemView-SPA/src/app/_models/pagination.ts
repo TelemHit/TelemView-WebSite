@@ -1,5 +1,6 @@
 import { DataForHome } from './dataForHome';
 
+//model of pagination data
 export interface Pagination {
     currentPage: number;
     itemsPerPage: number;
@@ -7,6 +8,7 @@ export interface Pagination {
     totalPages: number;
 }
 
+//model of results after pagination
 export class PaginatedResult<T>{
     result: T;
     pagination: Pagination;

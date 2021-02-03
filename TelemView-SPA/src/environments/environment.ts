@@ -5,7 +5,9 @@
 export const environment = {
   production: false,
   apiUrl: 'http://localhost:5000/api/',
-  imageslUrl: 'http://localhost:5000/images/'
+  imageslUrl: 'http://localhost:5000/images/',
+  resetPassword: 'http://localhost:4200/resetpassword',
+  emailConfirmation: 'http://localhost:4200/emailconfirmation'
 };
 
 /*

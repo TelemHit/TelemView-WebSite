@@ -1,24 +1,39 @@
 <div class="container-fluid pl-0 pr-0">
-  <app-homeAboveFold></app-homeAboveFold>
-  <!-- <app-numberOfTypes class="row home_main types-numbers" [dataforhome] = "dataforhome['productTypes']"></app-numberOfTypes> -->
-  <!-- <app-about-faculty></app-about-faculty> -->
-  <app-multi-filter *ngIf="dataforhome" [data]="dataforhome" [totalProducts]="totalCount"></app-multi-filter>
-  <!-- <app-filters-nav id="our_Products" (clearFilters)="clearAll()" class="home_main row justify-content-center" [dataforhome] = "dataforhome" [productParamsFromHome] ="productParams.params"></app-filters-nav> -->
+
+  <!-- header -->
+  <app-home-header></app-home-header>
+
+  <!-- filters -->
+  <app-multi-filter role="form" *ngIf="dataforhome" [queryParams]="productParams" [data]="dataforhome"
+    [totalProducts]="totalCount"></app-multi-filter>
 </div>
-  <div class="container-fluid gray-bg products-container" infiniteScroll [infiniteScrollDistance]="2"
-    [infiniteScrollThrottle]="50" [scrollWindow]="true" (scrolled)="onScroll()">
-    <p *ngIf="checkIfFilters()" class="text-center search-result">
-      <span *ngIf="totalCount<1">לא נמצאו תוצרים... כדאי לנסות חיפוש אחר</span>
-      <span *ngIf="totalCount==1">נמצא תוצר <strong>אחד</strong></span>
-      <span *ngIf="totalCount>1">נמצאו <strong>{{totalCount}}</strong> תוצרים</span>
-      
-    </p>
-    <app-product-card [products]="products"></app-product-card>
-    <div class="spinner-th">
-      <ngx-spinner [fullScreen]="false" type="ball-fussion" size="medium" color="#1BA098">
-        <p class="loading">התוצרים בדרך אליך...</p>
-      </ngx-spinner>
-      <p *ngIf="cantGetProduct">נראה שיש בעיה בטעינת התוצרים... <br />
-        בבקשה בדקו את החיבור לרשת ונסו לרענן את הדף</p>
-    </div>
+
+<!-- products list -->
+<div class="container-fluid gray-bg products-container" infiniteScroll [infiniteScrollDistance]="2"
+  [infiniteScrollThrottle]="50" [scrollWindow]="true" (scrolled)="onScroll()">
+  <!-- filters result -->
+  <p *ngIf="checkIfFilters()" class="text-center search-result">
+    <span *ngIf="totalCount<1">לא נמצאו תוצרים... כדאי לנסות חיפוש אחר</span>
+    <span *ngIf="totalCount==1">נמצא תוצר <strong>אחד</strong></span>
+    <span *ngIf="totalCount>1">נמצאו <strong>{{totalCount}}</strong> תוצרים</span>
+  </p>
+
+  <!-- chips -->
+  <ul *ngIf="chips.length>0" id="filter-chips" role="form" aria-label="selected filters">
+    <li class="th-badge" *ngFor="let item of chips">
+      <button class="btn" aria-label="cancel filter"
+        (click)="clearFilter(item)">&times;</button><span>{{item.title}}</span>
+    </li>
+  </ul>
+
+  <!-- products -->
+  <app-product-card [products]="products"></app-product-card>
+
+  <div class="spinner-th">
+    <ngx-spinner [fullScreen]="false" type="ball-fussion" size="medium" color="#1BA098">
+      <p class="loading">התוצרים בדרך אליך...</p>
+    </ngx-spinner>
+    <p *ngIf="cantGetProduct">נראה שיש בעיה בטעינת התוצרים... <br />
+      בבקשה בדקו את החיבור לרשת ונסו לרענן את הדף</p>
   </div>
+</div>

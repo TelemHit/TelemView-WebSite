@@ -17,7 +17,6 @@ namespace TelemView.API.Models
         public bool IsApproved { get; set; }
         public bool IsPublish { get; set; } 
         public bool ShowOnHomePage { get; set; }
-        public string ThumbnailUrl { get; set; }
         public virtual Task Task {get; set;}
         public int TaskId {get; set;}
         public virtual ProductType ProductType {get; set;}

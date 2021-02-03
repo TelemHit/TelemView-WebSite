@@ -20,12 +20,17 @@ we send user name and pasword to the component using ng-form -->
 <div class="text-center text-danger">
   <p *ngIf="alert!=''">{{alert}}</p>
 </div>
+
   <div class="row justify-content-center mt-3">
     <button [disabled]="!loginForm.valid" type="submit" class="btn btn-primary-dark col-lg-3 col-md-4 col-sm-6">כניסה לעורך
       <ngx-spinner [fullScreen]="false" type="ball-spin-clockwise" size="small" color="white"></ngx-spinner>
     </button>
   </div>
+  <div class="row justify-content-center">
+    <a [routerLink]="['/forgotpassword']"> שכחתי סיסמה </a>
+  </div>
+
   <div class="text-center mt-3">
-    <small class="text-center">התבקשת להיכנס למערכך ואין לך פרטי כניסה? יש ליצור קשר עם מנהל המערכת.</small>
+    <small class="text-center">התבקשת להיכנס למערכת ואין לך פרטי כניסה? יש ליצור קשר עם מנהל המערכת.</small>
   </div>
 </form>

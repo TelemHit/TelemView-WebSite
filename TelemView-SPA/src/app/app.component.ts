@@ -16,6 +16,7 @@ export class AppComponent implements OnInit {
 
   constructor(private authService: AuthService, private router: Router){}
 
+  //set token and logged-in variables in auth service 
   ngOnInit() {
     const token = localStorage.getItem('token');
     if (token) {

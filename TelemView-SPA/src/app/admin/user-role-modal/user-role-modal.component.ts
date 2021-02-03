@@ -1,3 +1,5 @@
+//user roles edit modal
+
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { User } from 'src/app/_models/user';
@@ -25,6 +27,7 @@ export class UserRoleModalComponent implements OnInit {
     this.bsModalRef.hide();
   }
 
+  //if user is admin we disable the option to unselect Admin checkbox
   isAdmin(user){
     if(this.authService.RoleMatch(['Admin']) && user.id == this.authService.decodedToken.nameid){
       return true;

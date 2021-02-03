@@ -1,3 +1,4 @@
+//product card
 import { Component, OnInit, Input } from '@angular/core';
 import { Product } from 'src/app/_models/product';
 

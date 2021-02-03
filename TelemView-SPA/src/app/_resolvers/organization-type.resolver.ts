@@ -7,6 +7,8 @@ import { AuthService } from '../_services/auth.service';
 import { Organization } from '../_models/organization';
 import { OrganizationType } from '../_models/organizationType';
 
+//resolve Organization Types for Organization Types edit page
+
 @Injectable()
 
 

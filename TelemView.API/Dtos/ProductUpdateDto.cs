@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TelemView.API.Models;
 
+//dto for product update data
 namespace TelemView.API.Dtos
 {
     public class ProductUpdateDto

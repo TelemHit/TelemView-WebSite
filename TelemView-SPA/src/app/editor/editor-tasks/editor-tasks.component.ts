@@ -1,3 +1,4 @@
+//Tasks list in the editor
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ProductTypesResolver } from 'src/app/_resolvers/product-types.resolver';
@@ -41,7 +42,7 @@ export class EditorTasksComponent implements OnInit {
 
     });
   }
-
+  //open delete modal
   deleteTask(id, title) {
     const initialState = {
       title: 'מחיקת משימה',
@@ -63,7 +64,7 @@ export class EditorTasksComponent implements OnInit {
       }
     });
   }
-
+ //delete after Approve
   finalDeleteTask(id: number) {
     this.generalService
       .deleteTask(this.authService.decodedToken.nameid, id)
@@ -76,7 +77,7 @@ export class EditorTasksComponent implements OnInit {
         this.alertify.error('הייתה בעיה במחיקת המשימה')
       });
   }
-
+ //open add modal
   addTaskModal() {
     const initialState = {
       input: false,
@@ -98,6 +99,7 @@ export class EditorTasksComponent implements OnInit {
       this.addTask();
     });
   }
+   //add after Approve
   addTask() {
     this.spinner.show();
     this.data.title = this.newEntity['name'];
@@ -119,7 +121,7 @@ export class EditorTasksComponent implements OnInit {
         }
       );
   }
-
+//open update modal
   updateTaskModal(task) {
     const initialState = {
       input: false,
@@ -144,7 +146,7 @@ export class EditorTasksComponent implements OnInit {
       this.updateTask(task);
     });
   }
-
+//update after Approve
   updateTask(task) {
     this.spinner.show();
     this.data.title = this.newEntity['name'];
@@ -179,7 +181,7 @@ export class EditorTasksComponent implements OnInit {
       this.bsModalRef.hide();
     }
   }
-
+//clear variables
   clear() {
     this.data = {};
     this.newEntity = null;

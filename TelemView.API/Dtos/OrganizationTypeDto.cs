@@ -1,3 +1,4 @@
+//dto for OrganizationType
 namespace TelemView.API.Dtos
 {
     public class OrganizationTypeDto

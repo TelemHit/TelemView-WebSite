@@ -1,3 +1,4 @@
+//gallery of More products
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { Product } from 'src/app/_models/product';
 import { SwiperOptions } from 'swiper';
@@ -12,12 +13,17 @@ export class ProductsGalleryComponent implements OnChanges {
   localProducts: Product[];
 
   index = 0;
+
+  // Swiper js configuration
   config: SwiperOptions = {
     slidesPerView: 1,
     spaceBetween: 10,
     navigation: {
       nextEl: '.swiper-button-next-unique',
       prevEl: '.swiper-button-prev-unique',
+    },
+    a11y: {
+      enabled: true
     },
     breakpoints: {
       640: {
@@ -38,6 +44,7 @@ export class ProductsGalleryComponent implements OnChanges {
   
   constructor() { }
 
+  //on product change replace products
   ngOnChanges(changes) {
     if(changes.products){
       this.index=0;

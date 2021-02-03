@@ -1,3 +1,4 @@
+//dto for user login data
 namespace TelemView.API.Dtos
 {
     public class UserForLoginDto

@@ -5,33 +5,66 @@
     <div class="main-table col-sm-10 col pt-5">
       <div class="container">
         <h1>ניהול משתמשים</h1>
-        <div class="table-container mt-4 table-responsive">
-          <table class="table-hover table mt-4">
-            <thead class="table-light">
-              <th scope="col">שם משתמש</th>
-              <th scope="col" class="text-center">כתובת מייל</th>
-
-              <th scope="col" class="text-center">הרשאה 
-                <ng-template  #popTemplate><ul class="text-left pl-0" [innerHtml]="html"></ul></ng-template>
-                <i class="fa fa-info-circle" [adaptivePosition]="false" [tooltip]="popTemplate"></i></th>
-              <th scope="col" class="text-center">מחיקה <i class="fa fa-info-circle" [adaptivePosition]="false" tooltip="ניתן למחוק רק משתמש שאינו Admin."></i></th>
-            </thead>
-            <tbody>
-              <tr class="text-center" *ngFor="let user of users">
-                <th class="align-middle" scope="row">{{user.userName}}</th>
-                <td class="align-middle">{{user.email}}</td>
-                <td class="align-middle">
-                  <span *ngFor="let role of user.roles" class="badge badge-pill badge-dark">{{role}}</span>
-                  <button class="btn" type="button" (click)="editRolesModal(user)">
-                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                  </button></td>
-                <td class="align-middle"><button *ngIf="isAdmin(user)" (click)="deleteUser(user)" class="btn" type="button">
-                    <i class="fa fa-trash-o" aria-hidden="true"></i>
-                  </button></td>
-              </tr>
-            </tbody>
-          </table>
+        <div>
+          <!-- use ngx-bootstrap tabs -->
+          <tabset>
+            <!-- users table tab -->
+            <tab heading="משתמשים קיימים" id="tab1">
+              <section>
+                <div class="table-container mt-4 table-responsive">
+                  <table class="table-hover table mt-4">
+                    <thead class="table-light">
+                      <th scope="col">שם</th>
+                      <th scope="col" class="text-center">כתובת מייל</th>
+                      <th scope="col" class="text-center">אימות מייל <i class="fa fa-info-circle" [adaptivePosition]="false"
+                        tooltip="האם המשתמש אישר את המייל שנשלח אליו."></i></th>
+                      <th scope="col" class="text-center">הרשאה
+                        <ng-template #popTemplate>
+                          <ul class="text-left pl-0" [innerHtml]="html"></ul>
+                        </ng-template>
+                        <i class="fa fa-info-circle" [adaptivePosition]="false" [tooltip]="popTemplate"></i>
+                      </th>
+                      <th scope="col" class="text-center">מחיקה <i class="fa fa-info-circle" [adaptivePosition]="false"
+                          tooltip="ניתן למחוק רק משתמש שאינו Admin."></i></th>
+                    </thead>
+                    <tbody>
+                      <tr class="text-center" *ngFor="let user of users">
+                        <th class="align-middle" scope="row">{{user.firstName}} {{user.lastName}}</th>
+                        <td class="align-middle">{{user.email}}</td>
+                        <!-- resend email button only if email not confirmed -->
+                        <td class="align-middle">
+                          <span *ngIf="user.emailConfirmation==true">אומת</span>
+                          <span *ngIf="user.emailConfirmation!=true"><button class="btn btn-warning" (click)="resendConfirmation(user)">שליחה חוזרת</button></span></td>
+                        <td class="align-middle">
+                          <span *ngFor="let role of user.roles" class="badge badge-pill badge-dark">{{role}}</span>
+                          <button class="btn" type="button" (click)="editRolesModal(user)">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                          </button>
+                        </td>
+                        <!-- allow delete only if user is not admin -->
+                        <td class="align-middle"><button *ngIf="isAdmin(user)" (click)="deleteUser(user)" class="btn"
+                            type="button">
+                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                          </button></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+            </tab>
+            <!-- registration tab -->
+            <tab heading="משתמש חדש" >
+              <section>
+                <div class="table-container mt-4 mb-4">
+                  <app-register-user (newUser)="addUser($event)"></app-register-user>
+                </div>
+              </section>
+            </tab>
+            
+          </tabset>
         </div>
       </div>
     </div>
-    <ngx-spinner [fullScreen]="true" type="ball-fussion" size="medium" color="#1BA098"></ngx-spinner>
+  </div>
+</div>
+<ngx-spinner [fullScreen]="true" type="ball-fussion" size="medium" color="#1BA098"></ngx-spinner>

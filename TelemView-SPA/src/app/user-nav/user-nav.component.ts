@@ -1,3 +1,4 @@
+//main nav - client side
 import { Component, HostListener, OnInit } from '@angular/core';
 
 @Component({
@@ -8,6 +9,8 @@ import { Component, HostListener, OnInit } from '@angular/core';
 export class UserNavComponent implements OnInit {
   staticNav=false;
   mobileNav=false;
+
+  //static nav on scroll
   @HostListener("window:scroll", ["$event"])
   onWindowScroll() {
   //In chrome and some browser scroll is given to body tag

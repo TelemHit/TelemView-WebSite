@@ -1,0 +1,122 @@
+.background-wrapper{
+    height: 460px;
+    position: relative;
+    padding: 0;
+}
+.background-inner{
+    background: url(../../../assets/images/mainBI.png) no-repeat center center;
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-size: cover;
+    z-index: -2;
+    background-attachment: fixed;
+}
+
+.photo-gallery{
+    position: relative;
+    top: 120px;
+}
+
+.background-overlay-gradient {
+    background-color: rgb(27, 160, 152);
+    background-image: linear-gradient(rgb(5, 22, 34), rgb(17, 98, 99));
+    z-index: -1;
+}
+
+.background-overlay {
+    border-radius: inherit;
+    opacity: 0.8;
+}
+
+.top-div{
+    width: 100%;
+    position: absolute;
+    height: 100%;
+    left: 0;
+    top: 0;
+}
+
+
+.homePage-top{
+    left: 0;
+    right: 0;
+}
+
+
+
+    
+
+.main-sentence h1{
+    margin-bottom: 0;
+    font-weight: 600;
+    font-size: 3rem;
+    margin-top: 100px;
+}
+
+.gradient-bottom svg{
+    transform: translatex(-50%) scaley(-1);
+    width: 100%;
+    height: 101%;
+    left: 50%;
+    position: relative;
+    overflow: hidden;
+}
+.gradient-bottom{
+    bottom: 0px;
+    position: absolute;
+    right: 0;
+    left: 0;
+    width: 100%;
+    height: 120px;
+}
+.arrow-down-animation{
+    animation-play-state: paused;
+}
+.our-products-btn:hover ~ .arrow-down-animation{
+    -webkit-animation: mover 1s infinite  alternate;
+    animation: mover 1s infinite  alternate; 
+    animation-play-state: running;
+}
+@-webkit-keyframes mover {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-10px); }
+}
+@keyframes mover {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-10px); }
+}
+
+/* tablet */
+@media only screen and (max-width: 992px) {
+    .main-sentence h1 {
+        font-size: 2rem;
+        margin-top: 100px;
+    }
+}
+/* mobile */
+@media only screen and (max-width: 576px) {
+    .background-inner{
+        background: url(../../../assets/images/mainBI_mobile.png) no-repeat center center;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+        z-index: -2;
+        background-attachment: fixed;
+    }
+    .main-sentence h1 {
+        margin-bottom: 10px;
+        font-size: 1.8em;
+        margin-top: 80px;
+    }
+    .background-wrapper{
+        height: 440px;
+    }
+    .gradient-bottom svg{
+        height: 75px;
+        
+    }
+    .gradient-bottom{
+        height: 74px;
+    }
+}
+

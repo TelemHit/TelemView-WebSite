@@ -1,3 +1,4 @@
+//Types list in the editor
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ProductTypesResolver } from 'src/app/_resolvers/product-types.resolver';
@@ -40,7 +41,7 @@ export class EditorTypesComponent implements OnInit {
 
     });
   }
-
+  //open delete modal
   deletePT(id, title) {
     const initialState = {
       title: 'מחיקת סוג תוצר',
@@ -62,7 +63,7 @@ export class EditorTypesComponent implements OnInit {
       }
     });
   }
-
+  //delete after Approve
   finalDeletept(id: number) {
     this.generalService
       .deleteProductType(this.authService.decodedToken.nameid, id)
@@ -77,6 +78,7 @@ export class EditorTypesComponent implements OnInit {
       });
   }
 
+  //open add modal
   addPtModal() {
     const initialState = {
       input: false,
@@ -96,6 +98,7 @@ export class EditorTypesComponent implements OnInit {
       this.addPt();
     });
   }
+    //add after Approve
   addPt() {
     this.spinner.show();
     this.data.title = this.newEntity['name'];
@@ -115,7 +118,7 @@ export class EditorTypesComponent implements OnInit {
         }
       );
   }
-
+  //open update modal
   updatePtModal(type) {
     const initialState = {
       input: false,
@@ -137,6 +140,7 @@ export class EditorTypesComponent implements OnInit {
       this.updatePt(type);
     });
   }
+    //update after Approve
   updatePt(type) {
     this.spinner.show();
     this.data.title = this.newEntity['name'];
@@ -161,7 +165,7 @@ export class EditorTypesComponent implements OnInit {
       this.bsModalRef.hide();
     }
   }
-
+  //clear variables
   clear(){
     this.data={};
     this.newEntity = null;

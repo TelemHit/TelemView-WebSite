@@ -17,27 +17,28 @@
       <div class="invalid-feedback" *ngIf="addItem.get('name').errors
       && addItem.get('name').touched">יש להזין ערך</div>
 
-
+      <!-- course number -->
       <div *ngIf="input_2" class="mt-2">
         <label for="modalInput_2">{{label_2}}</label>
         <input id="modalInput_2" class="form-control" type="text" formControlName="number"
           placeholder="{{placeHolder_2}}" autocomplete="off">
       </div>
 
-
+      <!-- organization types -->
       <div *ngIf="isOrganization" class="mt-2">
         <label for="orgTypes">{{orgTypes_label}}</label>
         <div id="orgTypes" class="row">
           <div class="form-check form-check-inline col-sm-5" *ngFor="let type of orgTypes; let i=index;">
 
-            <input class="form-check-input ml-2 mr-0" (change)="onCheckChange($event)" type="checkbox" id="type_{{type.id}}"
-              [value]="type.title" [checked]="isChecked(type)">
+            <input class="form-check-input ml-2 mr-0" (change)="onCheckChange($event)" type="checkbox"
+              id="type_{{type.id}}" [value]="type.title" [checked]="isChecked(type)">
 
             <label class="form-check-label pl-1 pr-0" for="type_{{type.id}}">{{type.title}}</label>
           </div>
         </div>
       </div>
 
+      <!-- task description -->
       <div *ngIf="isTask" class="mt-2">
         <label for="taskDescription">{{descriptin_label}}</label>
         <textarea rows="7" class="form-control" formControlName="description" id="taskDescription"
@@ -53,7 +54,7 @@
 
   <div class="modal-footer">
     <button type="button" class="btn btn-default" (click)="bsModalRef.hide()">{{closeBtnName}}</button>
-    <button type="button" class="btn btn-default" [disabled]="!addItem.valid || (!addItem.dirty && isEdit)"
+    <button type="button" class="btn btn-primary-dark" [disabled]="!addItem.valid || (!addItem.dirty && isEdit)"
       type="submit">{{saveBtnName}}</button>
   </div>
 

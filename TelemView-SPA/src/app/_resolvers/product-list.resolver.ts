@@ -5,6 +5,8 @@ import {ProductsService} from '../_services/products.service';
 import {Observable, of } from 'rxjs';
 import {catchError, tap, filter, map, switchMap } from 'rxjs/operators';
 
+//resolve products details for home page
+
 @Injectable()
 export class ProductListResolver implements Resolve<Product[]>{
     products: Product[];

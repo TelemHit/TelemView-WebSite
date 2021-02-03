@@ -1,3 +1,6 @@
+//service for alertify js library
+//called from components to show alerts
+
 import { Injectable } from '@angular/core';
 import * as alertify from 'alertifyjs';
 

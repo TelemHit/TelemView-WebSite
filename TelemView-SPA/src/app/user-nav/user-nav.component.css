@@ -33,6 +33,13 @@
             object-fit: contain;
             z-index: 1;
         }
+        .home-nav-static .logo.logoTV{
+            max-width: 140px;
+        }
+        .logo.logoTV{
+            max-width: 170px;
+            margin-left: 15px;
+        }
 
         .modal-header{
             border-bottom: none;
@@ -57,7 +64,21 @@
             color: white;
             justify-self: flex-end;
         }
-
+        .mobile-hide{
+            display: inline-block;
+        }
+        .mobile-show{
+            display: none;
+        }
+        /* tablet */
+        @media only screen and (max-width: 992px) {
+            .mobile-show{
+                display: flex;
+            }
+            .mobile-hide{
+                display: none;
+            }
+        }
         /* mobile */
          @media only screen and (max-width: 576px) {
             .tv-nav-right{
@@ -68,15 +89,16 @@
                 display: block;
                 position: absolute;
                 background: white;
-                right: 27px;
-                top: 55px;
-                border-radius: 5px;
+                right: 15px;
+                top: 70px;
+                border-radius: 0;
                 animation: fadeIn ease 0.5s;
                 -webkit-animation: fadeIn ease 0.5s;
                 -moz-animation: fadeIn ease 0.5s;
                 -o-animation: fadeIn ease 0.5s;
                 -ms-animation: fadeIn ease 0.5s;
-                
+                width: 50%;
+                z-index: 1
             }
             .home-nav-static .tv-nav-right.nav-mobile-active{
                 right: 27px;
@@ -85,11 +107,46 @@
             .tv-nav-right.nav-mobile-active a, .tv-nav-right.nav-mobile-active button{
                 color: black;
                 display: block;
+                text-align: right;
             }
             .logo{
-                max-width: 80px;
+                max-width: 60px;
+            }
+            .logo.logoTV{
+                max-width: 120px;
+                margin-left:0;
             }
             .mobileNav{
                 display: block;
+                padding: 0;
             }
+            
+            #pencet{
+                display:flex;
+                align-items:center;
+                flex-direction:column;
+                cursor:pointer;
+              }
+              
+              #pencet span{
+                background-color: ghostwhite;
+                width: 1.35em;
+                height: .18em;
+                margin: 0.15em 0;
+                display: block;
+                transition: all .4s ease;
+                transform-origin: 0 0;
+              }
+              
+              .open span:nth-child(1) {
+                transform: rotate(45deg) translate(1px, -1px);
+              }
+              
+              .open span:nth-child(2) {
+                Transform: scaleX(0);
+              }
+              
+              .open span:nth-child(3) {
+                transform: rotate(-45deg) translate(1px, 0);
+              }
           }

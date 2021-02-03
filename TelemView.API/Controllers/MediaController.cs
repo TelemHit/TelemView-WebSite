@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
 
+//this controller responsible for Media table
 namespace TelemView.API.Controllers
 {
     [Authorize(Policy = "Edit")]
@@ -28,6 +29,7 @@ namespace TelemView.API.Controllers
             _repo = repo;
         }
 
+        //add media for specific product
         [HttpPost]
         public async Task<IActionResult> AddMediaForProduct(int productId, [FromForm] MediaForCreationDto mediaForCreationDto)
         {
@@ -37,11 +39,14 @@ namespace TelemView.API.Controllers
 
             if (file.Length > 0)
             {
+                //check file type with function in Extentions.cs file
                 if (Extentions.CheckFileType(Path.GetExtension(mediaForCreationDto.File.FileName)) != "false")
                 {
+                    //generate file name
                     var fileName = productId + "_" + $@"{Guid.NewGuid()}" + Path.GetExtension(mediaForCreationDto.File.FileName).ToString();
                     var filePath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\images", fileName);
 
+                    //save file in folder
                     using (var fileStream = new FileStream(filePath, FileMode.Create))
                     {
                         await mediaForCreationDto.File.CopyToAsync(fileStream);
@@ -55,6 +60,7 @@ namespace TelemView.API.Controllers
                     newMedia.Description = mediaForCreationDto.File.FileName;
                     newMedia.Status = "Temp";
 
+                    //add file to table
                     productFromRepo.Media.Add(newMedia);
                 }
                 else
@@ -74,6 +80,7 @@ namespace TelemView.API.Controllers
             return BadRequest("could not add the photo");
         }
 
+        //add link to url or youtube
         [HttpPost("link")]
         public async Task<IActionResult> AddLinksForProduct(int productId, LinkForCreationDto linkForCreationDto)
         {
@@ -81,6 +88,7 @@ namespace TelemView.API.Controllers
             var url = linkForCreationDto.Url;
             if (url.Length > 0)
             {
+                //link to youtube - generate embed link
                 if (linkForCreationDto.Type == "video")
                 {
                     var YoutubeVideoRegex = new Regex(@"youtu(?:\.be|be\.com)/(?:.*v(?:/|=)|(?:.*/)?)([a-zA-Z0-9-_]+)");
@@ -95,10 +103,9 @@ namespace TelemView.API.Controllers
                     }
                 }
 
+                //url - make sure url is valid
                 if (linkForCreationDto.Type == "link")
                 {
-                    // var LinkRegex = new Regex(@"^http(s)?://([\w-]+.)+[\w-]+(/[\w- ./?%&=])?$");
-                    // Match linkMatch = LinkRegex.Match(url);
                     bool isValidUrl = Uri.IsWellFormedUriString(url, UriKind.Absolute);
                     if (isValidUrl)
                     {
@@ -109,6 +116,7 @@ namespace TelemView.API.Controllers
                         return BadRequest("not a valid url");
                     }
                 }
+
                 linkForCreationDto.Status = "Temp";
                 var newMedia = _mapper.Map<Media>(linkForCreationDto);
                 productFromRepo.Media.Add(newMedia);
@@ -122,12 +130,9 @@ namespace TelemView.API.Controllers
                 return BadRequest("could not add the link");
             }
             return BadRequest("not a link");
-
-
-
         }
 
-
+        //get existing media
         [HttpGet("{id}", Name = "GetMedia")]
         public async Task<IActionResult> GetMedia(int id)
         {
@@ -138,6 +143,7 @@ namespace TelemView.API.Controllers
             return Ok(media);
         }
 
+        //delete media
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMedia(int productId, int id)
         {

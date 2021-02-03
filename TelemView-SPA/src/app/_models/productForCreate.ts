@@ -4,6 +4,7 @@ import { Student } from './Student';
 import { Tag } from './Tag';
 import { Course } from './Course';
 
+//model of initial data sends to save product
 export interface ProductForCreate {
         title: string;
         taskId: number;

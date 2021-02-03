@@ -22,9 +22,11 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using TelemView.API.Data;
+using TelemView.API.EmailService;
 using TelemView.API.Helpers;
 using TelemView.API.Models;
 
+//sets all configuration for our api and runs it
 namespace TelemView.API
 {
     public class Startup
@@ -36,20 +38,25 @@ namespace TelemView.API
 
         public IConfiguration Configuration { get; }
 
+        //db connection for dev mode
         public void ConfigureDevelopmentServices(IServiceCollection services)
         {
             services.AddDbContext<DataContext>(x =>
             {
+                //we use lazy loading - includes data only if needed
+                //we need to define all navigation properties in models as public and virtual
                 x.UseLazyLoadingProxies();
-                x.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
+                x.UseSqlServer(Configuration.GetConnectionString("DefaultConnectionDev"));
             });
             ConfigureServices(services);
         }
-
+        //db connection for prod mode
         public void ConfigureProductionServices(IServiceCollection services)
         {
             services.AddDbContext<DataContext>(x =>
             {
+                //we use lazy loading - includes data only if needed
+                //we need to define all navigation properties in models as public and virtual
                 x.UseLazyLoadingProxies();
                 x.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
@@ -57,14 +64,17 @@ namespace TelemView.API
         }
         public void ConfigureServices(IServiceCollection services)
         {
+            //configuration of dotnet core identity
             IdentityBuilder builder = services.AddIdentityCore<User>(opt =>
             {
-                opt.Password.RequireDigit = false;
                 opt.Password.RequiredLength = 8;
                 opt.Password.RequireNonAlphanumeric = false;
-                opt.Password.RequireUppercase = false;
                 opt.User.RequireUniqueEmail = true;
-            });
+                opt.SignIn.RequireConfirmedEmail = true;
+            })
+            .AddDefaultTokenProviders();
+            services.Configure<DataProtectionTokenProviderOptions>(opt =>
+                opt.TokenLifespan = TimeSpan.FromDays(7));
 
             builder = new IdentityBuilder(builder.UserType, typeof(Role), builder.Services);
             builder.AddEntityFrameworkStores<DataContext>();
@@ -72,6 +82,7 @@ namespace TelemView.API
             builder.AddRoleManager<RoleManager<Role>>();
             builder.AddSignInManager<SignInManager<User>>();
 
+            //add jwt Bearer authentication service
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
@@ -83,17 +94,23 @@ namespace TelemView.API
                 };
             });
 
+            //add role policy
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
                 options.AddPolicy("Edit", policy => policy.RequireRole("Admin", "Editor"));
             });
 
-            //Replace System.Text.Json with Newtonsoft.MVC
-
             services.AddCors();
             services.AddAutoMapper(typeof(TelemRepository).Assembly);
-            // services.AddControllers();
+
+            //add email service
+            var emailConfig = Configuration
+            .GetSection("EmailConfiguration")
+            .Get<EmailConfiguration>();
+            services.AddSingleton(emailConfig);
+
+            //add controllers and newtonsoft
             services.AddControllers(options =>
             {
                 var policy = new AuthorizationPolicyBuilder()
@@ -104,6 +121,8 @@ namespace TelemView.API
             .AddNewtonsoftJson(opt =>
             opt.SerializerSettings.ReferenceLoopHandling =
             Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+            services.AddScoped<IEmailSender, EmailSender>();
             services.AddScoped<ITelemRepository, TelemRepository>();
 
         }
@@ -111,6 +130,7 @@ namespace TelemView.API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            //handeling errors
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -139,6 +159,7 @@ namespace TelemView.API
 
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
+            //use static files
             app.UseDefaultFiles();
             app.UseStaticFiles();
 

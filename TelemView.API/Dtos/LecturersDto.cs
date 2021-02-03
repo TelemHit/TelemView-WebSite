@@ -1,3 +1,4 @@
+//dto for Lecturer data
 namespace TelemView.API.Dtos
 {
     public class LecturersDto

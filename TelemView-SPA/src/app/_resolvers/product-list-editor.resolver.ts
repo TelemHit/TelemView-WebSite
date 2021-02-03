@@ -5,7 +5,7 @@ import {Observable, of } from 'rxjs';
 import {catchError, tap, filter, map, switchMap } from 'rxjs/operators';
 import { ProductsService } from '../_services/products.service';
 
-
+//resolve products details for Products edit main page
 
 @Injectable()
 export class ProductListEditorResolver implements Resolve<Product[]>{

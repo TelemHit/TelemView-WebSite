@@ -9,6 +9,7 @@ using TelemView.API.Data;
 using TelemView.API.Dtos;
 using TelemView.API.Models;
 
+//this controller responsible for productTypes table
 namespace TelemView.API.Controllers
 {
     [Authorize(Policy = "Edit")]
@@ -24,6 +25,7 @@ namespace TelemView.API.Controllers
             _repo = repo;
         }
 
+        //get all productTypes
         [HttpGet]
         public async Task<IActionResult> GetProductTypes(int userId)
         {
@@ -37,6 +39,7 @@ namespace TelemView.API.Controllers
             return Ok(typesToReturn);
         }
 
+        //get specific productType
         [HttpGet("{id}", Name = "GetProductType")]
         public async Task<IActionResult> GetProductType(int userId, int id)
         {
@@ -50,6 +53,7 @@ namespace TelemView.API.Controllers
             return Ok(typesToReturn);
         }
 
+        //update productType
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateProductType(int id, int userId, ProductTypeDto productTypeDto)
         {
@@ -65,6 +69,7 @@ namespace TelemView.API.Controllers
             throw new Exception($"Updating type {id} failed on save");
         }
 
+        //delete productType
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProductType(int id, int userId)
         {
@@ -86,6 +91,7 @@ namespace TelemView.API.Controllers
             return BadRequest("Failed to delete the type");
         }
 
+        //add new productType
         [HttpPost]
         public async Task<IActionResult> AddProductType(int userId, ProductTypeDto productTypeDto)
         {

@@ -9,6 +9,7 @@ using TelemView.API.Data;
 using TelemView.API.Dtos;
 using TelemView.API.Models;
 
+//this controller responsible for OrganizationTypes table
 namespace TelemView.API.Controllers
 {
     [Authorize(Policy = "Edit")]
@@ -24,6 +25,7 @@ namespace TelemView.API.Controllers
             _repo = repo;
         }
 
+        //get all OrganizationTypes
         [HttpGet]
         public async Task<IActionResult> GetOrganizationTypes(int userId)
         {
@@ -37,6 +39,7 @@ namespace TelemView.API.Controllers
             return Ok(otToReturn);
         }
 
+        //get specific OrganizationType
         [HttpGet("{id}", Name = "GetOrganizationType")]
         public async Task<IActionResult> GetOrganizationType(int userId, int id)
         {
@@ -50,6 +53,7 @@ namespace TelemView.API.Controllers
             return Ok(otToReturn);
         }
 
+        //update OrganizationType
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateOrganizationType(int id, int userId, OrganizationTypeDto organizationTypeDto)
         {
@@ -66,6 +70,7 @@ namespace TelemView.API.Controllers
             throw new Exception($"Updating organization type {id} failed on save");
         }
 
+        //delete OrganizationType
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOrganizationType(int id, int userId)
         {
@@ -86,6 +91,7 @@ namespace TelemView.API.Controllers
             return BadRequest("Failed to delete the organization type");
         }
 
+        //add new OrganizationType
         [HttpPost]
         public async Task<IActionResult> AddOrganizationType(int userId, OrganizationTypeDto organizationTypeDto)
         {
@@ -98,7 +104,7 @@ namespace TelemView.API.Controllers
                 if (ot.Title.Trim() == organizationTypeDto.Title.Trim())
                     return BadRequest($"organization type {ot.Title} already exists");
             }
-            organizationTypeDto.Title=organizationTypeDto.Title.Trim();
+            organizationTypeDto.Title = organizationTypeDto.Title.Trim();
             var newOt = _mapper.Map<OrganizationType>(organizationTypeDto);
             _repo.Add(newOt);
             if (await _repo.SaveAll())

@@ -1,3 +1,4 @@
+//side nav for editor
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/_services/auth.service';
 import { Router } from '@angular/router';
@@ -14,12 +15,13 @@ export class SideNavComponent implements OnInit {
   ngOnInit() {
     this.name = this.authservice.decodedToken?.unique_name;
   }
-
+//log out
   logOut(){
     localStorage.removeItem('token');
     this.authservice.decodedToken = null;
     this.router.navigate(['/editor']);
   }
+  //check if log in
   loggedIn(){
     return this.authservice.loggedIn();
   }

@@ -9,6 +9,7 @@ using TelemView.API.Data;
 using TelemView.API.Dtos;
 using TelemView.API.Models;
 
+//this controller responsible for Tags table
 namespace TelemView.API.Controllers
 {
     [Authorize(Policy = "Edit")]
@@ -24,6 +25,7 @@ namespace TelemView.API.Controllers
             _repo = repo;
         }
 
+        //get all tags
         [HttpGet]
         public async Task<IActionResult> GetTags(int userId)
         {
@@ -37,6 +39,7 @@ namespace TelemView.API.Controllers
             return Ok(tagsToReturn);
         }
 
+        //get specific tag
         [HttpGet("{id}", Name = "GetTag")]
         public async Task<IActionResult> GetTag(int userId, int id)
         {
@@ -50,6 +53,7 @@ namespace TelemView.API.Controllers
             return Ok(tagToReturn);
         }
 
+        //update Tag
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTag(int id, int userId, TagDto tagDto)
         {
@@ -66,6 +70,7 @@ namespace TelemView.API.Controllers
             throw new Exception($"Updating tag {id} failed on save");
         }
 
+        //delete Tag
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTag(int id, int userId)
         {
@@ -87,6 +92,7 @@ namespace TelemView.API.Controllers
             return BadRequest("Failed to delete the tag");
         }
 
+        //add new Tag
         [HttpPost]
         public async Task<IActionResult> AddTag(int userId, TagDto tagDto)
         {
@@ -99,7 +105,7 @@ namespace TelemView.API.Controllers
                 if (tag.Title.Trim() == tagDto.Title.Trim())
                     return BadRequest($"tag {tag.Title} already exists");
             }
-            tagDto.Title=tagDto.Title.Trim();
+            tagDto.Title = tagDto.Title.Trim();
             var newTag = _mapper.Map<Tag>(tagDto);
             _repo.Add(newTag);
             if (await _repo.SaveAll())

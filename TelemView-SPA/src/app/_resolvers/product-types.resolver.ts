@@ -6,6 +6,8 @@ import {Observable, of } from 'rxjs';
 import {catchError, tap, filter, map, switchMap } from 'rxjs/operators';
 import { AuthService } from '../_services/auth.service';
 
+//resolve Types for Edit Types page
+
 @Injectable()
 export class ProductTypesResolver implements Resolve<ProductType[]>{
     products: ProductType[];

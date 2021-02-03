@@ -1,3 +1,4 @@
+//dto for media
 namespace TelemView.API.Dtos
 {
     public class MediaDto

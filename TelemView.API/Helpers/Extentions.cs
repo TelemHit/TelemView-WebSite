@@ -4,10 +4,12 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using TelemView.API.Models;
 
+//collection of helper functions.
 namespace TelemView.API.Helpers
 {
     public static class Extentions
     {
+        //add errors to http headers
         public static void AddApplicationError(this HttpResponse response, string message)
         {
             response.Headers.Add("Application-Error", message);
@@ -15,6 +17,7 @@ namespace TelemView.API.Helpers
             response.Headers.Add("Access-Control-Allow-Origin", "*");
         }
 
+        //calculate counter for organization type
         public static int CalculateCounter(this ICollection<OrganizationsAndTypes> organizationsAndTypes)
         {
             int count = 0;
@@ -26,6 +29,7 @@ namespace TelemView.API.Helpers
             return count;
         }
 
+        //check the file type and if it is a valid type
         public static string CheckFileType(this string extention)
         {
             List<string> ImageExtensions = new List<string> { ".JPG", ".JPE", ".JPEG", ".GIF", ".PNG" };
@@ -40,6 +44,7 @@ namespace TelemView.API.Helpers
             return "false";
         }
 
+        //add pagination params to http headers
         public static void AddPagination(this HttpResponse response, int currentPage, int itemsPerPage, int totalItems, int totalPages)
         {
             var paginationHeader = new PaginationHeader(currentPage, itemsPerPage, totalItems, totalPages);

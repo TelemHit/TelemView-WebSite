@@ -23,8 +23,8 @@
   cursor: pointer;
   box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 }
-.card-tv:hover{
-    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+.card-tv:hover, .card-tv:focus{
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px !important;
     
 }
 .card-tv:focus{

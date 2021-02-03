@@ -9,6 +9,7 @@ using TelemView.API.Data;
 using TelemView.API.Dtos;
 using TelemView.API.Models;
 
+//this controller responsible for courses table
 namespace TelemView.API.Controllers
 {
     [Authorize(Policy = "Edit")]
@@ -24,6 +25,7 @@ namespace TelemView.API.Controllers
             _repo = repo;
         }
 
+        //get all courses
         [HttpGet]
         public async Task<IActionResult> GetCourses(int userId)
         {
@@ -37,6 +39,7 @@ namespace TelemView.API.Controllers
             return Ok(coursesToReturn);
         }
 
+        //get specific course
         [HttpGet("{id}", Name = "GetCourse")]
         public async Task<IActionResult> GetCourse(int userId, int id)
         {
@@ -50,6 +53,7 @@ namespace TelemView.API.Controllers
             return Ok(courseToReturn);
         }
 
+        //update course
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCourse(int id, int userId, CourseDto courseDto)
         {
@@ -66,6 +70,7 @@ namespace TelemView.API.Controllers
             throw new Exception($"Updating course {id} failed on save");
         }
 
+        // delete course
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCourse(int id, int userId)
         {
@@ -87,6 +92,7 @@ namespace TelemView.API.Controllers
             return BadRequest("Failed to delete the course");
         }
 
+        //add new course
         [HttpPost]
         public async Task<IActionResult> AddCourse(int userId, CourseDto courseDto)
         {
@@ -99,7 +105,7 @@ namespace TelemView.API.Controllers
                 if (course.Title.Trim() == courseDto.Title.Trim())
                     return BadRequest($"student {course.Title} already exists");
             }
-            courseDto.Title=courseDto.Title.Trim();
+            courseDto.Title = courseDto.Title.Trim();
             var newCourse = _mapper.Map<Course>(courseDto);
             _repo.Add(newCourse);
             if (await _repo.SaveAll())

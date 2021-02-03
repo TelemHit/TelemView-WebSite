@@ -1,6 +1,6 @@
-using System;
-using Microsoft.AspNetCore.Http;
 
+using Microsoft.AspNetCore.Http;
+//dto for new media we create
 namespace TelemView.API.Dtos
 {
     public class MediaForCreationDto

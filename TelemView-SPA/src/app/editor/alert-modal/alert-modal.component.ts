@@ -1,3 +1,5 @@
+//modal shows before deleting objects
+
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 

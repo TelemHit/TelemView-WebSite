@@ -7,6 +7,8 @@ import { AuthService } from '../_services/auth.service';
 import { Organization } from '../_models/organization';
 import { Course } from '../_models/Course';
 
+//resolve courses for courses edit 
+
 @Injectable()
 
 

@@ -1,3 +1,4 @@
+//general modal for data updating (organizations, types etc)
 import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import {
@@ -7,8 +8,6 @@ import {
   FormArray,
   FormControl,
 } from '@angular/forms';
-import { DataForHome } from 'src/app/_models/dataForHome';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { OrganizationType } from 'src/app/_models/organizationType';
 
 @Component({
@@ -51,10 +50,10 @@ export class ModalComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    //create form
     this.createUpdateForm();
-    
+    //check if updating organization and push organization types to form control
     if (this.orgCurrentTypes != null && this.orgCurrentTypes.length > 0) {
-      console.log(this.orgCurrentTypes)
       const formArray: FormArray = this.addItem.get('orgTypes') as FormArray;
       this.orgCurrentTypes.forEach((ot: OrganizationType) => {
         formArray.push(new FormControl({ id: ot.id }));
@@ -62,10 +61,12 @@ export class ModalComponent implements OnInit {
     }
   }
 
-isChecked(type){
-  return this.addItem.get('orgTypes').value.find(ot => ot.id === type.id);
-}
+  //check if organization has a type
+  isChecked(type) {
+    return this.addItem.get('orgTypes').value.find((ot) => ot.id === type.id);
+  }
 
+  //create form
   createUpdateForm() {
     this.addItem = this.formBuilder.group(
       {
@@ -85,6 +86,7 @@ isChecked(type){
     );
   }
 
+//organization types check change
   onCheckChange(event) {
     const formArray: FormArray = this.addItem.get('orgTypes') as FormArray;
     /* Selected */
@@ -100,7 +102,6 @@ isChecked(type){
       let i = 0;
 
       formArray.controls.forEach((ctrl: FormControl) => {
-        console.log(ctrl.value.id);
         if (ctrl.value.id === parseInt(event.target.id.split('_')[1], 10)) {
           // Remove the unselected element from the arrayForm
           formArray.removeAt(i);
@@ -113,16 +114,19 @@ isChecked(type){
     this.addItem.markAsDirty();
   }
 
+  //validate description if Task
   checkIfDescriptionNeeded(g: FormGroup) {
     return this.isTask ? Validators.required(g.controls.description) : null;
   }
 
+  //validate checkboxes if organization 
   checkIforgTypesNeeded(g: FormGroup) {
     return this.isOrganization
       ? Validators.required(g.controls.orgTypes)
       : null;
   }
 
+  // check if name already exists
   checkIfExists(g: FormGroup) {
     return this.generalData.find((x) => x === g.get('name').value.trim()) &&
       !this.isEdit
@@ -130,17 +134,17 @@ isChecked(type){
       : null;
   }
 
+  //validate number input if Course
   checkIfNumberNeeded(g: FormGroup) {
     return this.isNumberNeeded ? Validators.required(g.controls.number) : null;
   }
 
+  //save
   saveObject(form) {
     this.triggerEvent(form.value);
-    // this.addItem.get('name').setValue('');
-    // this.closeBtnName = 'סגירה';
-    // this.bsModalRef.hide();
   }
 
+  //send data to parent
   triggerEvent(item: any) {
     this.item.emit({ data: item, res: 200 });
   }

@@ -37,9 +37,11 @@ export class EditorProductsComponent implements OnInit {
     private alertify:AlertifyService,
     private titleService:Title
   ) {
+    //wait 0.5 second before search
     this.modelChanged.pipe(debounceTime(this.debounceTime)).subscribe(() => {
       this.search();
     });
+    //show time ago in hebrew
     intl.strings = hebrewStrings;
     intl.changes.next();
   }
@@ -54,6 +56,7 @@ export class EditorProductsComponent implements OnInit {
     });
   }
 
+  //publish
   publishProduct(id) {
     this.productsService
       .publishProduct(this.authService.decodedToken.nameid, id)
@@ -65,6 +68,7 @@ export class EditorProductsComponent implements OnInit {
       });
   }
 
+  //show on home page - not in use
   setOnHomePage(id) {
     this.productsService
       .productOnHomePage(this.authService.decodedToken.nameid, id)
@@ -76,6 +80,7 @@ export class EditorProductsComponent implements OnInit {
       });
   }
 
+  //open delete modal
   deleteProduct(id, title) {
     const initialState = {
       title: 'מחיקת תוצר',
@@ -98,6 +103,7 @@ export class EditorProductsComponent implements OnInit {
     });
   }
 
+  //delete
   finalDeleteProduct(id) {
     this.productsService
       .deleteProduct(this.authService.decodedToken.nameid, id)
@@ -113,11 +119,13 @@ export class EditorProductsComponent implements OnInit {
       );
   }
 
+  //pagination
   pageChanged(e: any): void{
     this.pagination.currentPage = e.page;
     this.loadProducts({});
   }
 
+  //load more products
   loadProducts(search) {
     this.productsService.getProducts(search, this.pagination.currentPage, this.pagination.itemsPerPage, false)
     .subscribe((res: PaginatedResult<Product[]>) => {
@@ -129,14 +137,17 @@ export class EditorProductsComponent implements OnInit {
     });
   }
 
+  //clear search
   clearSearch(){
     this.loadProducts({});
     this.someValue = '';
   }
+  //search input change
   modelChange() {
     this.modelChanged.next();
   }
+  //search
   search(){
-    this.loadProducts({params:{search: this.someValue}});
+    this.loadProducts({search: this.someValue});
   }
 }

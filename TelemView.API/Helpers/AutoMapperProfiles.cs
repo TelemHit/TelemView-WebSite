@@ -2,7 +2,9 @@ using System.Linq;
 using AutoMapper;
 using TelemView.API.Dtos;
 using TelemView.API.Models;
-
+//we use AutoMapper library to map between objects.
+//mainly between models and dto
+//this file define all those maps. 
 namespace TelemView.API.Helpers
 {
     public class AutoMapperProfiles : Profile
@@ -11,18 +13,14 @@ namespace TelemView.API.Helpers
         {
             CreateMap<User, UserForLoginDto>();
             CreateMap<User, UserForRegisterDto>();
+            CreateMap<UserForRegisterDto, User>()
+            .ForMember(u => u.UserName, opt => opt.MapFrom(x => x.Email));
             CreateMap<Product, ProductForHomeDto>()
             .ForMember(dest => dest.MainPhotoUrl, opt => opt.MapFrom(
                 src => src.Media.FirstOrDefault(m => m.IsMain).Url
             ))
             .ForMember(dest => dest.Lecturers, opt => opt.MapFrom(
                 src => src.ProductsLecturers
-            ))
-            .ForMember(dest => dest.Tags, opt => opt.MapFrom(
-                src => src.ProductsTags
-            ))
-            .ForMember(dest => dest.Students, opt => opt.MapFrom(
-                src => src.ProductStudents
             ))
             .ForMember(dest => dest.Courses, opt => opt.MapFrom(
                 src => src.ProductsCourses
@@ -70,7 +68,6 @@ namespace TelemView.API.Helpers
             .ForMember(dest => dest.Name, opt => opt.MapFrom(
                 src => src.Student.Name
             ));
-
             CreateMap<OrganizationsAndTypes, OrganizationDto>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(
                 src => src.OrganizationId
@@ -78,7 +75,6 @@ namespace TelemView.API.Helpers
             .ForMember(dest => dest.Title, opt => opt.MapFrom(
                 src => src.Organization.Title
             ));
-
             CreateMap<OrganizationsAndTypes, OrganizationTypeDto>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(
                 src => src.OrganizationTypeId
@@ -87,7 +83,8 @@ namespace TelemView.API.Helpers
                 src => src.OrganizationType.Title
             ));
 
-            CreateMap<DataForHome, DataForHomeDto>();
+            CreateMap<GeneralData, DataForHomeDto>();
+            CreateMap<GeneralData, DataForEditDto>();
             CreateMap<Year, YearDto>();
             CreateMap<Degree, DegreeDto>();
             CreateMap<Organization, OrganizationDto>()
@@ -136,12 +133,10 @@ namespace TelemView.API.Helpers
             .ForMember(dest => dest.ProductsCourses, opt => opt.MapFrom(
                 src => src.Courses
             ));
-
             CreateMap<TagDto, ProductTag>()
             .ForMember(dest => dest.TagId, opt => opt.MapFrom(
                 src => src.Id
             ));
-
             CreateMap<StudentDto, ProductStudent>()
             .ForMember(dest => dest.StudentId, opt => opt.MapFrom(
                 src => src.Id
@@ -151,12 +146,10 @@ namespace TelemView.API.Helpers
            .ForMember(dest => dest.CourseId, opt => opt.MapFrom(
                src => src.Id
            ));
-
             CreateMap<LecturersDto, ProductLecturer>()
            .ForMember(dest => dest.LecturerId, opt => opt.MapFrom(
                src => src.Id
            ));
-
             CreateMap<MediaForCreationDto, Media>();
             CreateMap<Media, MediaForReturnDto>()
             .ForMember(dest => dest.MDescription, opt => opt.MapFrom(
@@ -171,16 +164,13 @@ namespace TelemView.API.Helpers
             .ForMember(dest => dest.Description, opt => opt.MapFrom(
                 src => src.MDescription
             ));
-
             CreateMap<Product, ProductIdDto>();
-
             CreateMap<ProductTypeDto, ProductType>();
             CreateMap<TagDto, Tag>();
             CreateMap<StudentDto, Student>();
             CreateMap<LecturersDto, Lecturer>();
             CreateMap<CourseDto, Course>();
             CreateMap<TaskDto, Task>();
-
             CreateMap<OrganizationDto, Organization>()
             .ForMember(dest => dest.OrganizationAndType, opt => opt.MapFrom(
                 src => src.OrganizationTypes
@@ -189,13 +179,11 @@ namespace TelemView.API.Helpers
             .ForMember(dest => dest.OrganizationId, opt => opt.MapFrom(
                             src => src.Id
             ));
-
             CreateMap<OrganizationTypeDto, OrganizationType>();
             CreateMap<OrganizationTypeDto, OrganizationsAndTypes>()
             .ForMember(dest => dest.OrganizationTypeId, opt => opt.MapFrom(
                 src => src.Id
             ));
-
         }
     }
 }

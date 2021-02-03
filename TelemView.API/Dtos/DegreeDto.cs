@@ -1,3 +1,4 @@
+//dto for degree data
 namespace TelemView.API.Dtos
 {
     public class DegreeDto

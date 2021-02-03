@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TelemView.API.Models;
 
+//dto for product details - when we get product for Detail page or Edit page
 namespace TelemView.API.Dtos
 {
     public class ProductDetailsDto

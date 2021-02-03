@@ -9,11 +9,11 @@ import { ProductType } from './productType';
 import { Year } from './year';
 import { Degree } from './Degree';
 
+//general data for home page filters
+
 export interface DataForHome {
     courses: Course[];
-    tags: Tag[];
     lecturers: Lecturer[];
-    students: Student[];
     organizations: Organization[];
     organizationTypes: OrganizationType[];
     tasks: Task[];

@@ -22,7 +22,7 @@ export class EditorOrganizationsComponent implements OnInit {
   organizations: Organization[];
   bsModalRef: BsModalRef;
   newEntity: string;
-  types: ProductType[];
+  types: OrganizationType[];
 
   constructor(
     private generalService: GeneralDataService,
@@ -71,6 +71,7 @@ export class EditorOrganizationsComponent implements OnInit {
     });
   }
 
+  //get all organization types
   getOrgTypes() {
     this.generalService
       .getOrganizationTypes(this.authService.decodedToken.nameid)
@@ -92,6 +93,11 @@ export class EditorOrganizationsComponent implements OnInit {
       .addOrganization(this.authService.decodedToken.nameid, orgData)
       .subscribe(
         (data: Organization) => {
+          data.organizationTypes.forEach((o: OrganizationType) => {
+                o.title=this.types.find(t => t.id == o['id']).title;
+                o.counter= this.types.find(t => t.id == o['id']).counter;
+                o.filteredCounter= this.types.find(t => t.id == o['id']).filteredCounter;
+          });
           this.organizations.unshift(data);
           this.clear();
           this.bsModalRef.hide();
@@ -105,11 +111,13 @@ export class EditorOrganizationsComponent implements OnInit {
       );
   }
 
+  //clear variables
   clear() {
     this.newEntity = null;
     this.spinner.hide();
   }
 
+  //open update modal
   updateOrgModal(org) {
     const initialState = {
       input: true,
@@ -135,13 +143,14 @@ export class EditorOrganizationsComponent implements OnInit {
     });
   }
 
+  //update after Approve
   updateOrg(org) {
     this.spinner.show();
     const orgData: OrganizationForUpdate = {
       title: this.newEntity['name'],
       organizationTypes: this.newEntity['orgTypes'],
     };
-    console.log(this.checkOrgTypes(org, this.newEntity['orgTypes']));
+
     if (
       this.newEntity['name'] !==
         this.organizations.find((o) => o.id == org.id).title ||
@@ -187,11 +196,14 @@ export class EditorOrganizationsComponent implements OnInit {
     }
   }
 
+  //check if organization types updated
   checkOrgTypes(org, newTypes) {
     const oldTypes: OrganizationType[] = this.organizations.find(
       (o) => o.id == org.id
     ).organizationTypes;
-    if (oldTypes.length != newTypes.length) return true;
+    if (oldTypes.length != newTypes.length){
+      return true;
+    } 
     for (let i = 0; i < oldTypes.length; i++) {
       let match = false;
       for (let n = 0; n < newTypes.length; n++) {
@@ -206,6 +218,7 @@ export class EditorOrganizationsComponent implements OnInit {
     return false;
   }
 
+    //open delete modal
   deleteOrg(id: number, title: string) {
     const initialState = {
       title: 'מחיקת ארגון',
@@ -227,6 +240,7 @@ export class EditorOrganizationsComponent implements OnInit {
     });
   }
 
+  //delete after Approve
   finalDeleteOrg(id: number) {
     this.generalService
       .deleteOrganization(this.authService.decodedToken.nameid, id)

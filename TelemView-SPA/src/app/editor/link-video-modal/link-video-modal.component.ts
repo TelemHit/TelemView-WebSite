@@ -1,3 +1,4 @@
+//modal for youtube and url upload
 import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import {
@@ -47,6 +48,7 @@ export class LinkVideoModalComponent implements OnInit {
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
+  //create form
   createLinkForm() {
     this.addItem = this.formBuilder.group(
       {
@@ -59,6 +61,7 @@ export class LinkVideoModalComponent implements OnInit {
     );
   }
   
+  //check that url is valid and create safe link
   checkUrl(){
     if(this.addItem.get('url').value.length>0 && !this.addItem.getError('notUrl')){
       this.sanitizedUrl = this.type === 'video' ? this.createYoutubeLink(this.addItem.get('url').value) 
@@ -66,6 +69,8 @@ export class LinkVideoModalComponent implements OnInit {
     }
     
   }
+
+//make sure url is valid
   checkIfUrl(g: FormGroup) {
     if (this.type === 'video') {
       const urlForCheck = g.controls.url.value.match(
@@ -83,25 +88,26 @@ export class LinkVideoModalComponent implements OnInit {
     }
   }
 
+  //create youtube link
   createYoutubeLink(url) {
     const videoId = this.matchYoutubeUrl(url);
     url = 'https://www.youtube.com/embed/' + videoId;
     return this.safeURL(url);
   }
 
+  //return only youtube id
   matchYoutubeUrl(url) {
     const p = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
     return url.match(p) ? RegExp.$1 : false;
   }
 
+  //save
   saveObject(form) {
     this.triggerEvent(form.value);
-    // this.addItem.get('url').setValue('');
-    // this.addItem.get('mDescription').setValue('');
-    // this.closeBtnName = 'סגירה';
     this.bsModalRef.hide();
   }
 
+  //send data to parent
   triggerEvent(item: any) {
     this.item.emit({ data: item, res: 200 });
   }

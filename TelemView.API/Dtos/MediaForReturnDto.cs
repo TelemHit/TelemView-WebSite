@@ -1,6 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Http;
 
+//dto for media we return to user
 namespace TelemView.API.Dtos
 {
     public class MediaForReturnDto

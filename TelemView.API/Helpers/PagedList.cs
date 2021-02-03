@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TelemView.API.Models;
 
+//class that creates a list of products according to pagination params
+//also return all pagination information
 namespace TelemView.API.Helpers
 {
     public class PagedList<T> : List<T>

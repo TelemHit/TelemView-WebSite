@@ -1,8 +1,9 @@
+//service for all general data
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { DataForHome } from '../_models/dataForHome';
+import { DataForEdit } from '../_models/DataForEdit';
 import { GeneralData } from '../_models/generalData';
 import { OrganizationForUpdate } from '../_models/OrganizationForUpdate';
 import { ProductType } from '../_models/productType';
@@ -22,8 +23,9 @@ export class GeneralDataService {
 
   constructor(private http: HttpClient) {}
 
-  getData(): Observable<DataForHome[]> {
-    return this.http.get<DataForHome[]>(this.baseUrl + 'generaldata');
+  //get general data for Edit product page
+  getData(): Observable<DataForEdit[]> {
+    return this.http.get<DataForEdit[]>(this.baseUrl + 'generaldata');
   }
 
   // Product types

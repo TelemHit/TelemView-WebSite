@@ -9,6 +9,7 @@ using TelemView.API.Data;
 using TelemView.API.Dtos;
 using TelemView.API.Models;
 
+//this controller responsible for Tasks table
 namespace TelemView.API.Controllers
 {
     [Authorize(Policy = "Edit")]
@@ -24,6 +25,7 @@ namespace TelemView.API.Controllers
             _repo = repo;
         }
 
+        //get all tasks
         [HttpGet]
         public async Task<IActionResult> GetTasks(int userId)
         {
@@ -37,6 +39,7 @@ namespace TelemView.API.Controllers
             return Ok(tasksToReturn);
         }
 
+        //get specific Task
         [HttpGet("{id}", Name = "GetTask")]
         public async Task<IActionResult> GetTask(int userId, int id)
         {
@@ -50,6 +53,7 @@ namespace TelemView.API.Controllers
             return Ok(taskToReturn);
         }
 
+        //update Task
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTask(int id, int userId, TaskDto taskDto)
         {
@@ -66,6 +70,7 @@ namespace TelemView.API.Controllers
             throw new Exception($"Updating task {id} failed on save");
         }
 
+        //delete Task
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTask(int id, int userId)
         {
@@ -87,6 +92,7 @@ namespace TelemView.API.Controllers
             return BadRequest("Failed to delete the task");
         }
 
+        //add Task
         [HttpPost]
         public async Task<IActionResult> AddTask(int userId, TaskDto taskDto)
         {
@@ -99,7 +105,7 @@ namespace TelemView.API.Controllers
                 if (task.Title.Trim() == taskDto.Title.Trim())
                     return BadRequest($"task {task.Title} already exists");
             }
-            taskDto.Title=taskDto.Title.Trim();
+            taskDto.Title = taskDto.Title.Trim();
             var newTask = _mapper.Map<Models.Task>(taskDto);
             _repo.Add(newTask);
             if (await _repo.SaveAll())

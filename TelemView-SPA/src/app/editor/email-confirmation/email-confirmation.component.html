@@ -1,0 +1,10 @@
+<app-nav></app-nav>
+<div class="container login-container">
+    <h1 class="text-center">אישור מייל</h1>
+    <p *ngIf="showError" class="text-center text-danger" role="alert">
+        {{errorMessage}}
+    </p>
+    <p *ngIf="showSuccess"  class="text-center text-success" role="alert">
+        כתובת המייל אושרה בהצלחה. <br/><a [routerLink]="['/editor']"> יש ללחוץ כאן כדי להתחבר למערכת</a>.
+    </p>
+</div>

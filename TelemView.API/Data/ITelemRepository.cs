@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using TelemView.API.Helpers;
 using TelemView.API.Models;
 
+//interface for the main repository - TelemRepository
 namespace TelemView.API.Data
 {
     public interface ITelemRepository
@@ -10,7 +11,7 @@ namespace TelemView.API.Data
         Task<PagedList<Product>> GetProducts(ProductParams productParams);
         Task<Product> GetProduct(int id);
         Task<bool> ProductExists(int id);
-        Task<DataForHome> GetDataForHome();
+        Task<GeneralData> GetGeneralData();
         Task<bool> SaveAll();
         void Add<T>(T entity) where T : class;
         void Delete<T>(T entity) where T : class;
