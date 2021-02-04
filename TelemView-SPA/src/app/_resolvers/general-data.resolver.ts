@@ -15,7 +15,6 @@ export class GeneralDataResolver implements Resolve<DataForEdit[]>{
 
         return this.generalDataService.getData().pipe(
             catchError(error => {
-                console.log('problem retrieving data');
                 return of(null);
             })
         );

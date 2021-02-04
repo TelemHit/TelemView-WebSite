@@ -18,7 +18,6 @@ export class ProductTypesResolver implements Resolve<ProductType[]>{
     resolve(route: ActivatedRouteSnapshot): Observable<ProductType[]>{
         return this.dataService.getProductTypes(this.authService.decodedToken.nameid).pipe(
             catchError(error => {
-                console.log('problem retrieving data');
                 return of(null);
             })
         );

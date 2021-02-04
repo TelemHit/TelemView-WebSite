@@ -16,7 +16,6 @@ export class ProductEditorResolver implements Resolve<Product>{
 
         return this.productService.getProduct(route.params.id).pipe(
             catchError(error => {
-                console.log('problem retrieving product');
                 return of(null);
             })
         );

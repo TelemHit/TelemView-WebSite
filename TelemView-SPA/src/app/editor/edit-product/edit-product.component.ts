@@ -105,7 +105,6 @@ export class EditProductComponent implements OnInit {
     //get data of product
     this.route.url.subscribe((val) => (this.routeName = val[1].path));
     this.route.data.subscribe((data) => {
-      console.log(data.generalData);
       this.generalData = data.generalData;
       this.titleService.setTitle('Telem View - עריכת תוצר');
       if (this.routeName !== 'create' && data.product) {
@@ -754,7 +753,6 @@ export class EditProductComponent implements OnInit {
       .updateProduct(this.authService.decodedToken.nameid, id, this.product)
       .subscribe(
         (next) => {
-          console.log('updated!!!');
           this.productForm.reset(this.product);
           if (this.routeName === 'create') {
             this.router.navigate(['editor/products/' + id]);
@@ -764,7 +762,6 @@ export class EditProductComponent implements OnInit {
           this.router.navigate(['/editor/products']);
         },
         (error) => {
-          console.log('not updated :(');
           this.spinner.hide();
         }
       );

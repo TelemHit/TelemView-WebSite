@@ -42,11 +42,11 @@ export class ProductDetailsComponent implements OnInit {
       let scrollToTop = window.setInterval(() => {
         let pos = window.pageYOffset;
         if (pos > 0) {
-          window.scrollTo(0, pos - 20); // how far to scroll on each step
+          window.scrollTo(0, pos - 50); // how far to scroll on each step
         } else {
           window.clearInterval(scrollToTop);
         }
-      }, 8);
+      }, 10);
     });
   }
 
@@ -93,7 +93,6 @@ export class ProductDetailsComponent implements OnInit {
   addProducts(params) {
     this.productService.getProducts(params, 1, 10).subscribe(
       (res: PaginatedResult<Product[]>) => {
-        console.log(res.pagination);
         let productsArray = res.result.filter((p) => p.id != this.product.id);
         productsArray.forEach((p) => {
           if (this.products.find((r) => r.id == p.id) == undefined) {
@@ -103,7 +102,6 @@ export class ProductDetailsComponent implements OnInit {
         });
       },
       (error) => {
-        console.log(error);
       }
     );
   }
@@ -118,7 +116,6 @@ export class ProductDetailsComponent implements OnInit {
     const mediaForGallery = this.product.media.filter(
       (m) => m.type.toLowerCase() != 'file' && m.type.toLowerCase() != 'link'
     );
-    console.log(mediaForGallery);
     this.mediaForGalleryArray = mediaForGallery;
   }
 

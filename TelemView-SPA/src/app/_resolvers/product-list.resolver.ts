@@ -19,7 +19,6 @@ export class ProductListResolver implements Resolve<Product[]>{
     resolve(route: ActivatedRouteSnapshot): Observable<Product[]>{
         return this.productsService.getProducts().pipe(
             catchError(error => {
-                console.log('problem retrieving data');
                 return of(null);
             })
         );

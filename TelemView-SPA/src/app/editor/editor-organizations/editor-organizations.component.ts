@@ -76,7 +76,6 @@ export class EditorOrganizationsComponent implements OnInit {
     this.generalService
       .getOrganizationTypes(this.authService.decodedToken.nameid)
       .subscribe((data) => {
-        console.log(data);
         return data;
       });
   }
@@ -169,7 +168,6 @@ export class EditorOrganizationsComponent implements OnInit {
             this.organizations.find((o) => o.id == org.id).organizationTypes=[];
             let newTypes: OrganizationType[]=this.organizations.find((o) => o.id == org.id).organizationTypes;
             orgData.organizationTypes.forEach((o) => {
-              console.log(o['id']);
               newTypes.push(
                 {
                   id: o['id'],
@@ -233,7 +231,6 @@ export class EditorOrganizationsComponent implements OnInit {
     this.bsModalRef.content.approveBtnName = 'כן';
 
     this.bsModalRef.content.confirm.subscribe((res) => {
-      console.log(res.data);
       if (res.data === true) {
         this.finalDeleteOrg(id);
       }

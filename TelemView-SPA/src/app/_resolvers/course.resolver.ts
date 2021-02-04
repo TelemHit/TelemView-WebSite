@@ -20,7 +20,6 @@ export class CourseResolver implements Resolve<Course[]>{
     resolve(route: ActivatedRouteSnapshot): Observable<Course[]>{
         return this.dataService.getCourses(this.authService.decodedToken.nameid).pipe(
             catchError(error => {
-                console.log('problem retrieving data');
                 return of(null);
             })
         );

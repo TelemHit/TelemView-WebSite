@@ -44,11 +44,9 @@ export class AdminPanelComponent implements OnInit {
   getUsers() {
     this.adminService.getUsers().subscribe(
       (data: User[]) => {
-        console.log(data);
         this.users = data;
       },
       (error) => {
-        console.log(error);
       }
     );
   }
@@ -131,7 +129,6 @@ export class AdminPanelComponent implements OnInit {
           this.alertify.success('מייל אימות נשלח בהצלחה');
         },
         (error) => {
-          console.log(error);
           this.alertify.error('הייתה בעיה בשליחת המייל');
         }
       );

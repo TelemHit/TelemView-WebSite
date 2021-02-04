@@ -20,7 +20,6 @@ export class StudentResolver implements Resolve<Student[]>{
     resolve(route: ActivatedRouteSnapshot): Observable<Student[]>{
         return this.dataService.getStudents(this.authService.decodedToken.nameid).pipe(
             catchError(error => {
-                console.log('problem retrieving data');
                 return of(null);
             })
         );

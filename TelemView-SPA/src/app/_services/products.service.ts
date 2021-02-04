@@ -80,7 +80,6 @@ export class ProductsService {
 
   //update product
   updateProduct(userId: number, id: number, product: Product) {
-    console.log(product);
     return this.http.put(
       this.baseUrl + 'product/' + userId + '/' + id,
       product

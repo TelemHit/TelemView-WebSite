@@ -49,7 +49,6 @@ export class ProductsGalleryComponent implements OnChanges {
     if(changes.products){
       this.index=0;
       this.localProducts = this.products;
-      console.log(this.localProducts)
     }
   }
 

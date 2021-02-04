@@ -37,7 +37,6 @@ export class HomeComponent implements OnInit {
     this.route.queryParamMap.subscribe(
       (params) => {
         this.productParams = params['params'];
-        console.log(this.chips);
         localStorage.setItem('userParams', JSON.stringify(this.productParams));
         this.page = 1;
         this.products = [];
@@ -45,7 +44,6 @@ export class HomeComponent implements OnInit {
         this.loadProducts(1000);
       },
       (error) => {
-        console.log('problem retriving data');
       }
     );
     this.titleService.setTitle('Telem View - תוצרי הפקולטה לטכנולוגיות למידה');
@@ -114,7 +112,6 @@ export class HomeComponent implements OnInit {
     for (const [key, value] of Object.entries(params)) {
       if (key == item.key) {
         if (typeof value == 'string') {
-          console.log(params);
           delete params[key];
           break;
         } else {
@@ -137,7 +134,6 @@ export class HomeComponent implements OnInit {
         }
       }
     }
-    console.log(params);
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: params,

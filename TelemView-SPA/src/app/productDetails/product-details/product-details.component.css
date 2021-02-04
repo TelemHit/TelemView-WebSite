@@ -101,11 +101,11 @@ h1 {
   padding: 10px 15px;
   margin-bottom: 20px;
 }
-.back-btn{
-    /* display: none; */
-    color: white;
+.btn-about.back-btn{
+    width: unset;
     padding: 0;
 }
+
 /* mobile */
 @media only screen and (max-width: 576px) {
   .logo-top img {

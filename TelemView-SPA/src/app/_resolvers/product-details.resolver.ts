@@ -16,7 +16,6 @@ export class ProductDetailsResolver implements Resolve<Product>{
 
         return this.productsService.getProduct(route.params['id']).pipe(
             catchError(error => {
-                console.log('problem retrieving product');
                 this.router.navigate(['.']);
                 return of(null);
             })

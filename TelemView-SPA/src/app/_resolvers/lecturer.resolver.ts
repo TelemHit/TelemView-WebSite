@@ -20,7 +20,6 @@ export class LecturerResolver implements Resolve<Lecturer[]>{
     resolve(route: ActivatedRouteSnapshot): Observable<Lecturer[]>{
         return this.dataService.getLecturers(this.authService.decodedToken.nameid).pipe(
             catchError(error => {
-                console.log('problem retrieving data');
                 return of(null);
             })
         );

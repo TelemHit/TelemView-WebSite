@@ -18,7 +18,6 @@ export class ProductTasksResolver implements Resolve<Task[]>{
     resolve(route: ActivatedRouteSnapshot): Observable<Task[]>{
         return this.dataService.getTasks(this.authService.decodedToken.nameid).pipe(
             catchError(error => {
-                console.log('problem retrieving data');
                 return of(null);
             })
         );

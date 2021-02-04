@@ -20,7 +20,6 @@ export class OrganizationTypeResolver implements Resolve<OrganizationType[]>{
     resolve(route: ActivatedRouteSnapshot): Observable<OrganizationType[]>{
         return this.dataService.getOrganizationTypes(this.authService.decodedToken.nameid).pipe(
             catchError(error => {
-                console.log('problem retrieving data');
                 return of(null);
             })
         );

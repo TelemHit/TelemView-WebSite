@@ -95,7 +95,6 @@ export class EditorProductsComponent implements OnInit {
     this.bsModalRef.content.approveBtnName = 'כן';
 
     this.bsModalRef.content.confirm.subscribe((res) => {
-      console.log(res.data);
       if (res.data === true) {
         this.finalDeleteProduct(id);
         
@@ -133,7 +132,6 @@ export class EditorProductsComponent implements OnInit {
       this.pagination = res.pagination;
     },
     error => {
-      console.log(error);
     });
   }
 

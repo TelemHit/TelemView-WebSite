@@ -55,7 +55,6 @@ export class EditorOrganizationTypesComponent implements OnInit {
     this.bsModalRef.content.approveBtnName = 'כן';
 
     this.bsModalRef.content.confirm.subscribe((res) => {
-      console.log(res.data);
       if (res.data === true) {
         this.finalDeleteOt(id);
       }

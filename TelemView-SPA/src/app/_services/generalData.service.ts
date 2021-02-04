@@ -47,7 +47,6 @@ export class GeneralDataService {
   }
 
   updateProductType(userId: number, id: number, data: GeneralData) {
-    console.log(data)
     return this.http.put(
       this.baseUrl + 'producttype/' + userId + '/' + id, data
     );

@@ -19,7 +19,6 @@ export class TagResolver implements Resolve<Tag[]>{
     resolve(route: ActivatedRouteSnapshot): Observable<Tag[]>{
         return this.dataService.getTags(this.authService.decodedToken.nameid).pipe(
             catchError(error => {
-                console.log('problem retrieving data');
                 return of(null);
             })
         );

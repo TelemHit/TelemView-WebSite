@@ -107,7 +107,6 @@ export class PhotoGalleryProductComponent implements OnChanges {
         type: img.type,
       });
     }
-    console.log(imgUrl);
     return imgUrl;
   }
 }

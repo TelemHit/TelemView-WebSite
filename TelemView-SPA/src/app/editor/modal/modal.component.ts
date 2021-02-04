@@ -110,7 +110,6 @@ export class ModalComponent implements OnInit {
         i++;
       });
     }
-    console.log(this.addItem.get('orgTypes'));
     this.addItem.markAsDirty();
   }
 

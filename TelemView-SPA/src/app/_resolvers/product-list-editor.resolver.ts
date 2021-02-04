@@ -21,7 +21,6 @@ export class ProductListEditorResolver implements Resolve<Product[]>{
     resolve(route: ActivatedRouteSnapshot): Observable<Product[]>{
         return this.productService.getProducts({}, this.pageNumber, this.pageSize, this.hideUnpublished).pipe(
             catchError(error => {
-                console.log('problem retrieving data');
                 return of(null);
             })
         );

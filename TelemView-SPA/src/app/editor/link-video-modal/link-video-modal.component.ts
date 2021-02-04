@@ -44,7 +44,6 @@ export class LinkVideoModalComponent implements OnInit {
 
   // make url safe for angular
   safeURL(url) {
-    console.log(url);
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
