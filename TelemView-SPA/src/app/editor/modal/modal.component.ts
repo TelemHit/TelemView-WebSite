@@ -71,7 +71,10 @@ export class ModalComponent implements OnInit {
     this.addItem = this.formBuilder.group(
       {
         name: [this.text, Validators.required],
-        number: [this.courseNumber, Validators.pattern('^[0-9]*$')],
+        number: [
+          this.courseNumber,
+          [Validators.pattern('^[0-9]*$'), Validators.maxLength(9)],
+        ],
         description: [this.description],
         orgTypes: new FormArray([]),
       },
@@ -86,7 +89,7 @@ export class ModalComponent implements OnInit {
     );
   }
 
-//organization types check change
+  //organization types check change
   onCheckChange(event) {
     const formArray: FormArray = this.addItem.get('orgTypes') as FormArray;
     /* Selected */
@@ -118,7 +121,7 @@ export class ModalComponent implements OnInit {
     return this.isTask ? Validators.required(g.controls.description) : null;
   }
 
-  //validate checkboxes if organization 
+  //validate checkboxes if organization
   checkIforgTypesNeeded(g: FormGroup) {
     return this.isOrganization
       ? Validators.required(g.controls.orgTypes)
@@ -141,6 +144,7 @@ export class ModalComponent implements OnInit {
   //save
   saveObject(form) {
     this.triggerEvent(form.value);
+    this.bsModalRef.hide();
   }
 
   //send data to parent

@@ -107,12 +107,10 @@ export class EditorTypesComponent implements OnInit {
         (data: any) => {
           this.productTypes.unshift(data);
           this.clear();
-          this.bsModalRef.hide();
           this.alertify.success('סוג התוצר נוסף בהצלחה');
         },
         (error) => {
-          this.bsModalRef.content.failMessage =
-            'הייתה בעיה בשמירת הנתונים, יש לנסות שנית';
+          this.alertify.error('הייתה בעיה בשמירת הנתונים, יש לנסות שנית');
             this.clear();
         }
       );
@@ -151,12 +149,10 @@ export class EditorTypesComponent implements OnInit {
         (data: any) => {
           this.productTypes.find(pt => pt.id == type.id).title=this.data.title;
           this.clear();
-          this.bsModalRef.hide();
           this.alertify.success('סוג התוצר עודכן בהצלחה');
         },
         (error) => {
-          this.bsModalRef.content.failMessage =
-            'הייתה בעיה בשמירת הנתונים, יש לנסות שנית';
+          this.alertify.error('הייתה בעיה בשמירת הנתונים, יש לנסות שנית');
           this.clear();
         });
     } else{

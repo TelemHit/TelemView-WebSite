@@ -102,10 +102,11 @@
 </article>
 <aside class="container-fluid overflow-auto darkBlue-bg text-center" >
   <section class="body-section gallery">
-  <div class="row d-flex justify-content-center">
+  <div class="row d-flex justify-content-center ml-0">
     <h2 class="gold">תוצרים נוספים שעשויים לעניין אותך</h2>
   </div>
   <app-products-gallery [products]="products"></app-products-gallery>
-  <a type="button"  [routerLink]="['']" class="btn btn-yellow mt-5">חזרה לכל התוצרים</a>
+  <button type="button" (click)="backClicked()" class="btn btn-yellow mt-5">חזרה לכל התוצרים</button>
 </section>
 </aside>
+<app-footer></app-footer>

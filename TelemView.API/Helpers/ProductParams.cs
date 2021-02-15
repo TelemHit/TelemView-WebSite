@@ -4,7 +4,7 @@ namespace TelemView.API.Helpers
     //that include filters and pagination
     public class ProductParams
     {
-        public bool HideUnpublished { get; set; } = true;
+        public bool IsClient { get; set; } = true;
         public int[] ProductTypes { get; set; }
         public int[] Organizations { get; set; }
         public int[] Courses { get; set; }

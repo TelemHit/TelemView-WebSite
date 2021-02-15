@@ -87,6 +87,7 @@ import { RegisterUserComponent } from './admin/register-user/register-user.compo
 import { ForgotPasswordComponent } from './editor/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './editor/reset-password/reset-password.component';
 import { EmailConfirmationComponent } from './editor/email-confirmation/email-confirmation.component';
+import { FooterComponent } from './footer/footer.component';
 import{ CustomEncoder } from './_services/custom-encoder'
 
 export function tokenGetter() {
@@ -95,7 +96,7 @@ export function tokenGetter() {
 
 
 @NgModule({
-  declarations: [		
+  declarations: [			
     ResetPasswordComponent,
     ProductCardComponent,
     ForgotPasswordComponent,
@@ -130,7 +131,8 @@ export function tokenGetter() {
     UserRoleModalComponent,
     AppComponent,
     PhotoGalleryProductComponent,
-      UserNavComponent
+      UserNavComponent,
+      FooterComponent
    ],
   imports: [
     BrowserModule,

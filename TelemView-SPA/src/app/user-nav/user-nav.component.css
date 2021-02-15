@@ -1,152 +1,175 @@
-.home-nav{
-
-    padding: 10px 15px;
+.home-nav {
+  padding: 10px 15px;
 }
-.home-nav-static{
-    padding: 5px 15px;
-    opacity: .9;
-    width: 100%;
-    position: fixed;
-    z-index: 101;
-    background: rgb(20,114,113);
-    background: linear-gradient(0deg, rgba(20,114,113,1) 0%, rgba(5,22,34,1) 100%);
-    box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px, rgba(0, 0, 0, 0.07) 0px 2px 2px, rgba(0, 0, 0, 0.07) 0px 4px 4px, rgba(0, 0, 0, 0.07) 0px 8px 8px, rgba(0, 0, 0, 0.07) 0px 16px 16px;
+.home-nav-static {
+  padding: 5px 15px;
+  opacity: 0.9;
+  width: 100%;
+  position: fixed;
+  z-index: 101;
+  background: rgb(20, 114, 113);
+  background: linear-gradient(
+    0deg,
+    rgba(20, 114, 113, 1) 0%,
+    rgba(5, 22, 34, 1) 100%
+  );
+  box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px, rgba(0, 0, 0, 0.07) 0px 2px 2px,
+    rgba(0, 0, 0, 0.07) 0px 4px 4px, rgba(0, 0, 0, 0.07) 0px 8px 8px,
+    rgba(0, 0, 0, 0.07) 0px 16px 16px;
+  animation: fadeIn ease 0.5s;
+  -webkit-animation: fadeIn ease 0.5s;
+  -moz-animation: fadeIn ease 0.5s;
+  -o-animation: fadeIn ease 0.5s;
+  -ms-animation: fadeIn ease 0.5s;
+
+  -webkit-transform: translate3d(0, 0, 0);
+  -o-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+}
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes fadeOut {
+  100% {
+    opacity: 0;
+  }
+  0% {
+    opacity: 1;
+  }
+}
+.home-nav-static .logo {
+  max-width: 70px;
+}
+.logo {
+  max-width: 100px;
+  object-fit: contain;
+  z-index: 1;
+}
+.home-nav-static .logo.logoTV {
+  max-width: 140px;
+}
+.logo.logoTV {
+  max-width: 170px;
+  margin-left: 15px;
+}
+
+.modal-header {
+  border-bottom: none;
+  padding-bottom: 0;
+  padding-right: 45px;
+  font-weight: 600;
+  font-size: 1.2em;
+  color: #051622;
+}
+.modal-content p {
+  color: #051622;
+  font-weight: 300;
+  font-size: 1.1em;
+}
+
+.modal-dialog {
+  box-shadow: rgba(187, 153, 119, 0.35) 0px 5px 15px;
+  border-radius: 0.3rem;
+}
+.mobileNav {
+  display: none;
+  color: white;
+  justify-self: flex-end;
+}
+.mobile-hide {
+  display: inline-block;
+}
+.mobile-show {
+  display: none;
+}
+
+/* tablet */
+@media only screen and (max-width: 992px) {
+  .mobile-show {
+    display: flex;
+  }
+  .mobile-hide {
+    display: none;
+  }
+}
+/* mobile */
+@media only screen and (max-width: 576px) {
+  .tv-nav-right {
+    display: none;
+  }
+
+  .ven-image{
+    padding: 15px 0;
+  }
+
+  .tv-nav-right.nav-mobile-active {
+    display: block;
+    position: absolute;
+    background: white;
+    right: 15px;
+    top: 70px;
+    border-radius: 0;
     animation: fadeIn ease 0.5s;
     -webkit-animation: fadeIn ease 0.5s;
     -moz-animation: fadeIn ease 0.5s;
     -o-animation: fadeIn ease 0.5s;
     -ms-animation: fadeIn ease 0.5s;
-    }
-    @keyframes fadeIn {
-        0% {opacity:0;}
-        100% {opacity:1;}
-        }
-        @keyframes fadeOut {
-            100% {opacity:0;}
-            0% {opacity:1;}
-            }
-        .home-nav-static .logo{
-            max-width: 70px;
-        }
-        .logo{
-            max-width: 100px;
-            object-fit: contain;
-            z-index: 1;
-        }
-        .home-nav-static .logo.logoTV{
-            max-width: 140px;
-        }
-        .logo.logoTV{
-            max-width: 170px;
-            margin-left: 15px;
-        }
+    width: 50%;
+    z-index: 1;
+  }
+  .home-nav-static .tv-nav-right.nav-mobile-active {
+    right: 27px;
+    top: 45px;
+  }
+  .tv-nav-right.nav-mobile-active a,
+  .tv-nav-right.nav-mobile-active button {
+    color: black;
+    display: block;
+    text-align: right;
+  }
+  .logo {
+    max-width: 60px;
+  }
+  .logo.logoTV {
+    max-width: 120px;
+    margin-left: 0;
+  }
+  .mobileNav {
+    display: block;
+    padding: 0;
+  }
 
-        .modal-header{
-            border-bottom: none;
-            padding-bottom: 0;
-            padding-right: 45px;
-            font-weight: 600;
-            font-size: 1.2em;
-            color: #051622;
-        }
-        .modal-content p{
-            color: #051622;
-            font-weight: 300;
-            font-size: 1.1em;
-        }
-        
-         .modal-dialog{
-            box-shadow: rgba(187, 153, 119, 0.35) 0px 5px 15px;
-            border-radius: .3rem;
-         }
-         .mobileNav{
-            display: none;
-            color: white;
-            justify-self: flex-end;
-        }
-        .mobile-hide{
-            display: inline-block;
-        }
-        .mobile-show{
-            display: none;
-        }
-        /* tablet */
-        @media only screen and (max-width: 992px) {
-            .mobile-show{
-                display: flex;
-            }
-            .mobile-hide{
-                display: none;
-            }
-        }
-        /* mobile */
-         @media only screen and (max-width: 576px) {
-            .tv-nav-right{
-                display: none;
-            }
+  #pencet {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    cursor: pointer;
+  }
 
-            .tv-nav-right.nav-mobile-active{
-                display: block;
-                position: absolute;
-                background: white;
-                right: 15px;
-                top: 70px;
-                border-radius: 0;
-                animation: fadeIn ease 0.5s;
-                -webkit-animation: fadeIn ease 0.5s;
-                -moz-animation: fadeIn ease 0.5s;
-                -o-animation: fadeIn ease 0.5s;
-                -ms-animation: fadeIn ease 0.5s;
-                width: 50%;
-                z-index: 1
-            }
-            .home-nav-static .tv-nav-right.nav-mobile-active{
-                right: 27px;
-                top: 45px;
-            }
-            .tv-nav-right.nav-mobile-active a, .tv-nav-right.nav-mobile-active button{
-                color: black;
-                display: block;
-                text-align: right;
-            }
-            .logo{
-                max-width: 60px;
-            }
-            .logo.logoTV{
-                max-width: 120px;
-                margin-left:0;
-            }
-            .mobileNav{
-                display: block;
-                padding: 0;
-            }
-            
-            #pencet{
-                display:flex;
-                align-items:center;
-                flex-direction:column;
-                cursor:pointer;
-              }
-              
-              #pencet span{
-                background-color: ghostwhite;
-                width: 1.35em;
-                height: .18em;
-                margin: 0.15em 0;
-                display: block;
-                transition: all .4s ease;
-                transform-origin: 0 0;
-              }
-              
-              .open span:nth-child(1) {
-                transform: rotate(45deg) translate(1px, -1px);
-              }
-              
-              .open span:nth-child(2) {
-                Transform: scaleX(0);
-              }
-              
-              .open span:nth-child(3) {
-                transform: rotate(-45deg) translate(1px, 0);
-              }
-          }
+  #pencet span {
+    background-color: ghostwhite;
+    width: 1.35em;
+    height: 0.18em;
+    margin: 0.15em 0;
+    display: block;
+    transition: all 0.4s ease;
+    transform-origin: 0 0;
+  }
+
+  .open span:nth-child(1) {
+    transform: rotate(45deg) translate(1px, -1px);
+  }
+
+  .open span:nth-child(2) {
+    transform: scaleX(0);
+  }
+
+  .open span:nth-child(3) {
+    transform: rotate(-45deg) translate(1px, 0);
+  }
+}

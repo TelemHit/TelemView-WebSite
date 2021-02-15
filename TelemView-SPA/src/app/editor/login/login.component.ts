@@ -49,14 +49,14 @@ export class LoginComponent implements OnInit {
               setTimeout(t => {
                 this.alert="אין לך הרשאות עריכה, יש ליצור קשר עם מנהל המערכת"
                 this.spinner.hide();
-              }, 1000)
+              }, 5000)
             }
           });
         } else{
           setTimeout(t => {
             this.alert="אין לך הרשאות עריכה, יש ליצור קשר עם מנהל המערכת"
             this.spinner.hide();
-          }, 1000)
+          }, 5000)
         }
         
       },
@@ -65,5 +65,10 @@ export class LoginComponent implements OnInit {
         this.alert=error;
       }
     );
+  }
+
+  //reset alert
+  resetAlert(){
+    this.alert='';
   }
 }

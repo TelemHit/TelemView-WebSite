@@ -17,7 +17,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 export class LinkVideoModalComponent implements OnInit {
   label: string;
-  text_2: string;
+  text_2='';
   placeHolder: string;
   label_2: string;
   placeHolder_2: string;
@@ -52,32 +52,45 @@ export class LinkVideoModalComponent implements OnInit {
     this.addItem = this.formBuilder.group(
       {
         url: ['', Validators.required],
-        mDescription: [this.text_2, Validators.required],
+        mDescription: [this.text_2, [Validators.required, Validators.maxLength(50)]],
       },
       {
         validators: [this.checkIfUrl.bind(this)],
       }
     );
   }
-  
+
   //check that url is valid and create safe link
-  checkUrl(){
-    if(this.addItem.get('url').value.length>0 && !this.addItem.getError('notUrl')){
-      this.sanitizedUrl = this.type === 'video' ? this.createYoutubeLink(this.addItem.get('url').value) 
-      : this.safeURL(this.addItem.get('url').value);
+  checkUrl() {
+    if (
+      this.addItem.get('url').value.length > 0 &&
+      !this.addItem.getError('notUrl')
+    ) {
+      this.sanitizedUrl =
+        this.type === 'video'
+          ? this.createYoutubeLink(this.addItem.get('url').value)
+          : this.safeURL(this.addItem.get('url').value);
     }
-    
   }
 
-//make sure url is valid
+  //make sure url is valid
   checkIfUrl(g: FormGroup) {
     if (this.type === 'video') {
-      const urlForCheck = g.controls.url.value.match(
-        /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/gi
-      );
+      const youtube = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|\?v=)([^#\&\?]*).*/;
+      const iframe = /<iframe.*?s*src="http(.*?)".*?<\/iframe>/;
+      let urlForCheck = null;
+      if (youtube.test(g.controls.url.value)) {
+        console.log(1)
+        urlForCheck = true;
+      }
+      if (iframe.test(g.controls.url.value) == true) {
+        console.log(2)
+        urlForCheck = null;
+      }
 
       return urlForCheck !== null ? null : { notUrl: true };
     }
+
     if (this.type === 'link') {
       return /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(
         g.controls.url.value

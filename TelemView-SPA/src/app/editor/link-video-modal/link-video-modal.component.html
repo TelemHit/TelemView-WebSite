@@ -9,15 +9,24 @@
   <div class="modal-body">
     <div class="form-group">
       <label for="modalInput">{{label}}</label>
-      <input id="modalInput" (input)="checkUrl()"
-        class="form-control" type="text" formControlName="url" placeholder="{{placeHolder}}" autocomplete="off"
+      <input id="modalInput" (input)="checkUrl()" class="form-control" type="text" formControlName="url"
+        placeholder="{{placeHolder}}" autocomplete="off"
         [ngClass]="{'is-invalid': addItem.get('url').touched &&  addItem.getError('notUrl')}">
-        <iframe class="card col-12 mt-2" height="300" *ngIf="!addItem.getError('notUrl')" [src]="sanitizedUrl"></iframe>
+      <iframe class="card col-12 mt-2" height="300" *ngIf="!addItem.getError('notUrl')" [src]="sanitizedUrl"></iframe>
       <div class="invalid-feedback">{{typeAlert}}</div>
       <div class="mt-2">
-      <label for="modalInput_2">{{label_2}}</label>
-      <input id="modalInput_2"
-        class="form-control" type="text" formControlName="mDescription" placeholder="{{placeHolder_2}}" autocomplete="off">
+
+        <div class="d-flex justify-content-between align-items-center">
+          <label for="modalInput_2">{{label_2}}</label>
+          <small class="char-counter">{{addItem.get('mDescription').value.length}}/50</small>
+        </div>
+
+        <input id="modalInput_2" [maxLength]=50 class="form-control" type="text" formControlName="mDescription"
+          placeholder="{{placeHolder_2}}" autocomplete="off"
+          [ngClass]="{'is-invalid': addItem.get('mDescription').touched && addItem.get('mDescription').errors}">
+        <div *ngIf="addItem.get('mDescription').touched && addItem.get('mDescription').errors" class="invalid-feedback">
+          יש לרשום תיאור
+        </div>
       </div>
 
     </div>
@@ -28,6 +37,7 @@
 
   <div class="modal-footer">
     <button type="button" class="btn btn-default" (click)="bsModalRef.hide()">{{closeBtnName}}</button>
-    <button type="button" class="btn btn-primary-dark" [disabled]="!addItem.valid" type="submit">{{saveBtnName}}</button>
+    <button type="button" class="btn btn-primary-dark" [disabled]="!addItem.valid"
+      type="submit">{{saveBtnName}}</button>
   </div>
 </form>

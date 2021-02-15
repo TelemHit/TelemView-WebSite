@@ -4,12 +4,12 @@
     <swiper [config]="config" [(index)]="index"  class="col-10">
       <div class="white-bg" *ngFor="let image of galleryImages">
         <img *ngIf="image.type == 'image'" [src]="image.url" alt="{{image.title}}" style="display: block; width: 100%;">
-        <button *ngIf="image.type == 'image'" class="largeImage btn" (click)="bigImage=image.url; bigImageTitle=image.title; setSmallFocus()">
+        <button *ngIf="image.type == 'image'" tabindex="-1" class="largeImage btn" (click)="bigImage=image.url; bigImageTitle=image.title; setSmallFocus()">
           <i class="fa fa-search-plus" aria-hidden="true"></i>
         </button>
         <iframe *ngIf="image.type != 'image'" [src]="image.url" frameborder="0" title="{{image.title}}"></iframe>
-        <div class="carousel-caption  d-none d-md-block">
-          <p><span class="green-bg">{{image.title}}</span></p>
+        <div class="carousel-caption d-none d-md-block">
+          <p class="green-bg"><span>{{image.title}}</span></p>
         </div>
       </div>
     </swiper>

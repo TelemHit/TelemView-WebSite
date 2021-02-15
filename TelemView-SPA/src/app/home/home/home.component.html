@@ -12,8 +12,8 @@
 <div class="container-fluid gray-bg products-container" infiniteScroll [infiniteScrollDistance]="2"
   [infiniteScrollThrottle]="50" [scrollWindow]="true" (scrolled)="onScroll()">
   <!-- filters result -->
-  <p *ngIf="checkIfFilters()" class="text-center search-result">
-    <span *ngIf="totalCount<1">לא נמצאו תוצרים... כדאי לנסות חיפוש אחר</span>
+  <p *ngIf="activeFilters" class="text-center search-result">
+    <span *ngIf="totalCount<1">לא נמצאו תוצרים</span>
     <span *ngIf="totalCount==1">נמצא תוצר <strong>אחד</strong></span>
     <span *ngIf="totalCount>1">נמצאו <strong>{{totalCount}}</strong> תוצרים</span>
   </p>
@@ -37,3 +37,13 @@
       בבקשה בדקו את החיבור לרשת ונסו לרענן את הדף</p>
   </div>
 </div>
+
+<!-- scroll to top -->
+
+<div class="scroll-to-top" [ngClass]="{'show-scrollTop': windowScrolled}">
+  <button type="button" class="btn active" data-toggle="button" aria-pressed="true" (click)="scrollToTop()">
+    <i class="fa fa-arrow-up" aria-hidden="true"></i>
+  </button>
+</div>
+
+<app-footer></app-footer>

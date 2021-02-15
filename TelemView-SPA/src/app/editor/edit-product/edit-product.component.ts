@@ -6,6 +6,7 @@ import {
   ViewChild,
   ElementRef,
   HostListener,
+  AfterViewInit,
 } from '@angular/core';
 import { Product } from 'src/app/_models/product';
 import { ProductsService } from 'src/app/_services/products.service';
@@ -47,7 +48,7 @@ declare let Hebcal: any;
   templateUrl: './edit-product.component.html',
   styleUrls: ['./edit-product.component.css'],
 })
-export class EditProductComponent implements OnInit {
+export class EditProductComponent implements OnInit, AfterViewInit {
   product: Product;
   generalData: DataForEdit[];
   orgSelectedValue: number;
@@ -98,34 +99,56 @@ export class EditProductComponent implements OnInit {
     private router: Router,
     private spinner: NgxSpinnerService,
     private alertify: AlertifyService,
-    private titleService:Title
+    private titleService: Title
   ) {}
 
   ngOnInit() {
     //get data of product
     this.route.url.subscribe((val) => (this.routeName = val[1].path));
-    this.route.data.subscribe((data) => {
-      this.generalData = data.generalData;
-      this.titleService.setTitle('Telem View - עריכת תוצר');
-      if (this.routeName !== 'create' && data.product) {
-        data.product.media.forEach((media) => {
-          if (media.type === 'video') {
-            media.urlForShow = this.safeURL(media.url);
-          }
-        });
-        this.product = data.product;
+    this.route.data.subscribe(
+      (data) => {
+        this.generalData = data.generalData;
+        if (this.routeName !== 'create' && data.product) {
+          let product = { ...data.product };
+          product.media.forEach((media) => {
+            if (media.type === 'video') {
+              media.urlForShow = this.safeURL(media.url);
+            }
+          });
+          this.product = product;
+        }
+      },
+      (error) => {
+        this.alertify.error('הייתה בעיה בטעינת התוצר');
+        this.router.navigate(['editor/products']);
       }
-    });
+    );
 
     if (!this.product && this.routeName !== 'create') {
       this.router.navigate(['editor/products']);
     }
+
+    if (this.routeName !== 'create') {
+      this.titleService.setTitle('Telem View - עריכת תוצר');
+    } else {
+      this.titleService.setTitle('Telem View - תוצר חדש');
+    }
+
     // initialize form
     this.createProductForm();
     if (this.product) {
       this.initializeValues();
       this.patch(this.product.media);
     }
+  }
+
+  ngAfterViewInit() {
+    this.scrollToTop();
+  }
+
+  // scroll top
+  scrollToTop() {
+        window.scrollTo(0, 0);
   }
 
   // initialize form values
@@ -247,17 +270,15 @@ export class EditProductComponent implements OnInit {
 
   // Check if url
   isUrl(g: FormGroup) {
-    if(g.controls.productUrl.value.length>0){
+    if (g.controls.productUrl.value.length > 0) {
       return /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(
         g.controls.productUrl.value
-      ) 
+      )
         ? null
         : { notUrl: true };
+    } else {
+      return null;
     }
-    else{
-      return null
-    }
-
   }
 
   // make url safe for angular
@@ -287,7 +308,10 @@ export class EditProductComponent implements OnInit {
 
   patchValues(mDescription, id, isMain, status, type, url, urlForShow, file?) {
     return this.formBuilder.group({
-      mDescription: [mDescription, Validators.required],
+      mDescription: [
+        mDescription,
+        [Validators.required, Validators.maxLength(50)],
+      ],
       id: [id],
       isMain: [isMain],
       status: [status],
@@ -300,109 +324,121 @@ export class EditProductComponent implements OnInit {
 
   // check students before add
   private beforeAddStudent(student: Student) {
-    const studentToAdd = student.name
-      ? student.name.trim()
-      : student.toString().trim();
-    if (studentToAdd) {
-      if (this.generalData['students'].find((t) => t.name === studentToAdd)) {
-        const newStudent = this.generalData['students'].find(
-          (t) => t.name === studentToAdd
-        );
-        if (
-          !this.productForm.controls.students.value.find(
-            (s) => s.id === newStudent.id
-          )
-        ) {
-          return of(newStudent);
+    if (student.name != '') {
+      const studentToAdd = student.name
+        ? student.name.trim()
+        : student.toString().trim();
+      if (studentToAdd) {
+        if (this.generalData['students'].find((t) => t.name === studentToAdd)) {
+          const newStudent = this.generalData['students'].find(
+            (t) => t.name === studentToAdd
+          );
+          if (
+            !this.productForm.controls.students.value.find(
+              (s) => s.id === newStudent.id
+            )
+          ) {
+            return of(newStudent);
+          } else {
+            this.studentAlertMessage = 'הסטודנט/ית כבר ברשימה';
+            setTimeout(() => {
+              this.studentAlertMessage = '';
+            }, 3000);
+          }
         } else {
-          this.studentAlertMessage = 'הסטודנט/ית כבר ברשימה';
-          setTimeout(() => {
-            this.studentAlertMessage = '';
-          }, 3000);
+          this.addStudentModal(studentToAdd);
         }
-      } else {
-        this.addStudentModal(studentToAdd);
       }
     }
   }
 
   // check tags before add
   private beforeAddTag(tag: Tag) {
-    const tagToAdd = tag.title ? tag.title.trim() : tag.toString().trim();
-    if (tagToAdd) {
-      if (this.generalData['tags'].find((t) => t.title === tagToAdd)) {
-        const newTag = this.generalData['tags'].find(
-          (t) => t.title === tagToAdd
-        );
+    if (tag.title != '') {
+      const tagToAdd = tag.title ? tag.title.trim() : tag.toString().trim();
+      if (tagToAdd && tagToAdd != '') {
+        if (this.generalData['tags'].find((t) => t.title === tagToAdd)) {
+          const newTag = this.generalData['tags'].find(
+            (t) => t.title === tagToAdd
+          );
 
-        if (
-          !this.productForm.controls.tags.value.find((s) => s.id === newTag.id)
-        ) {
-          return of(newTag);
+          if (
+            !this.productForm.controls.tags.value.find(
+              (s) => s.id === newTag.id
+            )
+          ) {
+            return of(newTag);
+          } else {
+            this.tagAlertMessage = 'התגית כבר ברשימה';
+            setTimeout(() => {
+              this.tagAlertMessage = '';
+            }, 3000);
+          }
         } else {
-          this.tagAlertMessage = 'התגית כבר ברשימה';
-          setTimeout(() => {
-            this.tagAlertMessage = '';
-          }, 3000);
+          this.addTagModal(tagToAdd);
         }
-      } else {
-        this.addTagModal(tagToAdd);
       }
     }
   }
 
   // check courses before add
   private beforeAddCourse(course: Course) {
-    const courseToAdd = course.title
-      ? course.title.trim()
-      : course.toString().trim();
-    if (courseToAdd) {
-      if (this.generalData['courses'].find((c) => c.title === courseToAdd)) {
-        const newCourse = this.generalData['courses'].find(
-          (t) => t.title === courseToAdd
-        );
-        if (
-          !this.productForm.controls.courses.value.find(
-            (s) => s.id === newCourse.id
-          )
-        ) {
-          return of(newCourse);
+    if (course.title != '') {
+      const courseToAdd = course.title
+        ? course.title.trim()
+        : course.toString().trim();
+      if (courseToAdd) {
+        if (this.generalData['courses'].find((c) => c.title === courseToAdd)) {
+          const newCourse = this.generalData['courses'].find(
+            (t) => t.title === courseToAdd
+          );
+          if (
+            !this.productForm.controls.courses.value.find(
+              (s) => s.id === newCourse.id
+            )
+          ) {
+            return of(newCourse);
+          } else {
+            this.courseAlertMessage = 'הקורס כבר ברשימה';
+            setTimeout(() => {
+              this.courseAlertMessage = '';
+            }, 3000);
+          }
         } else {
-          this.courseAlertMessage = 'הקורס כבר ברשימה';
-          setTimeout(() => {
-            this.courseAlertMessage = '';
-          }, 3000);
+          this.addCourseModal(courseToAdd);
         }
-      } else {
-        this.addCourseModal(courseToAdd);
       }
     }
   }
 
   // check lecturer before add
   private beforeAddLecturer(lecturer: Lecturer) {
-    const lecturerToAdd = lecturer.name
-      ? lecturer.name.trim()
-      : lecturer.toString().trim();
-    if (lecturerToAdd) {
-      if (this.generalData['lecturers'].find((c) => c.name === lecturerToAdd)) {
-        const newLecturer = this.generalData['lecturers'].find(
-          (t) => t.name === lecturerToAdd
-        );
+    if (lecturer.name != '') {
+      const lecturerToAdd = lecturer.name
+        ? lecturer.name.trim()
+        : lecturer.toString().trim();
+      if (lecturerToAdd) {
         if (
-          !this.productForm.controls.lecturers.value.find(
-            (s) => s.id === newLecturer.id
-          )
+          this.generalData['lecturers'].find((c) => c.name === lecturerToAdd)
         ) {
-          return of(newLecturer);
+          const newLecturer = this.generalData['lecturers'].find(
+            (t) => t.name === lecturerToAdd
+          );
+          if (
+            !this.productForm.controls.lecturers.value.find(
+              (s) => s.id === newLecturer.id
+            )
+          ) {
+            return of(newLecturer);
+          } else {
+            this.lecturerAlertMessage = 'המרצה כבר ברשימה';
+            setTimeout(() => {
+              this.lecturerAlertMessage = '';
+            }, 3000);
+          }
         } else {
-          this.lecturerAlertMessage = 'המרצה כבר ברשימה';
-          setTimeout(() => {
-            this.lecturerAlertMessage = '';
-          }, 3000);
+          this.addLecturerModal(lecturerToAdd);
         }
-      } else {
-        this.addLecturerModal(lecturerToAdd);
       }
     }
   }
@@ -452,13 +488,11 @@ export class EditProductComponent implements OnInit {
             'organizations'
           ].map((x) => x.name);
           this.productForm.markAsDirty();
-          this.bsModalRef.hide();
           this.spinner.hide();
           this.alertify.success('הארגון נוסף בהצלחה');
         },
         (error) => {
-          this.bsModalRef.content.failMessage =
-            'הייתה בעיה בשמירת הנתונים, יש לנסות שנית';
+          this.alertify.error('הייתה בעיה בשמירת הנתונים, יש לנסות שנית');
           this.spinner.hide();
         }
       );
@@ -498,7 +532,6 @@ export class EditProductComponent implements OnInit {
           this.productForm.controls.students.updateValueAndValidity();
 
           this.newEntity = null;
-          this.bsModalRef.hide();
           this.bsModalRef.content.generalData = this.generalData[
             'students'
           ].map((x) => x.name);
@@ -507,8 +540,7 @@ export class EditProductComponent implements OnInit {
           this.alertify.success('הסטודנט/ית נוספ/ה בהצלחה');
         },
         (error) => {
-          this.bsModalRef.content.failMessage =
-            'הייתה בעיה בשמירת הנתונים, יש לנסות שנית';
+          this.alertify.error('הייתה בעיה בשמירת הנתונים, יש לנסות שנית');
           this.spinner.hide();
         }
       );
@@ -547,19 +579,15 @@ export class EditProductComponent implements OnInit {
           this.productForm.controls.lecturers.value.push(data);
           this.productForm.controls.lecturers.updateValueAndValidity();
           this.newEntity = null;
-          // this.bsModalRef.content.successMessage =
-          //   'המרצה: ' + data['name'] + ' נוסף/ה בהצלחה';
           this.bsModalRef.content.generalData = this.generalData[
             'lecturers'
           ].map((x) => x.name);
           this.productForm.markAsDirty();
-          this.bsModalRef.hide();
           this.spinner.hide();
           this.alertify.success('המרצה נוספ/ה בהצלחה');
         },
         (error) => {
-          this.bsModalRef.content.failMessage =
-            'הייתה בעיה בשמירת הנתונים, יש לנסות שנית';
+          this.alertify.error('הייתה בעיה בשמירת הנתונים, יש לנסות שנית');
           this.spinner.hide();
         }
       );
@@ -598,25 +626,21 @@ export class EditProductComponent implements OnInit {
           this.productForm.controls.tags.value.push(data);
           this.productForm.controls.tags.updateValueAndValidity();
           this.newEntity = null;
-          // this.bsModalRef.content.successMessage =
-          //   'התגית: ' + data['title'] + ' נוספה בהצלחה';
           this.bsModalRef.content.generalData = this.generalData['tags'].map(
             (x) => x.title
           );
           this.productForm.markAsDirty();
-          this.bsModalRef.hide();
           this.spinner.hide();
           this.alertify.success('התגית נוספה בהצלחה');
         },
         (error) => {
-          this.bsModalRef.content.failMessage =
-            'הייתה בעיה בשמירת הנתונים, יש לנסות שנית';
+          this.alertify.error('הייתה בעיה בשמירת הנתונים, יש לנסות שנית');
           this.spinner.hide();
         }
       );
   }
 
-  // add tag course configurations
+  // add course configurations
   addCourseModal(courseName: string) {
     const initialState = {
       input: true,
@@ -654,20 +678,15 @@ export class EditProductComponent implements OnInit {
           this.productForm.controls.courses.value.push(data);
           this.productForm.controls.courses.updateValueAndValidity();
           this.newEntity = null;
-
-          // this.bsModalRef.content.successMessage =
-          //   'הקורס: ' + data['title'] + ' נוסף בהצלחה';
           this.bsModalRef.content.generalData = this.generalData['courses'].map(
             (x) => x.title
           );
           this.productForm.markAsDirty();
-          this.bsModalRef.hide();
           this.spinner.hide();
           this.alertify.success('הקורס נוסף בהצלחה');
         },
         (error) => {
-          this.bsModalRef.content.failMessage =
-            'הייתה בעיה בשמירת הנתונים, יש לנסות שנית';
+          this.alertify.error('הייתה בעיה בשמירת הנתונים, יש לנסות שנית');
           this.spinner.hide();
         }
       );
@@ -712,9 +731,8 @@ export class EditProductComponent implements OnInit {
       this.product.media.forEach((media, index) => {
         if (media.id === 0 && media.status !== 'Delete') {
           if (media.type === 'file' || media.type === 'image') {
-            this.productService
-              .uploadMedia(id, media.file)
-              .subscribe((e: Media) => {
+            this.productService.uploadMedia(id, media.file).subscribe(
+              (e: Media) => {
                 this.product.media[index].id = e.id;
                 this.product.media[index].url = e.url;
                 this.product.media[index].file = null;
@@ -722,7 +740,17 @@ export class EditProductComponent implements OnInit {
                 if (counter === target) {
                   this.finalUpdate(id);
                 }
-              });
+              },
+              (error) => {
+                this.alerts.push(
+                  'הייתה בעיה בשמירת הקובץ: ' + media.mDescription
+                );
+                this.alertify.error(
+                  'לא כל השינויים לא נשמרו, יש לבדוק את תקינות הקבצים'
+                );
+                this.spinner.hide();
+              }
+            );
           } else {
             this.productService.uploadLink(id, media).subscribe(
               (e: Media) => {
@@ -736,7 +764,13 @@ export class EditProductComponent implements OnInit {
                 }
               },
               (error) => {
-                this.message = 'Could not upload link ' + media.url;
+                this.alerts.push(
+                  'הייתה בעיה בשמירת הקישור: ' + media.mDescription
+                );
+                this.alertify.error(
+                  'לא כל השינויים לא נשמרו, יש לבדוק את תקינות הקישורים'
+                );
+                this.spinner.hide();
               }
             );
           }
@@ -762,6 +796,9 @@ export class EditProductComponent implements OnInit {
           this.router.navigate(['/editor/products']);
         },
         (error) => {
+          this.alertify.error(
+            'חלק מהשינויים לא נשמרו, יש לבדוק את תקינות הנתונים והחיבור לרשת ולנסות שנית'
+          );
           this.spinner.hide();
         }
       );
@@ -833,7 +870,7 @@ export class EditProductComponent implements OnInit {
     this.mediaUpload.nativeElement.value = '';
   }
 
-//add video
+  //add video
   addVideoModal() {
     const initialState = {
       label: 'לינק לסרטון ב: YouTube',
@@ -981,13 +1018,12 @@ export class EditProductComponent implements OnInit {
   }
   // hebrew years list creation
   //we use Hebcal library
-  heYearsList(){
-    let currentYear = new Hebcal.HDate(new Date).getYearObject().year;
+  heYearsList() {
+    let currentYear = new Hebcal.HDate(new Date()).getYearObject().year;
     let years = [];
     for (let i = 5771; i <= currentYear; i++) {
       years.push(Hebcal.gematriya(i, 3));
     }
     return years;
   }
-  
 }

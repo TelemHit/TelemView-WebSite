@@ -27,7 +27,7 @@ namespace TelemView.API.Data
 
             //get products according to user parameters
             //this include filters, search and if user is in edit mode or not
-            if (productParams.HideUnpublished == true)
+            if (productParams.IsClient == true)
             {
                 products = products.Where(p => p.IsPublish == true);
             }
@@ -63,9 +63,29 @@ namespace TelemView.API.Data
             {
                 products = products.Where(p => productParams.Degree.Contains(p.Degree));
             }
-            if (productParams.Search != null)
+            if (productParams.Search != null && productParams.IsClient == true)
             {
+                // if client - search by product name only
                 products = products.Where(p => p.Title.ToLower().Trim().Contains(productParams.Search.ToLower().Trim()));
+            }
+            if (productParams.Search != null && productParams.IsClient == false)
+            {
+                // if editor - search by all params
+                var filteredProducts = products.Where(p => p.Title.ToLower().Trim().Contains(productParams.Search.ToLower().Trim()));
+                var filteredYears = products.Where(p => p.YearOfCreation.ToString().Contains(productParams.Search.ToLower().Trim()));
+                var filteredDegree = products.Where(p => p.Degree.ToLower().Contains(productParams.Search.ToLower().Trim()));
+                var filteredOrg = products.Where(p => p.Organization.Title.ToLower().Contains(productParams.Search.ToLower().Trim()));
+                var filteredHeYears = products.Where(p => p.HeYearOfCreation.ToLower().Contains(productParams.Search.ToLower().Trim()));
+                var filteredType = products.Where(p => p.ProductType.Title.ToLower().Contains(productParams.Search.ToLower().Trim()));
+                var filteredTask = products.Where(p => p.Task.Title.ToLower().Contains(productParams.Search.ToLower().Trim()));
+                var filteredLecturers = products.Where(p => p.ProductsLecturers.Any(l => l.Lecturer.Name.Contains(productParams.Search.ToLower().Trim())));
+                var filteredStudents = products.Where(p => p.ProductStudents.Any(l => l.Student.Name.Contains(productParams.Search.ToLower().Trim())));
+                var filteredTag = products.Where(p => p.ProductsTags.Any(l => l.Tag.Title.Contains(productParams.Search.ToLower().Trim())));
+                var filteredOrgType = products.Where(p => p.Organization.OrganizationAndType.Any(l => l.OrganizationType.Title.Contains(productParams.Search.ToLower().Trim())));
+
+                products = filteredProducts.Union(filteredYears).Union(filteredDegree).Union(filteredOrg)
+                .Union(filteredType).Union(filteredTask).Union(filteredLecturers).Union(filteredStudents)
+                .Union(filteredTag).Union(filteredOrgType).Union(filteredHeYears);
             }
 
             //we return paged data - each time only part of data according to user paging parameters

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Product } from 'src/app/_models/product';
 import { ProductsService } from 'src/app/_services/products.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -23,6 +23,22 @@ export class HomeComponent implements OnInit {
   totalPages: number;
   totalCount: number;
   chips = [];
+  activeFilters=false;
+  windowScrolled = false;
+
+    //scrolltop btn on scroll
+    @HostListener("window:scroll", ["$event"])
+    onWindowScroll() {
+    //In chrome and some browser scroll is given to body tag
+    let pos = (document.documentElement.scrollTop || document.body.scrollTop);
+    // pos/max will give you the distance between scroll bottom and and bottom of screen in percentage.
+     if(pos >= 600 )   {
+     this.windowScrolled=true;
+     }
+     else{
+       this.windowScrolled=false;
+     }
+    }
 
   constructor(
     private route: ActivatedRoute,
@@ -49,6 +65,17 @@ export class HomeComponent implements OnInit {
     this.titleService.setTitle('Telem View - תוצרי הפקולטה לטכנולוגיות למידה');
   }
 
+  // scroll top
+  scrollToTop() {
+    (function smoothscroll() {
+        var currentScroll = window.pageYOffset;
+        if (currentScroll > 0) {
+            window.requestAnimationFrame(smoothscroll);
+            window.scrollTo(0, currentScroll - (currentScroll / 8));
+        }
+    })();
+}
+
   //return list of filters for chips display
   filtersForChips() {
     const params = { ...this.productParams };
@@ -63,10 +90,13 @@ export class HomeComponent implements OnInit {
             key.toLocaleLowerCase() == 'degree' ||
             key.toLocaleLowerCase() == 'years'
           ) {
-            titles.push({
-              title: value,
-              key: key,
-            });
+            if(value.trim() != ''){
+              titles.push({
+                title: value,
+                key: key,
+              });
+            }
+            
           } else {
             titles.push({
               title: this.dataforhome[key].find((x) => x.id == value).title,
@@ -82,10 +112,12 @@ export class HomeComponent implements OnInit {
           ) {
             const newValue: any = value;
             newValue.forEach((element) => {
-              titles.push({
-                title: element,
-                key: key,
-              });
+              if(element.trim() != ''){
+                titles.push({
+                  title: element,
+                  key: key,
+                });
+              }
             });
           } else {
             const newValue: any = value;
@@ -143,12 +175,13 @@ export class HomeComponent implements OnInit {
   //checks if any filter is active
   checkIfFilters() {
     const params = { ...this.productParams };
+    this.activeFilters = false;
     for (const [key, value] of Object.entries(params)) {
       if (params[key].length > 0) {
-        return true;
+        this.activeFilters = true;
+        break;
       }
     }
-    return false;
   }
 
   //load products from server
@@ -168,6 +201,9 @@ export class HomeComponent implements OnInit {
 
           //create chips
           this.filtersForChips();
+
+          //check filters
+          this.checkIfFilters();
         },
         (error) => {
           this.spinner.hide();

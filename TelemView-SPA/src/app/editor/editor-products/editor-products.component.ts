@@ -52,9 +52,20 @@ export class EditorProductsComponent implements OnInit {
       this.products = data.product.result;
       this.pagination = data.product.pagination;
       this.titleService.setTitle('Telem View - עריכת תוצרים');
-
     });
+    this.scrollToTop();
   }
+
+        // scroll top
+        scrollToTop() {
+          (function smoothscroll() {
+              var currentScroll = window.pageYOffset;
+              if (currentScroll > 0) {
+                  window.requestAnimationFrame(smoothscroll);
+                  window.scrollTo(0, currentScroll - (currentScroll / 8));
+              }
+          })();
+      }
 
   //publish
   publishProduct(id) {

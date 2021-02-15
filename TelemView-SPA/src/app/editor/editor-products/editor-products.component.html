@@ -13,16 +13,13 @@
                 <div class="search-btn form-group mt-4">
                     <label for="searchline">חיפוש תוצר</label>
                     <input (keyup)="modelChange()" class="form-control align-self-center search-input" id="searchline"
-                        placeholder="שם התוצר..." (blur)="isFocused = false" (focus)="isFocused = true"
+                        placeholder="ניתן להקליד את שם התוצר או מאפיין שלו, לדוגמה: מרצה, ארגון וכו'" (blur)="isFocused = false" (focus)="isFocused = true"
                         [(ngModel)]="someValue">
-                        <span class="search-icon"><i class="fa fa-search"></i></span>
-                        <button
-                        [ngClass]="someValue.length>0 ? 'clear-search' : 'clear-search-hidden'"
-                        class="btn clear-search" [hidden]="!isFocused && !someValue.length"
-                            (click)="clearSearch()">
-                            <i class="fa fa-times-circle"></i></button>
+                    <span class="search-icon"><i class="fa fa-search"></i></span>
+                    <button [ngClass]="someValue.length>0 ? 'clear-search' : 'clear-search-hidden'"
+                        class="btn clear-search" [hidden]="!isFocused && !someValue.length" (click)="clearSearch()">
+                        <i class="fa fa-times-circle"></i></button>
                 </div>
-
 
                 <div class="table-container mt-4 table-responsive">
                     <p *ngIf="products.length == 0">אין תוצרים לתצוגה, ניתן לנסות חיפוש אחר</p>
@@ -39,12 +36,14 @@
                         </thead>
                         <tbody>
                             <tr class="text-center" *ngFor="let product of this.products">
-                                <th class="align-middle" scope="row">{{product.title}}<br/><small>{{product.timeStamp | timeago:live}}</small></th>
-                                <td class="align-middle"><a [routerLink]="['/editor/products/', product.id]" class="btn"><i class="fa fa-pencil-square-o"
-                                            aria-hidden="true"></i></a></td>
-                                <td class="align-middle"><a [routerLink]="['/product/',product.id]" class="btn"><i class="fa fa-eye"
-                                            aria-hidden="true"></i></a></td>
-                                <td class="align-middle"><button class="btn" type="button" (click)="publishProduct(product.id)">
+                                <th class="align-middle" scope="row">{{product.title}}<br /><small>{{product.timeStamp |
+                                        timeago:live}}</small></th>
+                                <td class="align-middle"><a [routerLink]="['/editor/products/', product.id]"
+                                        class="btn"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></td>
+                                <td class="align-middle"><a [routerLink]="['/product/',product.id]" target="_blank" class="btn"><i
+                                            class="fa fa-eye" aria-hidden="true"></i></a></td>
+                                <td class="align-middle"><button class="btn" type="button"
+                                        (click)="publishProduct(product.id)">
                                         <i *ngIf="!product.isPublish" class="fa fa-square-o" aria-hidden="true"></i>
                                         <i *ngIf="product.isPublish" class="fa fa-check-square-o"
                                             aria-hidden="true"></i>

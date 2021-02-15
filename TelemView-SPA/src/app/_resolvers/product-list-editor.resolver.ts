@@ -11,7 +11,7 @@ import { ProductsService } from '../_services/products.service';
 export class ProductListEditorResolver implements Resolve<Product[]>{
     pageNumber = 1;
     pageSize = 20;
-    hideUnpublished = false;
+    isClient = false;
 
     products: Product[];
 
@@ -19,7 +19,7 @@ export class ProductListEditorResolver implements Resolve<Product[]>{
                 private route: ActivatedRoute){}
 
     resolve(route: ActivatedRouteSnapshot): Observable<Product[]>{
-        return this.productService.getProducts({}, this.pageNumber, this.pageSize, this.hideUnpublished).pipe(
+        return this.productService.getProducts({}, this.pageNumber, this.pageSize, this.isClient).pipe(
             catchError(error => {
                 return of(null);
             })

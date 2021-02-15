@@ -20,6 +20,9 @@ h2 {
 .gold {
   color: #bb9977;
 }
+.white{
+  color: white;
+}
 .green {
   color: #1ba098;
 }
@@ -176,18 +179,25 @@ h2 {
   margin-left: 0.3em !important;
   margin-right: -1.5em !important;
 }
-
+.ql-editor p{
+  margin-bottom: 10px;
+}
 .ql-editor {
   text-align: right;
   background-color: white;
   border-bottom-right-radius: 0.25rem;
   border-bottom-left-radius: 0.25rem;
-  height: 200px;
+  min-height: 200px;
   /* border-radius: .25rem; */
 }
 
 .ng2-tags-container tag {
   background: #1ba098 !important ;
+  height: fit-content !important;
+}
+
+.ng2-tags-container tag .tag-wrapper{
+  flex-direction: row-reverse;
 }
 
 quill-editor > .ql-toolbar {
@@ -503,7 +513,7 @@ button:focus {
   display: none;
 }
 
-.login-container .la-ball-spin-clockwise {
+.login-container .la-ball-spin-clockwise, .spinnerbtn .la-ball-spin-clockwise {
   left: 20px !important;
 }
 .fade {

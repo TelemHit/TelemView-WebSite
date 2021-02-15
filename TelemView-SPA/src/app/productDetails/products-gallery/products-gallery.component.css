@@ -128,12 +128,18 @@ app-product-card {
   .products-gallery .swiper-slide{
     height: unset !important;
   }
-  .swiper-nav:hover i, .swiper-nav:focus i{
-    padding: 0px 10px;
-    border-radius: 5px;
-    transition: all 0.2s ease;
-    box-shadow: rgba(248, 247, 247, 0.05) 0px 0px 0px 1px;
-  }
+
+  .swiper-button-next-unique i, .swiper-button-next-unique i,
+.swiper-button-prev-unique i, .swiper-button-prev-unique-top i{
+  text-shadow: 0px 0px #bb9977;
+  transition: all 0.2s ease;
+}
+.swiper-button-next-unique:hover i, .swiper-button-next-unique:focus i{
+  text-shadow: 2px 0px #bb9977;
+}
+.swiper-button-prev-unique:hover i, .swiper-button-prev-unique:focus i{
+  text-shadow: -2px 0px #bb9977;
+}
   
 /* mobile */
 @media only screen and (max-width: 576px) {

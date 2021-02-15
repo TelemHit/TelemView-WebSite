@@ -113,12 +113,10 @@ export class EditorCourseComponent implements OnInit {
         (data: any) => {
           this.courses.unshift(data);
           this.clear();
-          this.bsModalRef.hide();
           this.alertify.success('הקורס נוסף בהצלחה');
         },
         (error) => {
-          this.bsModalRef.content.failMessage =
-            'הייתה בעיה בשמירת הנתונים, יש לנסות שנית';
+          this.alertify.error('הייתה בעיה בשמירת הנתונים, יש לנסות שנית');
             this.clear();
         }
       );
@@ -168,12 +166,10 @@ export class EditorCourseComponent implements OnInit {
           this.courses.find(pt => pt.id == course.id).title=this.data.title;
           this.courses.find(pt => pt.id == course.id).number=this.data.number;
           this.clear();
-          this.bsModalRef.hide();
           this.alertify.success('הקורס עודכן בהצלחה');
         },
         (error) => {
-          this.bsModalRef.content.failMessage =
-            'הייתה בעיה בשמירת הנתונים, יש לנסות שנית';
+          this.alertify.error('הייתה בעיה בשמירת הנתונים, יש לנסות שנית');
           this.clear();
         });
     } else{

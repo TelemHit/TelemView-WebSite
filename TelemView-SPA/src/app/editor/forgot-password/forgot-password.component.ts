@@ -1,6 +1,7 @@
 //write email to send link for password reset
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { ForgotPassword } from 'src/app/_models/forgotPassword';
 import { AuthService } from 'src/app/_services/auth.service';
 import { environment } from 'src/environments/environment';
@@ -19,7 +20,8 @@ export class ForgotPasswordComponent implements OnInit {
   public showError: boolean;
   resetPassword = environment.resetPassword;
 
-  constructor(private _authService: AuthService) { }
+  constructor(private _authService: AuthService,
+    private spinner: NgxSpinnerService) { }
   ngOnInit(): void {
     //create form
     this.forgotPasswordForm = new FormGroup({
@@ -37,6 +39,7 @@ export class ForgotPasswordComponent implements OnInit {
 
   //send email
   public forgotPassword = (forgotPasswordFormValue) => {
+    this.spinner.show();
     this.showError = this.showSuccess = false;
     const forgotPass = { ...forgotPasswordFormValue };
     const forgotPassDto: ForgotPassword = {
@@ -46,12 +49,19 @@ export class ForgotPasswordComponent implements OnInit {
     this._authService.forgotPassword(forgotPassDto)
     .subscribe(_ => {
       this.showSuccess = true;
+      this.spinner.hide();
       this.successMessage = 'לינק להחלפת סיסמה נשלח בהצלחה לכתובת המייל שהזנת'
     },
     err => {
       this.showError = true;
+      this.spinner.hide();
       this.errorMessage = 'הייתה בעיה בשליחת המייל, יש לוודא כי כתובת המייל תקינה ונמצאת במערכת';
     })
   }
 
+    //reset alert
+    resetAlert(){
+      this.errorMessage='';
+      this.successMessage ='';
+    }
 }

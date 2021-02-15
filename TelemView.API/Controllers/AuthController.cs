@@ -21,9 +21,9 @@ using TelemView.API.Models;
 //we use dotnet core Identity package to control this proccess
 namespace TelemView.API.Controllers
 {
+    [Authorize(Policy = "RequireAdminRole")]
     [Route("api/[controller]")]
     [ApiController]
-    [AllowAnonymous]
     public class AuthController : ControllerBase
     {
         private readonly IConfiguration _config;
@@ -43,7 +43,6 @@ namespace TelemView.API.Controllers
         }
 
         //register new user - only admin can register new user
-        [Authorize(Policy = "RequireAdminRole")]
         [HttpPost("register")]
         public async Task<IActionResult> Register(UserForRegisterDto userForRegisterDto)
         {
@@ -73,7 +72,6 @@ namespace TelemView.API.Controllers
         }
 
         //resend confirmation email
-        [Authorize(Policy = "RequireAdminRole")]
         [HttpPost("ResendConfirmation")]
         public async Task<IActionResult> ResendConfirmation(ResendEmailDto resendEmailDto)
         {
@@ -101,6 +99,7 @@ namespace TelemView.API.Controllers
         }
 
         //email confirmation by the user 
+        [AllowAnonymous]
         [HttpGet("EmailConfirmation")]
         public async Task<IActionResult> EmailConfirmation([FromQuery] string email, [FromQuery] string token)
         {
@@ -114,6 +113,7 @@ namespace TelemView.API.Controllers
         }
 
         //login of user
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
         {
@@ -141,6 +141,7 @@ namespace TelemView.API.Controllers
         }
 
         //send email to change password
+        [AllowAnonymous]
         [HttpPost("ForgotPassword")]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordDto forgotPasswordDto)
         {
@@ -163,6 +164,7 @@ namespace TelemView.API.Controllers
         }
 
         //change password of user
+        [AllowAnonymous]
         [HttpPost("ResetPassword")]
         public async Task<IActionResult> ResetPassword(ResetPasswordDto resetPasswordDto)
         {

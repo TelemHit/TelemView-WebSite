@@ -111,12 +111,10 @@ export class EditorOrganizationTypesComponent implements OnInit {
         (data: any) => {
           this.organizationTypes.unshift(data);
           this.clear();
-          this.bsModalRef.hide();
           this.alertify.success('סוג הארגון נוסף בהצלחה');
         },
         (error) => {
-          this.bsModalRef.content.failMessage =
-            'הייתה בעיה בשמירת הנתונים, יש לנסות שנית';
+          this.alertify.error('הייתה בעיה בשמירת הנתונים, יש לנסות שנית');
           this.clear();
         }
       );
@@ -167,12 +165,10 @@ export class EditorOrganizationTypesComponent implements OnInit {
               (pt) => pt.id == type.id
             ).title = this.data.title;
             this.clear();
-            this.bsModalRef.hide();
             this.alertify.success('סוג הארגון עודכן בהצלחה');
           },
           (error) => {
-            this.bsModalRef.content.failMessage =
-              'הייתה בעיה בשמירת הנתונים, יש לנסות שנית';
+            this.alertify.error('הייתה בעיה בשמירת הנתונים, יש לנסות שנית');
             this.clear();
           }
         );

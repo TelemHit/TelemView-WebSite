@@ -4,7 +4,7 @@
     padding: 0;
 }
 .background-inner{
-    background: url(../../../assets/images/mainBI.png) no-repeat center center;
+    background: url(../../../assets/images/mainBI.jpg) no-repeat center center;
     background-repeat: no-repeat;
     background-position: center top;
     background-size: cover;
@@ -101,7 +101,7 @@
         background-position: center;
         background-size: cover;
         z-index: -2;
-        background-attachment: fixed;
+        background-attachment: scroll;
     }
     .main-sentence h1 {
         margin-bottom: 10px;

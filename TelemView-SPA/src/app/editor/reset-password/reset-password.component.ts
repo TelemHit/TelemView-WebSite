@@ -1,8 +1,10 @@
 //screen for password reset
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { ResetPassword } from 'src/app/_models/resetPassword';
+import { AlertifyService } from 'src/app/_services/alertify.service';
 import { AuthService } from 'src/app/_services/auth.service';
 import { PasswordConfirmationValidatorService } from 'src/app/_services/password-confirmation-validator.service';
 
@@ -13,15 +15,18 @@ import { PasswordConfirmationValidatorService } from 'src/app/_services/password
 })
 export class ResetPasswordComponent implements OnInit {
   public resetPasswordForm: FormGroup;
-  public showSuccess: boolean;
   public showError: boolean;
   public errorMessage: string;
   private _token: string;
   private _email: string;
+
   constructor(
     private authService: AuthService,
     private route: ActivatedRoute,
-    private _passConfValidator: PasswordConfirmationValidatorService
+    private _passConfValidator: PasswordConfirmationValidatorService,
+    private alertify: AlertifyService,
+    private router: Router,
+    private spinner: NgxSpinnerService,
   ) {}
   ngOnInit(): void {
     //create form
@@ -59,7 +64,8 @@ export class ResetPasswordComponent implements OnInit {
   };
   //reset
   public resetPassword = (resetPasswordFormValue) => {
-    this.showError = this.showSuccess = false;
+    this.spinner.show();
+    this.showError = false;
     const resetPass = { ...resetPasswordFormValue };
     const resetPassDto: ResetPassword = {
       password: resetPass.password,
@@ -69,12 +75,20 @@ export class ResetPasswordComponent implements OnInit {
     };
     this.authService.resetPassword(resetPassDto).subscribe(
       (_) => {
-        this.showSuccess = true;
+        this.spinner.hide();
+        this.alertify.success("הסיסמה הוחלפה בהצלחה");
+        this.router.navigate(['editor']);
       },
       (error) => {
+        this.spinner.hide();
         this.showError = true;
-        this.errorMessage = error;
+        this.errorMessage = "הייתה בעיה בהחלפת הסיסמה, יש לוודא כי הסיסמאות תואמות ולנסות שוב";
       }
     );
   };
+
+      //reset alert
+      resetAlert(){
+        this.errorMessage='';
+      }
 }

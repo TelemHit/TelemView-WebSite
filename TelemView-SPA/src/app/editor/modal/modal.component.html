@@ -20,8 +20,16 @@
       <!-- course number -->
       <div *ngIf="input_2" class="mt-2">
         <label for="modalInput_2">{{label_2}}</label>
-        <input id="modalInput_2" class="form-control" type="text" formControlName="number"
-          placeholder="{{placeHolder_2}}" autocomplete="off">
+        <input id="modalInput_2" [maxlength]="9" class="form-control" type="text" formControlName="number"
+          placeholder="{{placeHolder_2}}" autocomplete="off"
+          [ngClass]="{'is-invalid': addItem.get('number').touched && addItem.get('number').errors}">
+
+          <div class="invalid-feedback" *ngIf="addItem.get('number').getError('pattern')
+          && addItem.get('number').touched
+          ">יש להזין מספר תקני</div>
+          <div class="invalid-feedback" *ngIf="addItem.get('number').getError('maxLength')
+          && addItem.get('number').touched
+          ">ניתן להזין עד 9 ספרות</div>
       </div>
 
       <!-- organization types -->

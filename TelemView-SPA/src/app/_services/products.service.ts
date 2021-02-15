@@ -30,7 +30,7 @@ export class ProductsService {
     productParams?,
     page?,
     itemsPerPage?,
-    hideUnpublished?
+    isClient?
   ): Observable<PaginatedResult<Product[]>> {
     const paginatedResults: PaginatedResult<Product[]> = new PaginatedResult<Product[]>();
     let params = new HttpParams();
@@ -54,8 +54,8 @@ export class ProductsService {
       params = params.append('pageSize', itemsPerPage);
     }
     //if user is editor return all products, else only published
-    if (hideUnpublished == false){
-      params = params.append('hideUnpublished', 'false');
+    if (isClient == false){
+      params = params.append('isClient', 'false');
     }
     return this.http
       .get<Product[]>(this.baseUrl + 'product', { observe: 'response', params })

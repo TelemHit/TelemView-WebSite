@@ -76,7 +76,7 @@ export class MultiFilterComponent implements OnInit, OnChanges {
     }, 0);
   }
 
-//get parameters to filter by and set them in array
+  //get parameters to filter by and set them in array
   getQueryParams() {
     this.selectedParams = {
       tasks: [],
@@ -142,7 +142,7 @@ export class MultiFilterComponent implements OnInit, OnChanges {
     }
   }
 
-//update parameters when clicking out of filter
+  //update parameters when clicking out of filter
   updateOnBlur(filter) {
     if (
       (this.queryParams[filter] && this.queryParams[filter].length > 0) ||
@@ -188,7 +188,7 @@ export class MultiFilterComponent implements OnInit, OnChanges {
 
   //get change of search input
   modelChange() {
-    this.modelChanged.next();
+      this.modelChanged.next();
   }
 
   //update search parameter

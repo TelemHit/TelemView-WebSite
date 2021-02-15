@@ -286,11 +286,11 @@
                                     [ngClass]="media.isMain ? 'btn-success active' : 'btn-secondary'"
                                     (click)="setMain($event)"><i class="fa fa-flag"></i></button>
                                 <!-- delete -->
-                                <button tooltip="מחיקת התמונה." id="delete_{{index}}" *ngIf="!media.isMain"
+                                <button tooltip="מחיקה" id="delete_{{index}}" *ngIf="!media.isMain"
                                     type="button" [disabled]="media.isMain" (click)="DeleteFile($event)"
                                     class="btn btn-sm btn-danger"><i class="fa fa-trash-o"></i></button>
                                 <!-- description -->
-                                <input type="text" class="form-control" formControlName="mDescription" />
+                                <input type="text" [maxLength]=50 class="form-control" formControlName="mDescription" />
                             </div>
 
                             <div *ngIf="noDescription(index)" class="invalid-feedback d-block" role="alert">

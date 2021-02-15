@@ -34,7 +34,8 @@
     </div>
 
     <!-- filters -->
-    <div class="filters-header mobile-hide" [ngClass]="{'mobileFilters': mobileFilters}">
+    <div class="filters-header mobile-hide" [ngClass]="{'mobileFilters': mobileFilters}"
+    [ngxScrollToOffset]="-100" [ngxScrollTo]="'filterSearchDiv'">
       <div class="mobile-hide">
         <div class="clear-all-btn-div" [ngClass]="{'clear-all-btn-div-active': filtersActive()}">
           <h3 [ngClass]="{'green': filtersActive()}"><i class="fa fa-sliders" aria-hidden="true"></i> מסננים</h3>
@@ -54,7 +55,7 @@
               <span *ngIf='filtersActive() && totalProducts==0'>(לא נמצאו תוצרים)</span>
             </h3>
           </div>
-          <button type="button" class="btn filters-btn clear-all-btn" (click)="clearall()"
+          <button type="button" class="btn filters-btn clear-all-btn" (click)="clearall(); mobileFilters=!mobileFilters;"
             [ngClass]="{'clear-all-btn-active': filtersActive()}">איפוס</button>
         </div>
         <div class="filters-row">

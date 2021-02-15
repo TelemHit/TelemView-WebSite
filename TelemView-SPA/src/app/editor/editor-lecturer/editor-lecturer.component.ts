@@ -108,13 +108,10 @@ export class EditorLecturerComponent implements OnInit {
         (data: any) => {
           this.lecturers.unshift(data);
           this.clear();
-          this.bsModalRef.hide();
           this.alertify.success('המרצה נוסף/ה בהצלחה');
-
         },
         (error) => {
-          this.bsModalRef.content.failMessage =
-            'הייתה בעיה בשמירת הנתונים, יש לנסות שנית';
+          this.alertify.error('הייתה בעיה בשמירת הנתונים, יש לנסות שנית');
             this.clear();
         }
       );
@@ -155,13 +152,11 @@ export class EditorLecturerComponent implements OnInit {
         (data: any) => {
           this.lecturers.find(pt => pt.id == lect.id).name=this.data.name;
           this.clear();
-          this.bsModalRef.hide();
           this.alertify.success('המרצה עודכן/ה בהצלחה');
 
         },
         (error) => {
-          this.bsModalRef.content.failMessage =
-            'הייתה בעיה בשמירת הנתונים, יש לנסות שנית';
+          this.alertify.error('הייתה בעיה בשמירת הנתונים, יש לנסות שנית');
           this.clear();
         });
     } else{

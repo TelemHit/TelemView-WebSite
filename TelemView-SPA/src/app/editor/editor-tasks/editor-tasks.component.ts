@@ -109,13 +109,11 @@ export class EditorTasksComponent implements OnInit {
         (data: any) => {
           this.Tasks.unshift(data);
           this.clear();
-          this.bsModalRef.hide();
           this.alertify.success('המשימה נוספה בהצלחה')
 
         },
         (error) => {
-          this.bsModalRef.content.failMessage =
-            'הייתה בעיה בשמירת הנתונים, יש לנסות שנית';
+          this.alertify.error('הייתה בעיה בשמירת הנתונים, יש לנסות שנית');
             this.clear();
         }
       );
@@ -166,12 +164,10 @@ export class EditorTasksComponent implements OnInit {
               (pt) => pt.id == task.id
             ).description = this.data.description;
             this.clear();
-            this.bsModalRef.hide();
             this.alertify.success('המשימה עודכנה בהצלחה')
           },
           (error) => {
-            this.bsModalRef.content.failMessage =
-              'הייתה בעיה בשמירת הנתונים, יש לנסות שנית';
+            this.alertify.error('הייתה בעיה בשמירת הנתונים, יש לנסות שנית');
             this.clear();
           }
         );

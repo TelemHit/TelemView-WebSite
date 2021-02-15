@@ -4,7 +4,8 @@
         <label for="firstName" class="form-label">שם פרטי:</label>
         <div>
             <input type="text" id="firstName" formControlName="firstName" class="form-control"
-                [ngClass]="{'is-invalid': validateControl('firstName') && hasError('firstName', 'required')}" />
+                [ngClass]="{'is-invalid': validateControl('firstName') && hasError('firstName', 'required')}" 
+                (focus)="resetAlert()"/>
             <div class="invalid-feedback" *ngIf="validateControl('firstName') && hasError('firstName', 'required')">
                 יש להזין שם פרטי</div>
         </div>
@@ -14,7 +15,8 @@
         <label for="lastName" class="form-label">שם משפחה:</label>
         <div>
             <input type="text" id="lastName" formControlName="lastName" class="form-control"
-                [ngClass]="{'is-invalid': validateControl('lastName') && hasError('lastName', 'required')}" />
+                [ngClass]="{'is-invalid': validateControl('lastName') && hasError('lastName', 'required')}" 
+                (focus)="resetAlert()"/>
             <div class="invalid-feedback" *ngIf="validateControl('lastName') && hasError('lastName', 'required')">
                 יש להזין שם משפחה</div>
         </div>
@@ -23,8 +25,9 @@
         <label for="email" class="form-label">מייל:</label>
         <div>
             <input type="email" id="email" formControlName="email" class="form-control" [ngClass]="{'is-invalid': validateControl('email') && hasError('email', 'required')
-                || validateControl('email') && hasError('email', 'email')}" />
-            <div class="invalid-feedback" *ngIf="validateControl('email') && hasError('email', 'email')">יש להזין מייל
+                || validateControl('email') && hasError('email', 'pattern')}" 
+                (focus)="resetAlert()"/>
+            <div class="invalid-feedback" *ngIf="validateControl('email') && hasError('email', 'pattern')">יש להזין מייל
                 תיקני</div>
             <div class="invalid-feedback" *ngIf="validateControl('email') && hasError('email', 'required')">יש להזין
                 מייל</div>
@@ -34,7 +37,8 @@
         <label for="password" class="form-label">סיסמה:</label>
         <div>
             <input type="password" id="password" formControlName="password" class="form-control" [ngClass]="{'is-invalid': validateControl('password') && hasError('password', 'required')
-                || validateControl('password') && hasError('password', 'pattern')}" />
+                || validateControl('password') && hasError('password', 'pattern')}" 
+                (focus)="resetAlert()"/>
 
             <div class="invalid-feedback" *ngIf="validateControl('password') && hasError('password', 'required')">יש
                 להזין סיסמה</div>
@@ -53,7 +57,8 @@
         <label for="confirm" class="form-label">אישור סיסמה:</label>
         <div>
             <input type="password" id="confirm" formControlName="confirm" class="form-control" [ngClass]="{'is-invalid': validateControl('confirm') && hasError('confirm', 'required')
-                || validateControl('confirm') && hasError('confirm', 'mustMatch')}" />
+                || validateControl('confirm') && hasError('confirm', 'mustMatch')}" 
+                (focus)="resetAlert()"/>
 
             <div class="invalid-feedback" *ngIf="validateControl('confirm') && hasError('confirm', 'required')">יש להזין
                 את הסיסמה שנית</div>
@@ -61,13 +66,28 @@
         </div>
     </div>
     <br>
-    <div class="form-group row">
-        <div class="col-lg-7 col-md-8">
-            <button type="submit" class="btn btn-primary-dark" [disabled]="!registerForm.valid">רישום משתמש</button>
-        </div>
-    </div>
     <div>
-        <p *ngIf="confirmation!=''" [innerHTML]="confirmation"></p>
+        <!-- <p *ngIf="confirmation!=''" class="text-success" [innerHTML]="confirmation"></p> -->
         <p *ngIf="showError" class="text-danger" [innerHTML]="errorMessage"></p>
     </div>
+        <div class="row justify-content-center spinnerbtn">
+            <button type="submit" class="btn btn-primary-dark col-lg-7 col-md-8 col-sm-8 col-10" [disabled]="!registerForm.valid">רישום משתמש
+                <ngx-spinner name="spinnerbtn" [fullScreen]="false" type="ball-spin-clockwise" size="small" color="white"></ngx-spinner>
+            </button>
+        </div>
+
 </form>
+
+<!-- confirm register modal -->
+<ng-template #confirmRegister>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left text-success">רישום המשתמש בוצע בהצלחה</h4>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <p>מייל אימות נשלח לכתובת: {{confirmation}}</p>
+        <p>יש להגדיר הרשאה מתאימה בטבלת המשתמשים.</p>
+    </div>
+  </ng-template>

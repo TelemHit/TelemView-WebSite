@@ -1,0 +1,10 @@
+footer .btn{
+    font-size: 1em;
+}
+
+@media only screen and (max-width: 576px) {
+    footer .btn{
+        font-size: 0.9em;
+        padding: 10px 0 ;
+    }
+}

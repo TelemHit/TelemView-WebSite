@@ -99,12 +99,10 @@ export class EditorOrganizationsComponent implements OnInit {
           });
           this.organizations.unshift(data);
           this.clear();
-          this.bsModalRef.hide();
           this.alertify.success('הארגון נוסף בהצלחה');
         },
         (error) => {
-          this.bsModalRef.content.failMessage =
-            'הייתה בעיה בשמירת הנתונים, יש לנסות שנית';
+          this.alertify.error('הייתה בעיה בשמירת הנתונים, יש לנסות שנית');
           this.clear();
         }
       );
@@ -179,12 +177,10 @@ export class EditorOrganizationsComponent implements OnInit {
             })
             
             this.clear();
-            this.bsModalRef.hide();
             this.alertify.success('הארגון עודכן בהצלחה');
           },
           (error) => {
-            this.bsModalRef.content.failMessage =
-              'הייתה בעיה בשמירת הנתונים, יש לנסות שנית';
+            this.alertify.error('הייתה בעיה בשמירת הנתונים, יש לנסות שנית');
             this.clear();
           }
         );

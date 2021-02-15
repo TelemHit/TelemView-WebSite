@@ -39,15 +39,19 @@ export class ProductDetailsComponent implements OnInit {
       this.mediaForGallery();
       this.getProducts();
       this.getFiles();
-      let scrollToTop = window.setInterval(() => {
-        let pos = window.pageYOffset;
-        if (pos > 0) {
-          window.scrollTo(0, pos - 50); // how far to scroll on each step
-        } else {
-          window.clearInterval(scrollToTop);
-        }
-      }, 10);
+      this.scrollToTop();
     });
+  }
+
+    // scroll top
+    scrollToTop() {
+      (function smoothscroll() {
+          var currentScroll = window.pageYOffset;
+          if (currentScroll > 0) {
+              window.requestAnimationFrame(smoothscroll);
+              window.scrollTo(0, currentScroll - (currentScroll / 8));
+          }
+      })();
   }
 
   // back to home, preserve filters

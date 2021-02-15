@@ -31,10 +31,12 @@ slide iframe,
   right: 0;
   text-align: right;
 }
-.carousel-caption span {
+
+.carousel-caption p{
   font-weight: 600;
-  padding: 10px 15px;
-  font-size: 1.2em;
+  padding: 7px 10px;
+  font-size: 1.1em;
+  width: fit-content;
 }
 
 .swiper-pagination {
@@ -50,11 +52,16 @@ slide iframe,
 .swiper-nav i {
   font-size: 3em;
 }
-.swiper-nav:hover i, .swiper-nav:focus i{
-  padding: 0px 10px;
-  border-radius: 5px;
+.swiper-button-next-unique-top i, .swiper-button-next-unique-top i,
+.swiper-button-prev-unique-top i, .swiper-button-prev-unique-top i{
+  text-shadow: 0px 0px #051622;
   transition: all 0.2s ease;
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
+}
+.swiper-button-next-unique-top:hover i, .swiper-button-next-unique-top:focus i{
+  text-shadow: 2px 0px #051622;
+}
+.swiper-button-prev-unique-top:hover i, .swiper-button-prev-unique-top:focus i{
+  text-shadow: -2px 0px #051622;
 }
 .swiper-nav.swiper-button-disabled {
   opacity: 0;
@@ -115,6 +122,10 @@ slide iframe,
   .swiper-slide img {
     height: 350px;
   }
+  .carousel-caption p{
+    font-size: 1em;
+  }
+  
 }
 /* mobile */
 @media only screen and (max-width: 576px) {

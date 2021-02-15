@@ -105,13 +105,11 @@ export class EditorTagComponent implements OnInit {
         (data: any) => {
           this.tags.unshift(data);
           this.clear();
-          this.bsModalRef.hide();
           this.alertify.success('התגית נוספה בהצלחה')
 
         },
         (error) => {
-          this.bsModalRef.content.failMessage =
-            'הייתה בעיה בשמירת הנתונים, יש לנסות שנית';
+          this.alertify.error('הייתה בעיה בשמירת הנתונים, יש לנסות שנית');
             this.clear();
         }
       );
@@ -150,13 +148,11 @@ export class EditorTagComponent implements OnInit {
         (data: any) => {
           this.tags.find(pt => pt.id == tag.id).title=this.data.title;
           this.clear();
-          this.bsModalRef.hide();
           this.alertify.success('התגית עודכנה בהצלחה')
 
         },
         (error) => {
-          this.bsModalRef.content.failMessage =
-            'הייתה בעיה בשמירת הנתונים, יש לנסות שנית';
+          this.alertify.error('הייתה בעיה בשמירת הנתונים, יש לנסות שנית');
           this.clear();
         });
     } else{

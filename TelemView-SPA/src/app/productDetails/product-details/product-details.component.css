@@ -14,6 +14,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  word-break: break-word;
 }
 .product-id {
   background: #e8e8e8;
