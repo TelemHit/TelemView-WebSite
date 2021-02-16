@@ -12,11 +12,27 @@ import { ModalComponent } from '../modal/modal.component';
 import { Lecturer } from 'src/app/_models/lecturer';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { Title } from '@angular/platform-browser';
+import {
+  trigger,
+  state,
+  style,
+  animate,
+  transition,
+  // ...
+} from '@angular/animations';
 
 @Component({
   selector: 'app-editor-lecturer',
   templateUrl: './editor-lecturer.component.html',
-  styleUrls: ['./editor-lecturer.component.css']
+  styleUrls: ['./editor-lecturer.component.css'],
+  animations: [
+    trigger('Fading', [
+      state('void', style({ opacity: 0 })),
+      state('*', style({ opacity: 1 })),
+      transition(':enter', animate('400ms ease-out')),
+      transition(':leave', animate('400ms ease-in')),
+    ])
+  ]
 })
 export class EditorLecturerComponent implements OnInit {
 

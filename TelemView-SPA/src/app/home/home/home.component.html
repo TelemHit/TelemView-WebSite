@@ -1,16 +1,16 @@
-<div class="container-fluid pl-0 pr-0">
+<div class="container-fluid pl-0 pr-0" @Fading>
 
   <!-- header -->
   <app-home-header></app-home-header>
 
   <!-- filters -->
   <app-multi-filter role="form" *ngIf="dataforhome" [queryParams]="productParams" [data]="dataforhome"
-    [totalProducts]="totalCount"></app-multi-filter>
+    [totalProducts]="totalCount" @Fading></app-multi-filter>
 </div>
 
 <!-- products list -->
 <div class="container-fluid gray-bg products-container" infiniteScroll [infiniteScrollDistance]="2"
-  [infiniteScrollThrottle]="50" [scrollWindow]="true" (scrolled)="onScroll()">
+  [infiniteScrollThrottle]="50" [scrollWindow]="true" (scrolled)="onScroll()" @Fading>
   <!-- filters result -->
   <p *ngIf="activeFilters" class="text-center search-result">
     <span *ngIf="totalCount<1">לא נמצאו תוצרים</span>
@@ -30,12 +30,13 @@
   <app-product-card [products]="products"></app-product-card>
 
   <div class="spinner-th">
-    <ngx-spinner [fullScreen]="false" type="ball-fussion" size="medium" color="#1BA098">
+    <ngx-spinner [fullScreen]="false" type="ball-beat" size="medium" color="#1BA098">
       <p class="loading">התוצרים בדרך אליך...</p>
     </ngx-spinner>
     <p *ngIf="cantGetProduct">נראה שיש בעיה בטעינת התוצרים... <br />
       בבקשה בדקו את החיבור לרשת ונסו לרענן את הדף</p>
   </div>
+
 </div>
 
 <!-- scroll to top -->

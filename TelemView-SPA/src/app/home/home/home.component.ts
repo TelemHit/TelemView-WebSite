@@ -6,11 +6,27 @@ import { DataForHome } from 'src/app/_models/dataForHome';
 import { environment } from 'src/environments/environment';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Title } from '@angular/platform-browser';
+import {
+  trigger,
+  state,
+  style,
+  animate,
+  transition,
+  // ...
+} from '@angular/animations';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
+  animations: [
+    trigger('Fading', [
+      state('void', style({ opacity: 0 })),
+      state('*', style({ opacity: 1 })),
+      transition(':enter', animate('400ms ease-out')),
+      transition(':leave', animate('400ms ease-in')),
+    ])
+  ]
 })
 export class HomeComponent implements OnInit {
   products: Product[] = [];

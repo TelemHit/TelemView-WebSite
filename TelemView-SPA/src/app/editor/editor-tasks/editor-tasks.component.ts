@@ -13,11 +13,27 @@ import { GeneralData } from 'src/app/_models/generalData';
 import { Task } from 'src/app/_models/task';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { Title } from '@angular/platform-browser';
+import {
+  trigger,
+  state,
+  style,
+  animate,
+  transition,
+  // ...
+} from '@angular/animations';
 
 @Component({
   selector: 'app-editor-tasks',
   templateUrl: './editor-tasks.component.html',
   styleUrls: ['./editor-tasks.component.css'],
+  animations: [
+    trigger('Fading', [
+      state('void', style({ opacity: 0 })),
+      state('*', style({ opacity: 1 })),
+      transition(':enter', animate('400ms ease-out')),
+      transition(':leave', animate('400ms ease-in')),
+    ])
+  ]
 })
 export class EditorTasksComponent implements OnInit {
   Tasks: Task[];

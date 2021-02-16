@@ -11,11 +11,27 @@ import { AlertModalComponent } from '../alert-modal/alert-modal.component';
 import { ModalComponent } from '../modal/modal.component';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { Title } from '@angular/platform-browser';
+import {
+  trigger,
+  state,
+  style,
+  animate,
+  transition,
+  // ...
+} from '@angular/animations';
 
 @Component({
   selector: 'app-editor-organization-types',
   templateUrl: './editor-organization-types.component.html',
   styleUrls: ['./editor-organization-types.component.css'],
+  animations: [
+    trigger('Fading', [
+      state('void', style({ opacity: 0 })),
+      state('*', style({ opacity: 1 })),
+      transition(':enter', animate('400ms ease-out')),
+      transition(':leave', animate('400ms ease-in')),
+    ])
+  ]
 })
 export class EditorOrganizationTypesComponent implements OnInit {
   organizationTypes: OrganizationType[];

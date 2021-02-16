@@ -103,7 +103,7 @@
     display: none;
   }
 
-  .ven-image{
+  .ven-image {
     padding: 15px 0;
   }
 
@@ -122,6 +122,7 @@
     width: 50%;
     z-index: 1;
   }
+
   .home-nav-static .tv-nav-right.nav-mobile-active {
     right: 27px;
     top: 45px;
@@ -134,6 +135,7 @@
   }
   .logo {
     max-width: 60px;
+    max-height: 60px;
   }
   .logo.logoTV {
     max-width: 120px;
@@ -153,23 +155,37 @@
 
   #pencet span {
     background-color: ghostwhite;
-    width: 1.35em;
-    height: 0.18em;
-    margin: 0.15em 0;
+    width: 25px;
+    height: 3px;
+    margin: 3px 0;
     display: block;
     transition: all 0.4s ease;
     transform-origin: 0 0;
+    -webkit-transform-origin: 0 0;
+    -ms-transform-origin: 0 0;
   }
 
   .open span:nth-child(1) {
     transform: rotate(45deg) translate(1px, -1px);
+    -webkit-transform: rotate(45deg) translate(1px, -1px);
+    -moz-transform: rotate(45deg) translate(1px, -1px);
+    -ms-transform: rotate(45deg) translate(1px, -1px);
+    -o-transform: rotate(45deg) translate(1px, -1px);
   }
 
   .open span:nth-child(2) {
     transform: scaleX(0);
+    -webkit-transform: scaleX(0);
+    -moz-transform: scaleX(0);
+    -ms-transform: scaleX(0);
+    -o-transform: scaleX(0);
   }
 
   .open span:nth-child(3) {
     transform: rotate(-45deg) translate(1px, 0);
+    -webkit-transform: rotate(-45deg) translate(1px, 0);
+    -moz-transform: rotate(-45deg) translate(1px, 0);
+    -ms-transform: rotate(-45deg) translate(1px, 0);
+    -o-transform: rotate(-45deg) translate(1px, 0);
   }
 }

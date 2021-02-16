@@ -14,11 +14,27 @@ import { Lecturer } from 'src/app/_models/lecturer';
 import { Student } from 'src/app/_models/Student';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { Title } from '@angular/platform-browser';
+import {
+  trigger,
+  state,
+  style,
+  animate,
+  transition,
+  // ...
+} from '@angular/animations';
 
 @Component({
   selector: 'app-editor-student',
   templateUrl: './editor-student.component.html',
-  styleUrls: ['./editor-student.component.css']
+  styleUrls: ['./editor-student.component.css'],
+  animations: [
+    trigger('Fading', [
+      state('void', style({ opacity: 0 })),
+      state('*', style({ opacity: 1 })),
+      transition(':enter', animate('400ms ease-out')),
+      transition(':leave', animate('400ms ease-in')),
+    ])
+  ]
 })
 export class EditorStudentComponent implements OnInit {
 

@@ -251,12 +251,12 @@
 }
 
 .clear-all-btn {
-  opacity: 0;
-  transition: opacity 0.5s ease;
+  /* opacity: 0;
+  transition: opacity 0.5s ease; */
   display: none;
 }
 .clear-all-btn.clear-all-btn-active {
-  opacity: 1;
+  /* opacity: 1; */
   display: block;
 }
 
@@ -272,17 +272,17 @@
   transform: scale(1.05);
   font-weight: 600;
 }
-.clear-all-btn-div.clear-all-btn-div-active {
+/* .clear-all-btn-div.clear-all-btn-div-active {
   height: 56px;
-}
+} */
 
-.clear-all-btn-div {
+/* .clear-all-btn-div {
   -prefix-animation: slide 1s ease 3.5s forwards;
   overflow: hidden;
   transition: all 1s ease;
   height: 35px;
   max-height: 100px;
-}
+} */
 
 .filters-header > div:first-child {
   display: flex;

@@ -12,11 +12,27 @@ import { ModalComponent } from '../modal/modal.component';
 import { Course } from 'src/app/_models/Course';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { Title } from '@angular/platform-browser';
+import {
+  trigger,
+  state,
+  style,
+  animate,
+  transition,
+  // ...
+} from '@angular/animations';
 
 @Component({
   selector: 'app-editor-course',
   templateUrl: './editor-course.component.html',
-  styleUrls: ['./editor-course.component.css']
+  styleUrls: ['./editor-course.component.css'],
+  animations: [
+    trigger('Fading', [
+      state('void', style({ opacity: 0 })),
+      state('*', style({ opacity: 1 })),
+      transition(':enter', animate('400ms ease-out')),
+      transition(':leave', animate('400ms ease-in')),
+    ])
+  ]
 })
 export class EditorCourseComponent implements OnInit {
 

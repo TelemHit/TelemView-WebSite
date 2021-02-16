@@ -8,11 +8,27 @@ import { environment } from 'src/environments/environment';
 import { PaginatedResult } from 'src/app/_models/pagination';
 import { Route } from '@angular/compiler/src/core';
 import { Location } from '@angular/common';
+import {
+  trigger,
+  state,
+  style,
+  animate,
+  transition,
+  // ...
+} from '@angular/animations';
 
 @Component({
   selector: 'app-product-details',
   templateUrl: './product-details.component.html',
   styleUrls: ['./product-details.component.css'],
+  animations: [
+    trigger('Fading', [
+      state('void', style({ opacity: 0 })),
+      state('*', style({ opacity: 1 })),
+      transition(':enter', animate('400ms ease-out')),
+      transition(':leave', animate('400ms ease-in')),
+    ])
+  ]
 })
 export class ProductDetailsComponent implements OnInit {
   product: Product;
@@ -45,6 +61,7 @@ export class ProductDetailsComponent implements OnInit {
 
     // scroll top
     scrollToTop() {
+      window.scrollTo(0, 100);
       (function smoothscroll() {
           var currentScroll = window.pageYOffset;
           if (currentScroll > 0) {

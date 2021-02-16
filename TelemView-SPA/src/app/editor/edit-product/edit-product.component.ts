@@ -41,12 +41,28 @@ import { LinkVideoModalComponent } from '../link-video-modal/link-video-modal.co
 import { DomSanitizer, Title } from '@angular/platform-browser';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AlertifyService } from 'src/app/_services/alertify.service';
+import {
+  trigger,
+  state,
+  style,
+  animate,
+  transition,
+  // ...
+} from '@angular/animations';
 declare let Hebcal: any;
 
 @Component({
   selector: 'app-edit-product',
   templateUrl: './edit-product.component.html',
   styleUrls: ['./edit-product.component.css'],
+  animations: [
+    trigger('Fading', [
+      state('void', style({ opacity: 0 })),
+      state('*', style({ opacity: 1 })),
+      transition(':enter', animate('400ms ease-out')),
+      transition(':leave', animate('400ms ease-in')),
+    ])
+  ]
 })
 export class EditProductComponent implements OnInit, AfterViewInit {
   product: Product;

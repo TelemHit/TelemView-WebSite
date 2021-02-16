@@ -13,11 +13,27 @@ import { ModalComponent } from '../modal/modal.component';
 import { Tag } from 'src/app/_models/Tag';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { Title } from '@angular/platform-browser';
+import {
+  trigger,
+  state,
+  style,
+  animate,
+  transition,
+  // ...
+} from '@angular/animations';
 
 @Component({
   selector: 'app-editor-tag',
   templateUrl: './editor-tag.component.html',
-  styleUrls: ['./editor-tag.component.css']
+  styleUrls: ['./editor-tag.component.css'],
+  animations: [
+    trigger('Fading', [
+      state('void', style({ opacity: 0 })),
+      state('*', style({ opacity: 1 })),
+      transition(':enter', animate('400ms ease-out')),
+      transition(':leave', animate('400ms ease-in')),
+    ])
+  ]
 })
 export class EditorTagComponent implements OnInit {
 
