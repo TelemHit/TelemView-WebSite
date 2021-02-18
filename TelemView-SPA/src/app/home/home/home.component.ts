@@ -41,6 +41,7 @@ export class HomeComponent implements OnInit {
   chips = [];
   activeFilters=false;
   windowScrolled = false;
+  loadProductsDiv=false;
 
     //scrolltop btn on scroll
     @HostListener("window:scroll", ["$event"])
@@ -72,7 +73,6 @@ export class HomeComponent implements OnInit {
         localStorage.setItem('userParams', JSON.stringify(this.productParams));
         this.page = 1;
         this.products = [];
-        this.spinner.show();
         this.loadProducts(1000);
       },
       (error) => {
@@ -202,6 +202,8 @@ export class HomeComponent implements OnInit {
 
   //load products from server
   loadProducts(timer) {
+    this.loadProductsDiv=true;
+    this.spinner.show();
     this.productsServise
       .getProducts(this.productParams, this.page, this.itemsPerPage)
       .subscribe(
@@ -213,6 +215,7 @@ export class HomeComponent implements OnInit {
             r.mainPhotoUrl = this.imageslUrl + r.mainPhotoUrl;
             this.products.push(r);
           });
+          this.loadProductsDiv=false;
           this.spinner.hide();
 
           //create chips
@@ -234,7 +237,6 @@ export class HomeComponent implements OnInit {
     this.page += 1;
     //load only if current page lesser then total pages
     if (this.page <= this.totalPages || this.totalPages == undefined) {
-      this.spinner.show();
       this.loadProducts(1000);
     }
   }

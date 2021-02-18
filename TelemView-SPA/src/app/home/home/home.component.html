@@ -29,7 +29,7 @@
   <!-- products -->
   <app-product-card [products]="products"></app-product-card>
 
-  <div class="spinner-th">
+  <div class="spinner-th" *ngIf="loadProductsDiv">
     <ngx-spinner [fullScreen]="false" type="ball-beat" size="medium" color="#1BA098">
       <p class="loading">התוצרים בדרך אליך...</p>
     </ngx-spinner>
