@@ -25,8 +25,8 @@ import {
       state('*', style({ opacity: 1 })),
       transition(':enter', animate('400ms ease-out')),
       transition(':leave', animate('400ms ease-in')),
-    ])
-  ]
+    ]),
+  ],
 })
 export class HomeComponent implements OnInit {
   products: Product[] = [];
@@ -39,23 +39,22 @@ export class HomeComponent implements OnInit {
   totalPages: number;
   totalCount: number;
   chips = [];
-  activeFilters=false;
+  activeFilters = false;
   windowScrolled = false;
-  loadProductsDiv=false;
+  loadProductsDiv = false;
 
-    //scrolltop btn on scroll
-    @HostListener("window:scroll", ["$event"])
-    onWindowScroll() {
+  //scrolltop btn on scroll
+  @HostListener('window:scroll', ['$event'])
+  onWindowScroll() {
     //In chrome and some browser scroll is given to body tag
-    let pos = (document.documentElement.scrollTop || document.body.scrollTop);
+    let pos = document.documentElement.scrollTop || document.body.scrollTop;
     // pos/max will give you the distance between scroll bottom and and bottom of screen in percentage.
-     if(pos >= 600 )   {
-     this.windowScrolled=true;
-     }
-     else{
-       this.windowScrolled=false;
-     }
+    if (pos >= 600) {
+      this.windowScrolled = true;
+    } else {
+      this.windowScrolled = false;
     }
+  }
 
   constructor(
     private route: ActivatedRoute,
@@ -75,22 +74,23 @@ export class HomeComponent implements OnInit {
         this.products = [];
         this.loadProducts(1000);
       },
-      (error) => {
-      }
+      (error) => {}
     );
     this.titleService.setTitle('Telem View - תוצרי הפקולטה לטכנולוגיות למידה');
+
+    this.scrollToTop();
   }
 
   // scroll top
   scrollToTop() {
     (function smoothscroll() {
-        var currentScroll = window.pageYOffset;
-        if (currentScroll > 0) {
-            window.requestAnimationFrame(smoothscroll);
-            window.scrollTo(0, currentScroll - (currentScroll / 8));
-        }
+      var currentScroll = window.pageYOffset;
+      if (currentScroll > 0) {
+        window.requestAnimationFrame(smoothscroll);
+        window.scrollTo(0, currentScroll - currentScroll / 8);
+      }
     })();
-}
+  }
 
   //return list of filters for chips display
   filtersForChips() {
@@ -106,16 +106,17 @@ export class HomeComponent implements OnInit {
             key.toLocaleLowerCase() == 'degree' ||
             key.toLocaleLowerCase() == 'years'
           ) {
-            if(value.trim() != ''){
+            if (value.trim() != '') {
               titles.push({
                 title: value,
                 key: key,
               });
             }
-            
           } else {
             titles.push({
-              title: this.dataforhome[key].find((x) => x.id == value).title,
+              title:
+                this.dataforhome[key].find((x) => x.id == value).title ||
+                this.dataforhome[key].find((x) => x.id == value).name,
               id: key,
               key: key,
             });
@@ -128,7 +129,7 @@ export class HomeComponent implements OnInit {
           ) {
             const newValue: any = value;
             newValue.forEach((element) => {
-              if(element.trim() != ''){
+              if (element.trim() != '') {
                 titles.push({
                   title: element,
                   key: key,
@@ -202,7 +203,7 @@ export class HomeComponent implements OnInit {
 
   //load products from server
   loadProducts(timer) {
-    this.loadProductsDiv=true;
+    this.loadProductsDiv = true;
     this.spinner.show();
     this.productsServise
       .getProducts(this.productParams, this.page, this.itemsPerPage)
@@ -215,7 +216,7 @@ export class HomeComponent implements OnInit {
             r.mainPhotoUrl = this.imageslUrl + r.mainPhotoUrl;
             this.products.push(r);
           });
-          this.loadProductsDiv=false;
+          this.loadProductsDiv = false;
           this.spinner.hide();
 
           //create chips

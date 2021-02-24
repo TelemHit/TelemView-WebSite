@@ -80,11 +80,9 @@ export class LinkVideoModalComponent implements OnInit {
       const iframe = /<iframe.*?s*src="http(.*?)".*?<\/iframe>/;
       let urlForCheck = null;
       if (youtube.test(g.controls.url.value)) {
-        console.log(1)
         urlForCheck = true;
       }
       if (iframe.test(g.controls.url.value) == true) {
-        console.log(2)
         urlForCheck = null;
       }
 

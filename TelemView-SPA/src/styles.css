@@ -359,6 +359,9 @@ aside .swiper-wrapper {
 .ng-select.custom .ng-select-container {
   width: auto;
 }
+.ng-select.custom .ng-select-container:hover {
+  cursor:pointer;
+}
 
 .ng-select.custom .ng-dropdown-panel {
   width: auto;
