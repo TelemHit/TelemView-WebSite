@@ -231,7 +231,7 @@
   justify-content: center;
 }
 
-.filters-header h3 {
+.filters-header h2 {
   font-weight: 600;
   font-size: 1.1em;
   vertical-align: middle;
@@ -314,6 +314,23 @@
   100% {
     right: 0;
   }
+}
+.search-auto-complete.search-auto-complete-active {
+  opacity: 1;
+  z-index: 100002;
+  width: 100%;
+  left: unset;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+}
+.search-auto-complete.search-auto-complete-active:hover {
+  cursor: pointer;
+}
+.search-auto-complete {
+  position: absolute;
+  opacity: 0;
+  list-style-type: none;
+  z-index: -100;
+  padding: 0;
 }
 
 /* mobile */

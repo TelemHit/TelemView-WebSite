@@ -33,5 +33,13 @@ namespace TelemView.API.Controllers
             //return Ok(dataForHome);
             return Ok(dataToReturn);
         }
+
+        [AllowAnonymous]
+        [HttpGet("search/{searchInput}")]
+        public async Task<IActionResult> GetSearchList(string searchInput)
+        {
+            var list = await _repo.GetSearchAutoComplete(searchInput);
+            return Ok(list);
+        }
     }
 }

@@ -96,7 +96,7 @@
 /* mobile */
 @media only screen and (max-width: 576px) {
     .background-inner{
-        background: url(../../../assets/images/mainBI_mobile.png) no-repeat center center;
+        background: url(../../../assets/images/mainBI_mobile.jpg) no-repeat center center;
         background-repeat: no-repeat;
         background-position: center;
         background-size: cover;

@@ -63,12 +63,13 @@ namespace TelemView.API.Data
             {
                 products = products.Where(p => productParams.Degree.Contains(p.Degree));
             }
-            if (productParams.Search != null && productParams.IsClient == true)
-            {
-                // if client - search by product name only
-                products = products.Where(p => p.Title.ToLower().Trim().Contains(productParams.Search.ToLower().Trim()));
-            }
-            if (productParams.Search != null && productParams.IsClient == false)
+            // if (productParams.Search != null && productParams.IsClient == true)
+            // {
+            //     // if client - search by product name only
+            //     products = products.Where(p => p.Title.ToLower().Trim().Contains(productParams.Search.ToLower().Trim()));
+            // }
+            // if (productParams.Search != null && productParams.IsClient == false)
+            if (productParams.Search != null)
             {
                 // if editor - search by all params
                 var filteredProducts = products.Where(p => p.Title.ToLower().Trim().Contains(productParams.Search.ToLower().Trim()));
@@ -90,6 +91,108 @@ namespace TelemView.API.Data
 
             //we return paged data - each time only part of data according to user paging parameters
             return await PagedList<Product>.CreateAsync(products, productParams.PageNumber, productParams.PageSize);
+        }
+
+        //get a list of search suggestions
+        public async Task<IEnumerable<string>> GetSearchAutoComplete(string searchInput)
+        {
+            var listToReturn = new List<string>();
+            var total = 10;
+
+            //products
+            var products = _context.Products.AsQueryable();
+            listToReturn = listToReturn.Union(await products.Where(pr => pr.IsPublish == true)
+            .Select(p => p.Title)
+            .Where(t => t.Contains(searchInput.ToLower())).ToListAsync()).ToList();
+
+            //check if list is greather then 20
+            if (listToReturn.Count >= total)
+                return listToReturn.Take(total);
+
+            //types
+            var types = _context.ProductTypes.AsQueryable();
+            listToReturn = listToReturn.Union(await types.Where(t => t.Products.Any(p => p.IsPublish == true)).Select(n => n.Title.ToLower()).Where(l => l.Contains(searchInput.ToLower())).ToListAsync()).ToList();
+
+            if (listToReturn.Count >= total)
+                return listToReturn.Take(total);
+
+            //lecturers
+            var lecturers = _context.Lecturers.AsQueryable();
+            listToReturn = listToReturn.Union(await lecturers.Where(l => l.ProductsLecturers.Any(t => t.Product.IsPublish == true)).Select(n => n.Name.ToLower()).Where(l => l.Contains(searchInput.ToLower())).ToListAsync()).ToList();
+
+            if (listToReturn.Count >= total)
+                return listToReturn.Take(total);
+
+            //organizations
+            var org = _context.Organizations.AsQueryable();
+            listToReturn = listToReturn.Union(await org.Where(o => o.Products.Any(p => p.IsPublish == true)).Select(n => n.Title.ToLower()).Where(l => l.Contains(searchInput.ToLower())).ToListAsync()).ToList();
+
+            if (listToReturn.Count >= total)
+                return listToReturn.Take(total);
+
+            //students
+            var students = _context.Students.AsQueryable();
+            listToReturn = listToReturn.Union(await students.Where(s => s.ProductStudents.Any(t => t.Product.IsPublish == true)).Select(n => n.Name.ToLower()).Where(l => l.Contains(searchInput.ToLower())).ToListAsync()).ToList();
+
+            if (listToReturn.Count >= total)
+                return listToReturn.Take(total);
+
+            //tasks
+            var tasks = _context.Tasks.AsQueryable();
+            listToReturn = listToReturn.Union(await tasks.Where(t => t.Products.Any(p => p.IsPublish == true)).Select(n => n.Title.ToLower()).Where(l => l.Contains(searchInput.ToLower())).ToListAsync()).ToList();
+
+            if (listToReturn.Count >= total)
+                return listToReturn.Take(total);
+
+            //courses
+            var courses = _context.Courses.AsQueryable();
+            listToReturn = listToReturn.Union(await courses.Where(c => c.ProductsCourses.Any(t => t.Product.IsPublish == true)).Select(n => n.Title.ToLower()).Where(l => l.Contains(searchInput.ToLower())).ToListAsync()).ToList();
+
+            if (listToReturn.Count >= total)
+                return listToReturn.Take(total);
+
+            //tag
+            var tags = _context.Tags.AsQueryable();
+            listToReturn = listToReturn.Union(await tags.Where(t => t.ProductsTags.Any(t => t.Product.IsPublish == true)).Select(n => n.Title.ToLower()).Where(l => l.Contains(searchInput.ToLower())).ToListAsync()).ToList();
+
+            if (listToReturn.Count >= total)
+                return listToReturn.Take(total);
+
+            //organization types
+            var orgTypes = _context.OrganizationTypes.AsQueryable();
+            listToReturn = listToReturn.Union(await orgTypes.Where(ot => ot.OrganizationAndType.Any(p => p.Organization.Products.Any(pr => pr.IsPublish == true))).Select(n => n.Title.ToLower()).Where(l => l.Contains(searchInput.ToLower())).ToListAsync()).ToList();
+
+            if (listToReturn.Count >= total)
+                return listToReturn.Take(total);
+
+            //years
+            var years = await _context.Products.Where(pr => pr.IsPublish == true).GroupBy(p => p.YearOfCreation).Select(y => new Year
+            {
+                Title = y.Key,
+            }).OrderBy(o => o.Title).ToListAsync();
+
+            listToReturn = listToReturn.Union(years.Select(n => n.Title.ToString()).Where(l => l.Contains(searchInput.ToLower()))).ToList();
+
+            if (listToReturn.Count >= total)
+                return listToReturn.Take(total);
+
+            //hebrew years
+            var heYears = await _context.Products.Where(pr => pr.IsPublish == true).GroupBy(p => p.HeYearOfCreation).Select(y => new Year
+            {
+                HeTitle = y.Key,
+            }).OrderBy(o => o.HeTitle).ToListAsync();
+
+            listToReturn = listToReturn.Union(heYears.Select(n => n.HeTitle.ToString()).Where(l => l.Contains(searchInput.ToLower()))).ToList();
+
+            //degree
+            var degree = await _context.Products.Where(pr => pr.IsPublish == true).GroupBy(p => p.Degree).Select(y => new Degree
+            {
+                Title = y.Key,
+            }).OrderBy(o => o.Title).ToListAsync();
+
+            listToReturn = listToReturn.Union(degree.Select(n => n.Title.ToString()).Where(l => l.Contains(searchInput.ToLower()))).ToList();
+
+            return listToReturn.Take(total);
         }
 
         //get specific product

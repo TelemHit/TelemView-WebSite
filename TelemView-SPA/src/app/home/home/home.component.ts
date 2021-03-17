@@ -34,7 +34,7 @@ export class HomeComponent implements OnInit {
   productParams: any = {};
   imageslUrl = environment.imageslUrl;
   page: number = 1;
-  itemsPerPage: number = 20;
+  itemsPerPage: number = 10;
   cantGetProduct = false;
   totalPages: number;
   totalCount: number;

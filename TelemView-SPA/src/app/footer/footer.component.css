@@ -1,6 +1,9 @@
 footer .btn{
     font-size: 1em;
 }
+footer .btn-link:hover, footer .btn-link:focus{
+    color: white;
+}
 
 @media only screen and (max-width: 576px) {
     footer .btn{

@@ -28,6 +28,11 @@ export class GeneralDataService {
     return this.http.get<DataForEdit[]>(this.baseUrl + 'generaldata');
   }
 
+    //get general data for Search List
+    getSearchList(searchInput: string) {
+      return this.http.get<Array<string>>(this.baseUrl + 'generaldata/search/'+searchInput);
+    }
+
   // Product types
   getProductTypes(userId: number): Observable<ProductType> {
     return this.http.get<ProductType>(this.baseUrl + 'producttype/' + userId);

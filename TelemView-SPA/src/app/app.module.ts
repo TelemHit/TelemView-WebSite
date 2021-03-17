@@ -27,6 +27,7 @@ import {
 } from 'ngx-timeago';
 import { SwiperModule } from 'ngx-swiper-wrapper';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 
 
 import { AppComponent } from './app.component';
@@ -173,6 +174,7 @@ export function tokenGetter() {
     InfiniteScrollModule,
     CarouselModule.forRoot(),
     ModalModule.forRoot(),
+    TypeaheadModule.forRoot(),
     JwtModule.forRoot({
       config: {
         tokenGetter,
@@ -208,7 +210,7 @@ export function tokenGetter() {
     StudentResolver,
     CourseResolver,
     LecturerResolver,
-    AdminService
+    AdminService,
   ],
   entryComponents: [
     AlertModalComponent,

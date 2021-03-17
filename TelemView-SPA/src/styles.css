@@ -42,6 +42,9 @@ h2 {
   background-color: #051622;
 }
 .green-bg {
+  background-color: #16827b;
+}
+.light-green-bg {
   background-color: #1ba098;
 }
 .gold-bg {
@@ -358,6 +361,7 @@ aside .swiper-wrapper {
 }
 .ng-select.custom .ng-select-container {
   width: auto;
+  margin-left: 5px;
 }
 .ng-select.custom .ng-select-container:hover {
   cursor:pointer;
@@ -563,6 +567,15 @@ button:focus {
 .ng-select span {
   white-space: normal;
 }
+
+.dropdown-item.active, .dropdown-item:active{
+  background-color: #1ba098;
+}
+typeahead-container .dropdown-item{
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /* mobile */
 @media only screen and (max-width: 576px) {
   .dropdown-container {
@@ -571,6 +584,7 @@ button:focus {
   }
   .ng-select.custom .ng-select-container {
     width: 100%;
+    margin-left: 0;
   }
   .ng-select.custom .ng-dropdown-panel {
     width: 100%;

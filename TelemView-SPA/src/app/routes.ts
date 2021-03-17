@@ -131,9 +131,6 @@ export const appRoutes: Routes = [
   {
     path: '',
     component: HomeComponent,
-    resolve: {
-      products: ProductListResolver,
-    },
   },
   {
     path: 'product/:id',

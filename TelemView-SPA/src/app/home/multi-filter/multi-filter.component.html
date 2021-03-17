@@ -19,10 +19,11 @@
           <label for="searchline" class="search-lbl mobile-hide">חיפוש תוצר</label>
           <div class="search-line-div d-flex align-items-center">
             <span class="search-icon"><i class="fa fa-search"></i></span>
-            <input #search [ngxScrollToOffset]="-100" [ngxScrollTo]="'filterSearchDiv'" (keyup)="modelChange()"
-              autocomplete="off" class="form-control align-self-center search-input" id="searchline" role="search"
-              (blur)="isFocused = false" (focus)="isFocused = true" placeholder="שם התוצר..." (blur)="isFocused = false"
-              (focus)="isFocused = true" [(ngModel)]="selectedParams.search[0]">
+            <input #search [ngxScrollToOffset]="-100" [ngxScrollTo]="'filterSearchDiv'"
+              (keyup)="modelChange();" autocomplete="off"
+              class="form-control align-self-center search-input" id="searchline" role="search"
+              placeholder="חיפוש תוצר..." [(ngModel)]="selectedParams.search[0]" (focus)="isFocused = true"
+              (blur)="isFocused = false" [typeahead]="filteredList" (typeaheadOnSelect)="updateSearch();" >
             <button class="btn clear-icon" [hidden]="!isFocused && ( selectedParams.search[0] == undefined || selectedParams.search[0].length==0) || 
           isFocused && (selectedParams.search[0] == undefined || selectedParams.search[0].length==0)"
               (click)="clearSearch()">
@@ -34,11 +35,11 @@
     </div>
 
     <!-- filters -->
-    <div class="filters-header mobile-hide" [ngClass]="{'mobileFilters': mobileFilters}"
-    [ngxScrollToOffset]="-100" [ngxScrollTo]="'filterSearchDiv'">
+    <div class="filters-header mobile-hide" [ngClass]="{'mobileFilters': mobileFilters}" [ngxScrollToOffset]="-100"
+      [ngxScrollTo]="'filterSearchDiv'">
       <div class="mobile-hide">
         <div class="clear-all-btn-div" [ngClass]="{'clear-all-btn-div-active': filtersActive()}">
-          <h3 [ngClass]="{'green': filtersActive()}"><i class="fa fa-sliders" aria-hidden="true"></i> מסננים</h3>
+          <h2 [ngClass]="{'green': filtersActive()}"><i class="fa fa-sliders" aria-hidden="true"></i> מסננים</h2>
           <button type="button" class="btn filters-btn clear-all-btn" (click)="clearall()"
             [ngClass]="{'clear-all-btn-active': filtersActive()}">איפוס</button>
         </div>
@@ -50,12 +51,13 @@
           <div class="d-flex align-items-center">
             <button type="button" class="btn back-filter-btn" (click)="mobileFilters=false"><i class="fa fa-arrow-right"
                 aria-hidden="true"></i></button>
-            <h3>סינון <span *ngIf="filtersActive() && totalProducts>1">(נמצאו {{totalProducts}} תוצרים)</span>
+            <h2>סינון <span *ngIf="filtersActive() && totalProducts>1">(נמצאו {{totalProducts}} תוצרים)</span>
               <span *ngIf='filtersActive() && totalProducts==1'>(נמצא תוצר אחד)</span>
               <span *ngIf='filtersActive() && totalProducts==0'>(לא נמצאו תוצרים)</span>
-            </h3>
+            </h2>
           </div>
-          <button type="button" class="btn filters-btn clear-all-btn" (click)="clearall(); mobileFilters=!mobileFilters;"
+          <button type="button" class="btn filters-btn clear-all-btn"
+            (click)="clearall(); mobileFilters=!mobileFilters;"
             [ngClass]="{'clear-all-btn-active': filtersActive()}">איפוס</button>
         </div>
         <div class="filters-row">
@@ -65,7 +67,7 @@
             <ng-select #productTypes [items]="data.productTypes | hasProducts" class="custom" placeholder="סוגי תוצרים"
               [multiple]="true" bindLabel="title" labelForId="productTypes" bindValue="id" [closeOnSelect]="false"
               [searchable]="false" [(ngModel)]="selectedParams.productTypes" [clearable]="false"
-              (blur)="updateOnBlur('productTypes')">
+              (blur)="updateOnBlur('productTypes')" aria-label="סוגי תוצרים">
               <ng-template ng-header-tmp>
                 <button type="button" class="btn back-filter-btn" (click)="closeSelect(productTypes, 'productTypes')"><i
                     class="fa fa-arrow-right" aria-hidden="true"></i></button>
@@ -90,7 +92,7 @@
             <ng-select #tasks [items]="data.tasks | hasProducts" [searchable]="false" class="custom"
               placeholder="משימות" [multiple]="true" bindLabel="title" labelForId="tasks" bindValue="id"
               [closeOnSelect]="false" [(ngModel)]="selectedParams.tasks" [clearable]="false"
-              (blur)="updateOnBlur('tasks')">
+              (blur)="updateOnBlur('tasks')"  aria-label="משימות">
               <ng-template ng-header-tmp>
                 <button type="button" class="btn back-filter-btn" (click)="closeSelect(tasks, 'tasks')"><i
                     class="fa fa-arrow-right" aria-hidden="true"></i></button>
@@ -112,7 +114,7 @@
             <label for="years" hidden>שנים <i class="fa fa-angle-down" aria-hidden="true"></i></label>
             <ng-select #years [items]="data.years" [searchable]="false" class="custom" placeholder="שנים"
               [multiple]="true" bindLabel="title" labelForId="years" bindValue="title" [closeOnSelect]="false"
-              [(ngModel)]="selectedParams.years" [clearable]="false" (blur)="updateOnBlur('years')">
+              [(ngModel)]="selectedParams.years" [clearable]="false" (blur)="updateOnBlur('years')" aria-label="שנים">
               <ng-template ng-header-tmp>
                 <button type="button" class="btn back-filter-btn" (click)="closeSelect(years, 'years')"><i
                     class="fa fa-arrow-right" aria-hidden="true"></i></button>
@@ -136,7 +138,7 @@
             <ng-select #organizations [items]="data.organizations | hasProducts" class="custom" [searchable]="false"
               placeholder="ארגונים" [multiple]="true" bindLabel="title" labelForId="organizations" bindValue="id"
               [closeOnSelect]="false" [(ngModel)]="selectedParams.organizations" [clearable]="false"
-              (blur)="updateOnBlur('organizations')">
+              (blur)="updateOnBlur('organizations')" aria-label="ארגונים">
               <ng-template ng-header-tmp>
                 <button type="button" class="btn back-filter-btn"
                   (click)="closeSelect(organizations, 'organizations')"><i class="fa fa-arrow-right"
@@ -174,7 +176,7 @@
               [searchable]="false" placeholder="סוגי ארגונים" [multiple]="true" bindLabel="title"
               labelForId="organizationTypes" bindValue="id" [closeOnSelect]="false"
               [(ngModel)]="selectedParams.organizationTypes" [clearable]="false"
-              (blur)="updateOnBlur('organizationTypes')">
+              (blur)="updateOnBlur('organizationTypes')" aria-label="סוגי ארגונים">
               <ng-template ng-header-tmp>
                 <button type="button" class="btn back-filter-btn"
                   (click)="closeSelect(organizationTypes, 'organizationTypes')"><i class="fa fa-arrow-right"
@@ -200,7 +202,7 @@
             <ng-select #courses [items]="data.courses | hasProducts" [searchable]="false" class="custom"
               placeholder="קורסים" [multiple]="true" bindLabel="title" labelForId="courses" bindValue="id"
               [closeOnSelect]="false" [(ngModel)]="selectedParams.courses" [clearable]="false"
-              (blur)="updateOnBlur('courses')">
+              (blur)="updateOnBlur('courses')" aria-label="קורסים">
               <ng-template ng-header-tmp>
                 <button type="button" class="btn back-filter-btn" (click)="closeSelect(courses, 'courses')"><i
                     class="fa fa-arrow-right" aria-hidden="true"></i></button>
@@ -225,7 +227,7 @@
             <ng-select #lecturers [items]="data.lecturers | hasProducts" [searchable]="false" class="custom"
               placeholder="מרצים" [multiple]="true" bindLabel="name" labelForId="lecturers" bindValue="id"
               [closeOnSelect]="false" [(ngModel)]="selectedParams.lecturers" [clearable]="false"
-              (blur)="updateOnBlur('lecturers')">
+              (blur)="updateOnBlur('lecturers')" aria-label="מרצים">
               <ng-template ng-header-tmp>
                 <button type="button" class="btn back-filter-btn" (click)="closeSelect(lecturers, 'lecturers')"><i
                     class="fa fa-arrow-right" aria-hidden="true"></i></button>
@@ -249,7 +251,7 @@
             <label for="degree" hidden>תואר <i class="fa fa-angle-down" aria-hidden="true"></i></label>
             <ng-select #degree [items]="data.degree | hasProducts" [multiple]="true" [searchable]="false" class="custom"
               placeholder="תואר" bindLabel="title" labelForId="degree" bindValue="title" [closeOnSelect]="false"
-              [(ngModel)]="selectedParams.degree" [clearable]="false" (blur)="updateOnBlur('degree')">
+              [(ngModel)]="selectedParams.degree" [clearable]="false" (blur)="updateOnBlur('degree')" aria-label="תואר">
               <ng-template ng-header-tmp>
                 <button type="button" class="btn back-filter-btn" (click)="closeSelect(degree, 'degree')"><i
                     class="fa fa-arrow-right" aria-hidden="true"></i></button>

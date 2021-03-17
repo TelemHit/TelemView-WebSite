@@ -12,8 +12,9 @@ import {
 import { DataForHome } from 'src/app/_models/dataForHome';
 import { ProductsService } from 'src/app/_services/products.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Subject, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
+import { GeneralDataService } from 'src/app/_services/generalData.service';
 
 @Component({
   selector: 'app-multi-filter',
@@ -40,6 +41,8 @@ export class MultiFilterComponent implements OnInit, OnChanges {
   openMoreFilters = false;
   mobileSearch = false;
   mobileFilters = false;
+  filteredList: Observable<any>;
+  showAutoComplete = false;
 
   @Input() totalProducts: number;
   @Input() data: DataForHome;
@@ -49,14 +52,26 @@ export class MultiFilterComponent implements OnInit, OnChanges {
   constructor(
     private productService: ProductsService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private generalDataService: GeneralDataService
   ) {
     this.modelChanged.pipe(debounceTime(this.debounceTime)).subscribe(() => {
       this.updateSearch();
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+      this.filteredList = new Observable((observer: any) => {
+        this.generalDataService
+          .getSearchList(this.selectedParams.search[0])
+          .subscribe((result: any) => {
+            observer.next(result);
+          }, (error) => {
+            console.log(error);
+          });
+      });
+  }
+
 
   //we use onChange so each time the url changes it changes also in Home component variable
   //then we get the params as GetQueryParams Input
@@ -188,7 +203,7 @@ export class MultiFilterComponent implements OnInit, OnChanges {
 
   //get change of search input
   modelChange() {
-      this.modelChanged.next();
+    this.modelChanged.next();
   }
 
   //update search parameter
