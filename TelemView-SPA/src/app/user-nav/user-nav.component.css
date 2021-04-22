@@ -1,6 +1,9 @@
 .home-nav {
   padding: 10px 15px;
 }
+.modal-content .origin-dev{
+  font-size: 0.9em;
+}
 .home-nav-static {
   padding: 5px 15px;
   opacity: 0.9;
@@ -41,6 +44,11 @@
   0% {
     opacity: 1;
   }
+}
+.active {
+  font-weight: 600;
+  text-decoration: underline;
+  cursor:default;
 }
 .home-nav-static .logo {
   max-width: 70px;

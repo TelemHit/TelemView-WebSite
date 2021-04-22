@@ -19,11 +19,21 @@
           <label for="searchline" class="search-lbl mobile-hide">חיפוש תוצר</label>
           <div class="search-line-div d-flex align-items-center">
             <span class="search-icon"><i class="fa fa-search"></i></span>
-            <input #search [ngxScrollToOffset]="-100" [ngxScrollTo]="'filterSearchDiv'"
+            <!-- <input #search [ngxScrollToOffset]="-100" [ngxScrollTo]="'filterSearchDiv'"
               (keyup)="modelChange();" autocomplete="off"
               class="form-control align-self-center search-input" id="searchline" role="search"
               placeholder="חיפוש תוצר..." [(ngModel)]="selectedParams.search[0]" (focus)="isFocused = true"
-              (blur)="isFocused = false" [typeahead]="filteredList" (typeaheadOnSelect)="updateSearch();" >
+              (blur)="isFocused = false" [typeahead]="filteredList" (typeaheadOnSelect)="updateSearch();" > -->
+              <input #search=bs-typeahead [ngxScrollToOffset]="-100" [ngxScrollTo]="'filterSearchDiv'"
+              autocomplete="off" (keyup)="modelChange();"
+              class="form-control align-self-center search-input" id="searchline" role="search"
+              placeholder="חיפוש תוצר..." [(ngModel)]="selectedParams.search[0]" (focus)="isFocused = true"
+              (blur)="isFocused = false" [typeahead]="filteredList" (typeaheadOnSelect)="selectSearchTimeOut();" 
+              [typeaheadItemTemplate]="template">
+              <ng-template #template let-match="match" let-query="query">
+                <div [innerHtml]="fixedHighligth(match, query)"></div>
+            </ng-template>
+
             <button class="btn clear-icon" [hidden]="!isFocused && ( selectedParams.search[0] == undefined || selectedParams.search[0].length==0) || 
           isFocused && (selectedParams.search[0] == undefined || selectedParams.search[0].length==0)"
               (click)="clearSearch()">

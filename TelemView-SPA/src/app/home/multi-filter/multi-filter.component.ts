@@ -15,6 +15,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { GeneralDataService } from 'src/app/_services/generalData.service';
+import { TypeaheadDirective, TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 
 @Component({
   selector: 'app-multi-filter',
@@ -47,7 +48,8 @@ export class MultiFilterComponent implements OnInit, OnChanges {
   @Input() totalProducts: number;
   @Input() data: DataForHome;
   @Input() queryParams;
-  @ViewChild('search') searchElement: ElementRef;
+  //@ViewChild('search') searchElement: ElementRef;
+  @ViewChild('search') typeahead: TypeaheadDirective;
 
   constructor(
     private productService: ProductsService,
@@ -72,6 +74,11 @@ export class MultiFilterComponent implements OnInit, OnChanges {
       });
   }
 
+  fixedHighligth(match: TypeaheadMatch, query: Array<string>): String {
+    // Avoid calling
+    query = query.filter((value) => value.trim().length > 0);
+    return this.typeahead._container.highlight(match, query);
+}
 
   //we use onChange so each time the url changes it changes also in Home component variable
   //then we get the params as GetQueryParams Input
@@ -87,7 +94,7 @@ export class MultiFilterComponent implements OnInit, OnChanges {
     this.mobileFilters = false;
     setTimeout(() => {
       // this will make the execution after the above boolean has changed
-      this.searchElement.nativeElement.focus();
+      this.typeahead.onFocus()
     }, 0);
   }
 
@@ -204,6 +211,12 @@ export class MultiFilterComponent implements OnInit, OnChanges {
   //get change of search input
   modelChange() {
     this.modelChanged.next();
+  }
+
+  selectSearchTimeOut(){
+    setTimeout(() => {
+      this.updateSearch();
+    }, 500);
   }
 
   //update search parameter

@@ -13,6 +13,7 @@
         <img src="assets/images/logoTV.png" alt="לוגו טכנולוגיות למידה" class="logo logoTV">
         <div class="tv-nav-right"
         [ngClass]="{'nav-mobile-active': mobileNav}">
+        <a routerLinkActive="active" class="btn btn-about" [routerLink]="['/home']">דף הבית</a>
         <button type="button" class="btn btn-about" (click)="lgModal.show()">מי אנחנו</button>
         <a class="btn btn-about" href="https://www.hit.ac.il/telem/overview" target="_blank">לאתר הפקולטה</a>
       </div>
@@ -48,7 +49,7 @@
           <a class="btn btn-yellow mt-3 col-sm-6" href="https://www.hit.ac.il/telem/overview" target="_blank">לאתר הפקולטה</a>
 
         </div>
-        
+        <p class="mt-5 mb-0 origin-dev">*האתר פותח במקור על ידי רוית דבוש במסגרת פרויקט גמר בהנחיית פרופ' מיקי רונן ז"ל ואורן בן אהרן, תשע"ה</p>
       </div>
     </div>
   </div>

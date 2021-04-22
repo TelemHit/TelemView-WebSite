@@ -1,12 +1,16 @@
 
 <article class="container-fluid overflow-hidden" @Fading>
   <div class="product-header">
-    <nav class="logo-top d-flex align-items-center justify-content-between">
+    <!-- <nav class="logo-top d-flex align-items-center justify-content-between">
       <button type="button" class="btn back-btn btn-about" (click)="backClicked()"><i class="fa fa-home" aria-hidden="true"></i> דף הבית
       </button>
       <a routerLink=""><img src="assets/images/logoTV.png" alt="לוגו טכנולוגיות למידה" class="logo logoTV"></a>
       <img src="assets/images/logoHit.png" alt="לוגו HIT" class="logo">
-    </nav>
+    </nav> -->
+    <div class="product-nav">
+      <app-user-nav></app-user-nav>
+    </div>
+    
     <header class="container">
       <div class="row align-items-center detail-header">
         <div class="col-lg-10 col-md-8 col-sm-9 mobile-center">

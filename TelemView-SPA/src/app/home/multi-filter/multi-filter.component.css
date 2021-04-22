@@ -269,8 +269,7 @@
 }
 .filters-btn:hover,
 .filters-btn:focus {
-  transform: scale(1.05);
-  font-weight: 600;
+  text-decoration: underline;
 }
 /* .clear-all-btn-div.clear-all-btn-div-active {
   height: 56px;
@@ -335,6 +334,13 @@
 
 /* mobile */
 @media only screen and (max-width: 576px) {
+  .filters-header h2 {
+    margin: 0;
+    margin-right: 5px;
+    font-size: 1.3em;
+    font-weight: 600;
+  }
+
   .filters-row.filters-row-bottom.filters-row-bottom-close {
     display: flex;
   }

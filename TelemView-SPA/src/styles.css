@@ -353,7 +353,7 @@ aside .swiper-wrapper {
 
 .ng-select.custom {
   display: flex;
-  margin-left: 10px;
+  margin-left: 5px;
 }
 
 .ng-select.custom .dropdown-container {
@@ -547,14 +547,13 @@ button:focus {
   color: white;
   font-size: 1em;
   font-weight: 300;
-  transform: scale(1);
-  transition: all 0.3s ease-in-out;
+  /* transition: all 0.3s ease-in-out; */
 }
 .btn-about:hover,
 .btn-about:focus {
   color: white;
   font-weight: 600;
-  transform: scale(1.1);
+  text-decoration: underline;
 }
 
 .ajs-message {

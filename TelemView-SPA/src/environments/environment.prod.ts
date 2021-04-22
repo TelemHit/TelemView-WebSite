@@ -2,6 +2,6 @@ export const environment = {
   production: true,
   apiUrl: 'api/',
   imageslUrl: 'images/',
-  resetPassword: 'http://109.226.52.174/TelemView/resetpassword',
-  emailConfirmation: 'http://109.226.52.174/TelemView/emailconfirmation'
+  resetPassword: 'https://telemview.telem-hit.net/resetpassword',
+  emailConfirmation: 'https://telemview.telem-hit.net/emailconfirmation'
 };

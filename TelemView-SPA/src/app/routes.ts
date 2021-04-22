@@ -129,7 +129,7 @@ export const appRoutes: Routes = [
     ],
   },
   {
-    path: '',
+    path: 'home',
     component: HomeComponent,
   },
   {
@@ -137,5 +137,5 @@ export const appRoutes: Routes = [
     component: ProductDetailsComponent,
     resolve: { product: ProductDetailsResolver },
   },
-  { path: '**', redirectTo: '', pathMatch: 'full' },
+  { path: '**', redirectTo: 'home', pathMatch: 'full' },
 ];
