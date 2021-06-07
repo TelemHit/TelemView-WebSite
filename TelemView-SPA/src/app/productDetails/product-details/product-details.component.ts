@@ -108,6 +108,10 @@ export class ProductDetailsComponent implements OnInit {
       years: this.product.yearOfCreation.toString(),
     };
     this.addProducts(years);
+    let degree = {
+      degree: this.product.degree.toString(),
+    };
+    this.addProducts(degree);
   }
 
   //load the products

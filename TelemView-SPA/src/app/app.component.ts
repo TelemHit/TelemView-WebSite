@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from './_services/auth.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
+
+declare const gtag: Function;
 
 @Component({
   selector: 'app-root',
@@ -14,7 +17,17 @@ export class AppComponent implements OnInit {
   loggedInApp: boolean;
   jwtHelper = new JwtHelperService();
 
-  constructor(private authService: AuthService, private router: Router){}
+  constructor(private authService: AuthService, private router: Router){
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: NavigationEnd) => {
+      /** START : Code to Track Page View  */
+       gtag('event', 'page_view', {
+          page_path: event.urlAfterRedirects
+       })
+      /** END */
+    })
+  }
 
   //set token and logged-in variables in auth service 
   ngOnInit() {
