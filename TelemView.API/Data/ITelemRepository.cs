@@ -9,6 +9,7 @@ namespace TelemView.API.Data
     public interface ITelemRepository
     {
         Task<IEnumerable<string>> GetSearchAutoComplete(string searchInput);
+        Task<IEnumerable<Product>> GetAllProducts();
         Task<PagedList<Product>> GetProducts(ProductParams productParams);
         Task<Product> GetProduct(int id);
         Task<bool> ProductExists(int id);

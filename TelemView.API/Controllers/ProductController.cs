@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TelemView.API.Data;
 using TelemView.API.Dtos;
@@ -22,10 +23,12 @@ namespace TelemView.API.Controllers
     {
         private readonly ITelemRepository _repo;
         private readonly IMapper _mapper;
-        public ProductController(ITelemRepository repo, IMapper mapper)
+        private readonly UserManager<User> _userManager;
+        public ProductController(ITelemRepository repo, IMapper mapper, UserManager<User> userManager)
         {
             _mapper = mapper;
             _repo = repo;
+            _userManager = userManager;
         }
         [AllowAnonymous]
         [HttpGet]
@@ -104,10 +107,20 @@ namespace TelemView.API.Controllers
         [HttpPost("editor/{userId}", Name = "CreateProduct")]
         public async Task<IActionResult> CreateProduct(int userId, ProductUpdateDto productUpdateDto)
         {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            var userRoles = await _userManager.GetRolesAsync(user);
 
             var productToAdd = _mapper.Map<Product>(productUpdateDto);
             //by default product is publish
-            productToAdd.IsPublish = true;
+            if (userRoles.Contains("Admin"))
+            {
+                productToAdd.IsPublish = true;
+            }
+            else
+            {
+                productToAdd.IsPublish = false;
+            }
+
             productToAdd.TimeStamp = DateTime.Now;
             await _repo.CreateProduct(productToAdd);
 

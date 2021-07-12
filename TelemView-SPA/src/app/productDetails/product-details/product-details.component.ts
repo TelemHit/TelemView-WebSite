@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Product } from 'src/app/_models/product';
 import { ProductsService } from 'src/app/_services/products.service';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
-import { DomSanitizer, Title } from '@angular/platform-browser';
+import { DomSanitizer, Title, Meta } from '@angular/platform-browser';
 import { environment } from 'src/environments/environment';
 import { PaginatedResult } from 'src/app/_models/pagination';
 import { Route } from '@angular/compiler/src/core';
@@ -44,7 +44,8 @@ export class ProductDetailsComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private router: Router,
     private _location: Location,
-    private titleService: Title
+    private titleService: Title,
+    private metadata: Meta
   ) {}
 
   ngOnInit() {
@@ -52,6 +53,7 @@ export class ProductDetailsComponent implements OnInit {
     this.route.data.subscribe((data) => {
       this.product = data['product'];
       this.titleService.setTitle('Telem View - ' + this.product.title);
+      this.metadata.updateTag({ name: 'description', content: this.product.brief });
       this.mediaForGallery();
       this.getProducts();
       this.getFiles();

@@ -33,3 +33,7 @@ table{
 .search-input{
     padding-right: 35px;
 }
+
+.pagination-wrapper{
+    overflow-x:scroll;
+}

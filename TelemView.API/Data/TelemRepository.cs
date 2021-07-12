@@ -18,7 +18,15 @@ namespace TelemView.API.Data
             _context = context;
         }
 
-        //get all products from DB
+        //get all published products
+        public async Task<IEnumerable<Product>> GetAllProducts()
+        {
+            var productIds = await _context.Products
+            .Where(p => p.IsPublish==true).ToListAsync();
+            return productIds;
+        }
+
+        //get products from DB by filter
         public async Task<PagedList<Product>> GetProducts(ProductParams productParams)
         {
             //get products as queryable because we query it later for paging

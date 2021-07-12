@@ -29,9 +29,9 @@
                                 <th scope="col">שם התוצר</th>
                                 <th class="text-center" scope="col">עריכה</th>
                                 <th class="text-center" scope="col">צפייה</th>
-                                <th class="text-center" scope="col">פרסום</th>
+                                <th *appHasRole="['Admin']"  class="text-center" scope="col">פרסום</th>
                                 <!-- <th class="text-center" scope="col">הצגה בדף הבית</th> -->
-                                <th class="text-center" scope="col">מחיקה</th>
+                                <th *appHasRole="['Admin']"  class="text-center" scope="col">מחיקה</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -42,7 +42,7 @@
                                         class="btn"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></td>
                                 <td class="align-middle"><a [routerLink]="['/product/',product.id]" target="_blank" class="btn"><i
                                             class="fa fa-eye" aria-hidden="true"></i></a></td>
-                                <td class="align-middle"><button class="btn" type="button"
+                                <td *appHasRole="['Admin']"  class="align-middle"><button class="btn" type="button"
                                         (click)="publishProduct(product.id)">
                                         <i *ngIf="!product.isPublish" class="fa fa-square-o" aria-hidden="true"></i>
                                         <i *ngIf="product.isPublish" class="fa fa-check-square-o"
@@ -54,7 +54,7 @@
                                         <i *ngIf="product.showOnHomePage" class="fa fa-check-square-o"
                                             aria-hidden="true"></i>
                                     </button></td> -->
-                                <td class="align-middle"><button class="btn" type="button"
+                                <td *appHasRole="['Admin']"  class="align-middle"><button class="btn" type="button"
                                         (click)="deleteProduct(product.id, product.title)">
                                         <i class="fa fa-trash-o" aria-hidden="true"></i>
                                     </button></td>
@@ -62,7 +62,7 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="d-flex justify-content-center mt-3">
+                <div class="d-flex justify-content-center mt-3 pagination-wrapper">
                     <pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems"
                         [itemsPerPage]="pagination.itemsPerPage" [(ngModel)]="pagination.currentPage"
                         (pageChanged)="pageChanged($event)" previousText="&lsaquo;" nextText="&rsaquo;"

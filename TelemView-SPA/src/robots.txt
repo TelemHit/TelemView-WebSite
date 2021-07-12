@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /editor/
+
+Sitemap: https://telemview.telem-hit.net/sitemap.xml
