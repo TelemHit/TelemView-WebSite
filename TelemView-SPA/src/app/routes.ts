@@ -41,13 +41,8 @@ export const appRoutes: Routes = [
     path: 'editor',
     runGuardsAndResolvers: 'always',
     canActivate: [AuthGuard],
-    data: { roles: ['Admin', 'Editor'] },
+    data: { roles: ['Admin', 'Editor', 'Student'] },
     children: [
-      {
-        path: 'products',
-        component: EditorProductsComponent,
-        resolve: { product: ProductListEditorResolver },
-      },
       {
         path: 'products/create',
         component: EditProductComponent,
@@ -55,6 +50,19 @@ export const appRoutes: Routes = [
           generalData: GeneralDataResolver,
         },
         canDeactivate: [PreventUnsavedChangesGuard],
+      },
+    ],
+  },
+  {
+    path: 'editor',
+    runGuardsAndResolvers: 'always',
+    canActivate: [AuthGuard],
+    data: { roles: ['Admin', 'Editor'] },
+    children: [
+      {
+        path: 'products',
+        component: EditorProductsComponent,
+        resolve: { product: ProductListEditorResolver },
       },
       {
         path: 'products/:id',

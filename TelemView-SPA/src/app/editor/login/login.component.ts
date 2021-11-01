@@ -39,19 +39,24 @@ export class LoginComponent implements OnInit {
           this.authService.decodedToken &&
           this.authService.decodedToken.role
         ) {
-          const allowedRoles = ['Admin', 'Editor'];
+          const allowedEditRoles = ['Admin', 'Editor'];
           const userRoles = this.authService.decodedToken.role as Array<string>;
-          allowedRoles.forEach((element) => {
+          allowedEditRoles.forEach((element) => {
             if (userRoles.includes(element)) {
+              this.spinner.hide();
               this.router.navigate(['editor/products']);
             }
-            else{
-              setTimeout(t => {
-                this.alert="אין לך הרשאות עריכה, יש ליצור קשר עם מנהל המערכת"
-                this.spinner.hide();
-              }, 5000)
-            }
           });
+          if(userRoles.includes('Student')){
+            this.spinner.hide();
+            this.router.navigate(['editor/products/create']);
+          }
+          else{
+            setTimeout(t => {
+              this.alert="אין לך הרשאות עריכה, יש ליצור קשר עם מנהל המערכת"
+              this.spinner.hide();
+            }, 5000)
+          }
         } else{
           setTimeout(t => {
             this.alert="אין לך הרשאות עריכה, יש ליצור קשר עם מנהל המערכת"

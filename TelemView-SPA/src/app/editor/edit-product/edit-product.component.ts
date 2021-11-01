@@ -61,8 +61,8 @@ declare let Hebcal: any;
       state('*', style({ opacity: 1 })),
       transition(':enter', animate('400ms ease-out')),
       transition(':leave', animate('400ms ease-in')),
-    ])
-  ]
+    ]),
+  ],
 })
 export class EditProductComponent implements OnInit, AfterViewInit {
   product: Product;
@@ -164,7 +164,7 @@ export class EditProductComponent implements OnInit, AfterViewInit {
 
   // scroll top
   scrollToTop() {
-        window.scrollTo(0, 0);
+    window.scrollTo(0, 0);
   }
 
   // initialize form values
@@ -804,12 +804,18 @@ export class EditProductComponent implements OnInit, AfterViewInit {
       .subscribe(
         (next) => {
           this.productForm.reset(this.product);
-          if (this.routeName === 'create') {
-            this.router.navigate(['editor/products/' + id]);
+          const userRoles = this.authService.decodedToken.role as Array<string>;
+          if (userRoles.includes('Student')) {
+            localStorage.removeItem('token');
+            this.authService.decodedToken = null;
+            this.router.navigate(['/product/' + id]);
+          } else if (this.routeName === 'create') {
+            this.router.navigate(['/editor/products/' + id]);
+          } else {
+            this.router.navigate(['/editor/products']);
           }
           this.spinner.hide();
           this.alertify.success('התוצר נשמר בהצלחה');
-          this.router.navigate(['/editor/products']);
         },
         (error) => {
           this.alertify.error(
@@ -924,9 +930,10 @@ export class EditProductComponent implements OnInit, AfterViewInit {
     }
   }
 
- //return youtube id
+  //return youtube id
   matchYoutubeUrl(url) {
-    const p = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
+    const p =
+      /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
     return url.match(p) ? RegExp.$1 : false;
   }
 

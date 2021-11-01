@@ -25,7 +25,8 @@ namespace TelemView.API.Data
                 var roles = new List<Role>
                 {
                     new Role{Name = "Admin"},
-                    new Role{Name = "Editor"}
+                    new Role{Name = "Editor"},
+                    new Role{Name = "Student"}
                 };
             foreach (var role in roles)
             {

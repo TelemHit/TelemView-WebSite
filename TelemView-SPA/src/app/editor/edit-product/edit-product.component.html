@@ -24,7 +24,8 @@
                     <small class="char-counter">{{productForm.get('title').value.length}}/100</small>
                 </div>
 
-                <input id="title" [maxlength]="100" formControlName="title" class="form-control" type="text" [ngClass]="{'is-invalid': productForm.get('title').errors 
+                <input id="title" placeholder="שם התוצר" [maxlength]="100" formControlName="title" class="form-control"
+                    type="text" [ngClass]="{'is-invalid': productForm.get('title').errors 
             && productForm.get('title').touched}" />
                 <div class="invalid-feedback"
                     *ngIf="productForm.get('title').errors && productForm.get('title').touched">
@@ -34,10 +35,12 @@
 
             <div class="mb-4 form-group col-lg-6 col-md-8 col-sm-12">
                 <div class="d-flex justify-content-between align-items-center">
-                    <label for="brief"><small class="text-danger">* </small>תיאור תמציתי</label>
+                    <label for="brief"><small class="text-danger">* </small>תיאור תמציתי <i class="fa fa-info-circle"
+                            tooltip="תיאור תמציתי טוב יכיל את סוג התוצר, תפקידו וקהל היעד"></i></label>
                     <small class="char-counter">{{productForm.get('brief').value.length}}/100</small>
                 </div>
-                <input id="brief" [maxlength]="100" formControlName="brief" class="form-control" type="text" [ngClass]="{'is-invalid': productForm.get('brief').errors 
+                <input id="brief" [maxlength]="100" placeholder="תיאור תמציתי" formControlName="brief"
+                    class="form-control" type="text" [ngClass]="{'is-invalid': productForm.get('brief').errors 
             && productForm.get('brief').touched}" />
                 <div class="invalid-feedback"
                     *ngIf="productForm.get('brief').errors && productForm.get('brief').touched">
@@ -46,7 +49,8 @@
 
             <div class="mb-4 form-group col-lg-6 col-md-8 col-sm-12">
                 <label for="tags"><small class="text-danger">* </small>תגיות <i class="fa fa-info-circle"
-                        tooltip="תגיות שמאפיינות את התוצר. לדוגמה: שפות תכנות בהן פותח."></i></label>
+                        tooltip="תגיות שמאפיינות את התוצר. לדוגמה: שפות תכנות בהן פותח, תוכנות, תיאוריות למידה וכו'."></i></label>
+                <small class="d-block">יש להקליד ולאחר מכן ללחוץ Entr על מנת להוסיף</small>
                 <div class="alert-danger" *ngIf="tagAlertMessage">{{tagAlertMessage}}</div>
                 <tag-input id="tags" formControlName="tags" [identifyBy]="'id'" [displayBy]="'title'" theme='bootstrap'
                     [onlyFromAutocomplete]="false" [secondaryPlaceholder]="'תגית'" [placeholder]="'הוספת תגית'"
@@ -65,7 +69,9 @@
 
             <div class="mb-4 form-group col-lg-6 col-md-8 col-sm-12">
                 <div class="d-flex justify-content-between align-items-center">
-                    <label for="description"><small class="text-danger">* </small>תיאור מפורט</label>
+                    <label for="description"><small class="text-danger">* </small>תיאור מפורט <i
+                            class="fa fa-info-circle"
+                            tooltip="שתים-שלוש פסקאות אודות התוצר. מה הדבר הכי מעניין בתוצר?"></i></label>
                 </div>
                 <quill-editor id="productDescription" [required]="true" [minLength]="2" placeholder="תיאור התוצר"
                     formControlName="description" [ngClass]="{'is-invalid': productForm.get('description').errors 
@@ -77,6 +83,7 @@
 
             <div class="mb-4 form-group col-lg-6 col-md-8 col-sm-12">
                 <label><small class="text-danger">* </small>סטודנטים</label>
+                <small class="d-block">יש להקליד ולאחר מכן ללחוץ Entr על מנת להוסיף</small>
                 <div class="alert-danger" *ngIf="studentAlertMessage">{{studentAlertMessage}}</div>
                 <tag-input formControlName="students" [identifyBy]="'id'" [displayBy]="'name'" theme='bootstrap'
                     [onlyFromAutocomplete]="false" [secondaryPlaceholder]="'שם הסטודנט/ית'"
@@ -165,7 +172,8 @@
             </div>
 
             <div class="mb-4 form-group col-lg-6 col-md-8 col-sm-12">
-                <label for="url">קישור</label>
+                <label for="url">קישור לתוצר <i class="fa fa-info-circle"
+                        tooltip="יש להזין את הקישור לתוצר על שרת הפקולטה. במידה ואין, להשאיר ריק"></i></label>
                 <input id="url" (input)="checkUrl()" formControlName="productUrl" class="form-control" type="text"
                     [ngClass]="{'is-invalid': productForm.hasError('notUrl') 
                 && productForm.get('productUrl').value.length > 0}" />
@@ -182,6 +190,8 @@
 
             <div class="mb-4 form-group col-lg-6 col-md-8 col-sm-12">
                 <label><small class="text-danger">* </small>קורסים</label>
+                <small class="d-block">יש להקליד ולאחר מכן ללחוץ Entr על מנת להוסיף</small>
+                <small class="d-block">לפרויקט גמר בחרו: "פרויקט גמר"</small>
                 <div class="alert-danger" *ngIf="courseAlertMessage">{{courseAlertMessage}}</div>
 
                 <tag-input formControlName="courses" [identifyBy]="'id'" [displayBy]="'title'"
@@ -200,6 +210,7 @@
 
             <div class="mb-4 form-group col-lg-6 col-md-8 col-sm-12">
                 <label><small class="text-danger">* </small>משימה</label>
+                <small class="d-block mb-2">לפרויקט גמר בחרו: "פרויקט גמר"</small>
                 <select id="task" class="custom-select" formControlName="taskId" [ngClass]="{'is-invalid': productForm.get('taskId').errors 
                 && productForm.get('taskId').touched}">
                     <option value="" disabled>בחירת משימה...</option>
@@ -212,6 +223,7 @@
 
             <div class="mb-4 form-group col-lg-6 col-md-8 col-sm-12">
                 <label><small class="text-danger">* </small>מרצים</label>
+                <small class="d-block">יש להקליד ולאחר מכן ללחוץ Entr על מנת להוסיף</small>
                 <div class="alert-danger" *ngIf="lecturerAlertMessage">{{lecturerAlertMessage}}</div>
                 <tag-input formControlName="lecturers" [identifyBy]="'id'" [displayBy]="'name'" theme='bootstrap'
                     [onlyFromAutocomplete]="false" [secondaryPlaceholder]="'שם המרצה'" [placeholder]="'הוספת מרצה'"
@@ -235,6 +247,7 @@
             <div class="mb-2 row btn-group mr-15">
                 <div class="btn btn-outline-primary-dark">
                     <label id="upload-photo-lbl" for="upload-photo">תמונות וקבצי PDF</label>
+
                     <input #MediaUpload id="upload-photo" type="file" multiple name="mediaUpload"
                         (change)="selectFiles($event)">
                 </div>
@@ -278,23 +291,26 @@
                             <!-- show video -->
                             <iframe *ngIf="media.type=='video'" [src]="media.urlForShow" class="img-thumbnail p-1"
                                 title="{{media.mDescription}}"></iframe>
-                            <div class="input-group">
+                                <!-- description -->
+                            <label for="lable_{{index}}">כותרת <i class="fa fa-info-circle"
+                                tooltip="כותרת שמתארת את הפריט. לדוגמה: דף הבית/דף מידע/סרטון התוצר/צד עורך וכו'"></i></label>
+                            <input id="lable_{{index}}" type="text" [maxLength]=50 class="form-control"
+                                    formControlName="mDescription" class="mb-1" />
+                            <div class="input-group justify-content-center">
                                 <!-- main image -->
                                 <button tooltip="קביעת התמונה הראשית שתופיע בדף הבית." id="isMain_{{index}}"
-                                    *ngIf="media.type=='image'" type="button" class="btn btn-sm"
+                                    *ngIf="media.type=='image'" type="button" class="mr-1 btn btn-sm"
                                     [disabled]="media.isMain"
                                     [ngClass]="media.isMain ? 'btn-success active' : 'btn-secondary'"
-                                    (click)="setMain($event)"><i class="fa fa-flag"></i></button>
+                                    (click)="setMain($event)"><i class="fa fa-flag "></i></button>
                                 <!-- delete -->
-                                <button tooltip="מחיקה" id="delete_{{index}}" *ngIf="!media.isMain"
-                                    type="button" [disabled]="media.isMain" (click)="DeleteFile($event)"
+                                <button tooltip="מחיקה" id="delete_{{index}}" *ngIf="!media.isMain" type="button"
+                                    [disabled]="media.isMain" (click)="DeleteFile($event)"
                                     class="btn btn-sm btn-danger"><i class="fa fa-trash-o"></i></button>
-                                <!-- description -->
-                                <input type="text" [maxLength]=50 class="form-control" formControlName="mDescription" />
                             </div>
 
                             <div *ngIf="noDescription(index)" class="invalid-feedback d-block" role="alert">
-                                יש לרשום תיאור
+                                יש לרשום כותרת לפריט
                             </div>
 
                         </div>
@@ -307,6 +323,8 @@
                 class="btn btn-primary-dark">שמירה</button>
             <button type="button" class="btn" [routerLink]="['/editor/products']">ביטול</button>
         </div>
+        <div class="text-danger text-center pt-2" *appHasRole="['Student']">שימו לב! יש לעבור על הטופס לפני שמירתו. לא
+            ניתן לערוך טופס שנשלח.</div>
     </form>
 </article>
 <ngx-spinner [fullScreen]="true" type="ball-beat" size="medium" color="#1BA098"></ngx-spinner>

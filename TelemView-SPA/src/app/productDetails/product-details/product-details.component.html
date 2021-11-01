@@ -19,7 +19,7 @@
             <li><span>{{product.yearOfCreation}}</span></li>
             <li><span>{{product.heYearOfCreation}}</span></li>
             <li><span>{{product.degree}}</span></li>
-            <li *ngFor="let tag of product.tags"><span>{{tag.title}}</span></li>
+            <!-- <li *ngFor="let tag of product.tags"><span>{{tag.title}}</span></li> -->
           </ul>
         </div>
         <a *ngIf="product.productUrl.length>0" [href]="product.productUrl" target="_blank" class="col-lg-2 col-md-4 col-sm-3 offset btn btn-yellow">התנסות

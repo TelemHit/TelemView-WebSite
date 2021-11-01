@@ -10,6 +10,9 @@ iframe.img-thumbnail{
 .media-card{
     width: 200px;
     margin-left: 10px;
+    border: 1px solid lightgray;
+    padding: 5px;
+    border-radius: 5px;
 }
 section{
     background-color: white;

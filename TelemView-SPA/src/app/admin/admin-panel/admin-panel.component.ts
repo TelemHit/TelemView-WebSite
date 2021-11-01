@@ -24,7 +24,8 @@ export class AdminPanelComponent implements OnInit {
   users: User[];
   bsModalRef: BsModalRef;
   html = `<li><strong>Admin</strong> - בעל כל הרשאות העריכה כולל ניהול משתמשים.</li>
-  <li><strong>Editor</strong> - בעל כל הרשאות העריכה.</li>`;
+  <li><strong>Editor</strong> - בעל כל הרשאות העריכה.</li>
+  <li><strong>Student</strong> - הרשאה להעלאת תוצר בלבד.</li>`;
   emailConfirmation = environment.emailConfirmation;
 
   constructor(
@@ -87,6 +88,7 @@ export class AdminPanelComponent implements OnInit {
     const availableRoles: any[] = [
       { name: 'Admin', value: 'Admin' },
       { name: 'Editor', value: 'Editor' },
+      { name: 'Student', value: 'Student' },
     ];
 
     for (let i = 0; i < availableRoles.length; i++) {

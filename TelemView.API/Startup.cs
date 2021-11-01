@@ -98,7 +98,7 @@ namespace TelemView.API
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
-                options.AddPolicy("Edit", policy => policy.RequireRole("Admin", "Editor"));
+                options.AddPolicy("Edit", policy => policy.RequireRole("Admin", "Editor", "Student"));
             });
 
             services.AddCors();
