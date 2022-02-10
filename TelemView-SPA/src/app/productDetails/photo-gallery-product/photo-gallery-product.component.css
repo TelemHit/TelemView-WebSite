@@ -30,6 +30,9 @@ slide iframe,
 .carousel-caption {
   right: 0;
   text-align: right;
+  padding: 0;
+  top: 30px;
+  bottom: auto;
 }
 
 .carousel-caption p{
@@ -37,6 +40,7 @@ slide iframe,
   padding: 7px 10px;
   font-size: 1.1em;
   width: fit-content;
+  margin: 0;
 }
 
 .swiper-pagination {

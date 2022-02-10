@@ -177,7 +177,7 @@ namespace TelemView.API.Data
             var years = await _context.Products.Where(pr => pr.IsPublish == true).GroupBy(p => p.YearOfCreation).Select(y => new Year
             {
                 Title = y.Key,
-            }).OrderBy(o => o.Title).ToListAsync();
+            }).OrderByDescending(o => o.Title).ToListAsync();
 
             listToReturn = listToReturn.Union(years.Select(n => n.Title.ToString()).Where(l => l.Contains(searchInput.ToLower()))).ToList();
 
@@ -188,7 +188,7 @@ namespace TelemView.API.Data
             var heYears = await _context.Products.Where(pr => pr.IsPublish == true).GroupBy(p => p.HeYearOfCreation).Select(y => new Year
             {
                 HeTitle = y.Key,
-            }).OrderBy(o => o.HeTitle).ToListAsync();
+            }).OrderByDescending(o => o.HeTitle).ToListAsync();
 
             listToReturn = listToReturn.Union(heYears.Select(n => n.HeTitle.ToString()).Where(l => l.Contains(searchInput.ToLower()))).ToList();
 
@@ -215,7 +215,7 @@ namespace TelemView.API.Data
         public async Task<GeneralData> GetGeneralData()
         {
             var generalData = new GeneralData();
-            generalData.Organizations = await _context.Organizations.ToListAsync();
+            generalData.Organizations = await _context.Organizations.OrderBy(org => org.Title).ToListAsync();
             generalData.OrganizationTypes = await _context.OrganizationTypes.OrderBy(o => o.Title).ToListAsync();
             generalData.Students = await _context.Students.OrderBy(o => o.Name).ToListAsync();
             generalData.Tags = await _context.Tags.OrderBy(o => o.Title).ToListAsync();
@@ -227,7 +227,7 @@ namespace TelemView.API.Data
             {
                 Title = y.Key,
                 Counter = y.Count()
-            }).OrderBy(o => o.Title).ToListAsync();
+            }).OrderByDescending(o => o.Title).ToListAsync();
             generalData.Degree = await _context.Products.GroupBy(p => p.Degree).Select(y => new Degree
             {
                 Title = y.Key,

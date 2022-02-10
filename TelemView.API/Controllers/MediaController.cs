@@ -92,14 +92,22 @@ namespace TelemView.API.Controllers
                 if (linkForCreationDto.Type == "video")
                 {
                     var YoutubeVideoRegex = new Regex(@"youtu(?:\.be|be\.com)/(?:.*v(?:/|=)|(?:.*/)?)([a-zA-Z0-9-_]+)");
+                    var VimeoVideoRegex = new Regex(@"vimeo\.com/(?:.*#|.*/)?([0-9]+)");
+
                     Match youtubeMatch = YoutubeVideoRegex.Match(url);
-                    if (youtubeMatch.Groups[1].Length == 11)
+                    Match vimeoMatch = VimeoVideoRegex.Match(url);
+
+                    if (youtubeMatch.Success)
                     {
                         linkForCreationDto.Url = "https://www.youtube.com/embed/" + youtubeMatch.Groups[1].Value;
                     }
+                    else if (vimeoMatch.Success)
+                    {
+                        linkForCreationDto.Url ="https://player.vimeo.com/video/" + vimeoMatch.Groups[1].Value;
+                    }
                     else
                     {
-                        return BadRequest("not a youtube");
+                        return BadRequest("not a video");
                     }
                 }
 

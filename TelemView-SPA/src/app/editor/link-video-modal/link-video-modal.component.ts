@@ -17,7 +17,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 export class LinkVideoModalComponent implements OnInit {
   label: string;
-  text_2='';
+  text_2 = '';
   placeHolder: string;
   label_2: string;
   placeHolder_2: string;
@@ -52,7 +52,10 @@ export class LinkVideoModalComponent implements OnInit {
     this.addItem = this.formBuilder.group(
       {
         url: ['', Validators.required],
-        mDescription: [this.text_2, [Validators.required, Validators.maxLength(50)]],
+        mDescription: [
+          this.text_2,
+          [Validators.required, Validators.maxLength(50)],
+        ],
       },
       {
         validators: [this.checkIfUrl.bind(this)],
@@ -76,13 +79,17 @@ export class LinkVideoModalComponent implements OnInit {
   //make sure url is valid
   checkIfUrl(g: FormGroup) {
     if (this.type === 'video') {
-      const youtube = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|\?v=)([^#\&\?]*).*/;
+      const youtube =
+        /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|\?v=)([^#\&\?]*).*/;
+      const vimeo =
+        /(http|https)?:\/\/(www\.|player\.)?vimeo\.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|video\/|)(\d+)(?:|\/\?)/;
       const iframe = /<iframe.*?s*src="http(.*?)".*?<\/iframe>/;
       let urlForCheck = null;
       if (youtube.test(g.controls.url.value)) {
         urlForCheck = true;
-      }
-      if (iframe.test(g.controls.url.value) == true) {
+      } else if (vimeo.test(g.controls.url.value)) {
+        urlForCheck = true;
+      } else if (iframe.test(g.controls.url.value) == true) {
         urlForCheck = null;
       }
 
@@ -101,14 +108,37 @@ export class LinkVideoModalComponent implements OnInit {
   //create youtube link
   createYoutubeLink(url) {
     const videoId = this.matchYoutubeUrl(url);
-    url = 'https://www.youtube.com/embed/' + videoId;
+    if (videoId['type'] == 'youtube') {
+      url = 'https://www.youtube.com/embed/' + videoId['id'];
+    } else if (videoId['type'] == 'vimeo') {
+      url = 'https://player.vimeo.com/video/' + videoId['id'];
+    }
     return this.safeURL(url);
   }
 
   //return only youtube id
   matchYoutubeUrl(url) {
-    const p = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
-    return url.match(p) ? RegExp.$1 : false;
+    const p =
+      /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
+    const v =
+    /(http|https)?:\/\/(www\.|player\.)?vimeo\.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|video\/|)(\d+)(?:|\/\?)/;
+    //console.log(RegExp.$1);
+    if (url.match(p)) {
+      console.log(url.match(p));
+      const vid = {
+        type: 'youtube',
+        id: url.match(p)[1],
+      };
+      return vid;
+    } else if (url.match(v)) {
+      
+      const vid = {
+        type: 'vimeo',
+        id: url.match(v)[4],
+      };
+      return vid;
+    }
+    return false;
   }
 
   //save

@@ -895,15 +895,15 @@ export class EditProductComponent implements OnInit, AfterViewInit {
   //add video
   addVideoModal() {
     const initialState = {
-      label: 'לינק לסרטון ב: YouTube',
+      label: 'לינק לסרטון ב: YouTube או Vimeo',
       text_2: 'סרטון התוצר',
-      placeHolder: 'לינק ל: YouTube',
+      placeHolder: 'לינק ל: YouTube או Vimeo',
       label_2: 'תיאור הסרטון:',
       placeHolder_2: 'תיאור הסרטון',
       title: 'הוספת סרטון חדש',
       closeBtnName: 'ביטול',
       saveBtnName: 'שמירה',
-      typeAlert: 'יש להזין כתובת Youtube תקנית',
+      typeAlert: 'יש להזין כתובת Youtube או Vimeo תקנית',
       type: 'video',
     };
     this.bsModalRef = this.modalService.show(LinkVideoModalComponent, {
@@ -913,7 +913,12 @@ export class EditProductComponent implements OnInit, AfterViewInit {
     this.bsModalRef.content.item.subscribe((res) => {
       res.data.type = 'video';
       const videoId = this.matchYoutubeUrl(res.data.url);
-      res.data.url = 'https://www.youtube.com/embed/' + videoId;
+      if(videoId["type"] == 'youtube'){
+        res.data.url = 'https://www.youtube.com/embed/' + videoId["id"];
+      } else if (videoId['type'] == 'vimeo') {
+        res.data.url = 'https://player.vimeo.com/video/' + videoId['id'];
+      }
+      
       this.uploadLink(res.data);
     });
   }
@@ -934,7 +939,23 @@ export class EditProductComponent implements OnInit, AfterViewInit {
   matchYoutubeUrl(url) {
     const p =
       /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
-    return url.match(p) ? RegExp.$1 : false;
+    const v = /(http|https)?:\/\/(www\.|player\.)?vimeo\.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|video\/|)(\d+)(?:|\/\?)/;
+        //console.log(RegExp.$1);
+        if (url.match(p)) {
+          console.log(url.match(p));
+          const vid = {
+            type: 'youtube',
+            id: url.match(p)[1],
+          };
+          return vid;
+        } else if (url.match(v)) {
+          const vid = {
+            type: 'vimeo',
+            id: url.match(v)[4],
+          };
+          return vid;
+        }
+        return false;
   }
 
   //add link modal
