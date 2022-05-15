@@ -14,6 +14,7 @@ namespace TelemView.API.Dtos
         public int YearOfCreation { get; set; }
         public string Degree { get; set; }
         public bool isPublish { get; set; }
+        public bool ShowOnHomePage { get; set; }
         public string MainPhotoUrl {get; set;}
         public string TaskTitle {get; set; }
         public int TaskId { get; set; }

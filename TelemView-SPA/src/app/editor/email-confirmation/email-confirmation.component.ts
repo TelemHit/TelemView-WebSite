@@ -25,7 +25,6 @@ export class EmailConfirmationComponent implements OnInit {
       this._authService.confirmEmail(token, email)
       .subscribe(_ => {
         this.showSuccess = true;
-        
       },
       error => {
         this.showError = true;

@@ -1,27 +1,25 @@
-<nav class="logo-top home-nav justify-content-between row"
-    [ngClass]="{'home-nav-static': staticNav}">
-    <button class="btn mobileNav" role="menu" (click)="mobileNav=!mobileNav" aria-controls="navbar">
-      <div id="menu" [ngClass]="{'open': mobileNav}">
-        <div id="pencet">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
+<nav class="logo-top home-nav justify-content-between row" [ngClass]="{'home-nav-static': staticNav}">
+  <button class="btn mobileNav" role="menu" (click)="mobileNav=!mobileNav" aria-controls="navbar">
+    <div id="menu" [ngClass]="{'open': mobileNav}">
+      <div id="pencet">
+        <span></span>
+        <span></span>
+        <span></span>
       </div>
-    </button>
-      <div class="d-flex align-items-center">
-        <img src="assets/images/logoTV.png" alt="לוגו טכנולוגיות למידה" class="logo logoTV">
-        <div class="tv-nav-right"
-        [ngClass]="{'nav-mobile-active': mobileNav}">
-        <a routerLinkActive="active" class="btn btn-about" [routerLink]="['/home']">דף הבית</a>
-        <button type="button" class="btn btn-about" (click)="lgModal.show()">מי אנחנו</button>
-        <a class="btn btn-about" href="https://www.hit.ac.il/telem/overview" target="_blank">לאתר הפקולטה</a>
-      </div>
-      </div>
-      <img src="assets/images/logoHit.png" alt="לוגו HIT" class="logo">
-    </nav>
+    </div>
+  </button>
+  <div class="d-flex align-items-center">
+    <img src="assets/images/logoTV.png" alt="לוגו טכנולוגיות למידה" class="logo logoTV">
+    <div class="tv-nav-right" [ngClass]="{'nav-mobile-active': mobileNav}">
+      <a routerLinkActive="active" class="btn btn-about" [routerLink]="['/home']">דף הבית</a>
+      <button type="button" class="btn btn-about" (click)="lgModal.show()">מי אנחנו</button>
+      <a class="btn btn-about" href="https://www.hit.ac.il/telem/overview" target="_blank">לאתר הפקולטה</a>
+    </div>
+  </div>
+  <img src="assets/images/logoHit.png" alt="לוגו HIT" class="logo">
+</nav>
 
-    
+
 <div bsModal #lgModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name1">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -35,22 +33,37 @@
       <div class="modal-body">
         <div class="container pt-1 pb-3">
           <div class="row align-items-top justify-content-around">
-          <div class="col-lg-6">
-            <p>
-            הפקולטה לטכנולוגיות למידה מכשירה את בוגריה להיות מפתחי פתרונות למידה דיגיטליים ומפתחי הדרכה משולבת טכנולוגיות למידה, ולענות לשלל מצבים וצרכים של מגזרים שונים במשק: המגזר החינוכי, ההשכלה הגבוהה, השוק הארגוני הממשלתי והאזרחי.
-          </p>
-          <a class="btn btn-yellow mobile-hide" href="https://www.hit.ac.il/telem/overview" target="_blank">לאתר הפקולטה</a>
-        </div>
-          <div class="col-lg-5 col-md-8 ven-image">
-            <img src="assets/images/telem-ven.svg"  alt="התואר הינו שילוב של התחומים: פיתוח הדרכה, פיתוח טכנולוגי ועיצוב מולטימדיה אינטראקטיבית">
+            <div class="col-lg-6">
+              <p>
+                הפקולטה לטכנולוגיות למידה מכשירה את בוגריה להיות מפתחי פתרונות למידה דיגיטליים ומפתחי הדרכה משולבת
+                טכנולוגיות למידה, ולענות לשלל מצבים וצרכים של מגזרים שונים במשק: המגזר החינוכי, ההשכלה הגבוהה, השוק
+                הארגוני הממשלתי והאזרחי.
+              </p>
+              <a class="mt-2 btn btn-yellow mobile-hide" href="https://www.hit.ac.il/telem/overview"
+                target="_blank">לאתר הפקולטה</a>
+            </div>
+            <div class="col-lg-5 col-md-8 ven-image">
+              <img src="assets/images/telem-ven.svg"
+                alt="התואר הינו שילוב של התחומים: פיתוח הדרכה, פיתוח טכנולוגי ועיצוב מולטימדיה אינטראקטיבית">
+            </div>
           </div>
+          <div class="mobile-show row justify-content-center">
+            <a class="btn btn-yellow mt-3 col-sm-6" href="https://www.hit.ac.il/telem/overview" target="_blank">לאתר
+              הפקולטה</a>
+          </div>
+          <hr class="mt-4" />
+          <p class="mt-2 mb-2 origin-dev">
+            הפרויקטים המוצגים באתר זה הם בבעלות מכון טכנולוגי חולון (ע.ר.) ומוגנים בזכויות יוצרים. אין להעתיק או לעשות
+            כל שימוש שהוא בפרויקטים המוצגים באתר זה או בחלקים מהם, אלא בהתאם להוראות השימוש או באישור מראש ובכתב של רשות
+            המחקר חדשנות ובינלאומיות של מכון טכנולוגי חולון.
+            הנך רשאי/ת להדפיס דפים בודדים מהאתר, לשימוש אישי שאינו מסחרי בלבד. מובהר כי הרשאה זו לא מקנה לך בעלות
+            בחומרים שהדפסת ואינה מהווה אישור לעשות בהם או במידע שבהם שימוש מסחרי. זאת, גם אם ביצעת שינויים במידע כאמור.
+            כל שימוש בחומרים המוצגים באתר עלול לפגוע בזכויות צדדים שלישיים או בזכויות המכון ועושה השימוש יהיה אחראי
+            באופן בלעדי לכל נזק שייגרם למכון או לצד שלישי כלשהו בשל השימוש בחומרים המוצגים באתר.
+          </p>
+          <p class="mt-0 mb-0 origin-dev">האתר פותח במקור על ידי רוית דבוש במסגרת פרויקט גמר בהנחיית פרופ' מיקי רונן ז"ל
+            ואורן בן אהרן, 2015. גרסה חדשה פותחה על ידי עמרי כהנא, 2021.</p>
         </div>
-        <div class="mobile-show row justify-content-center">
-          <a class="btn btn-yellow mt-3 col-sm-6" href="https://www.hit.ac.il/telem/overview" target="_blank">לאתר הפקולטה</a>
-
-        </div>
-        <p class="mt-5 mb-0 origin-dev">*האתר פותח במקור על ידי רוית דבוש במסגרת פרויקט גמר בהנחיית פרופ' מיקי רונן ז"ל ואורן בן אהרן, 2015. גרסה חדשה פותחה על ידי עמרי כהנא, 2021.</p>
       </div>
     </div>
   </div>
-</div>

@@ -36,5 +36,6 @@ namespace TelemView.API.Data
         Task<OrganizationType> GetOrganizationType(int id);
         Task<IEnumerable<OrganizationType>> GetOrganizationTypes();
         Task<IEnumerable<object>> GetUsers();
+        Task<IEnumerable<Product>> GetTopProducts();
     }
 }

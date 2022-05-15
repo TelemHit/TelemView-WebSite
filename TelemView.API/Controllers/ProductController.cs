@@ -32,7 +32,6 @@ namespace TelemView.API.Controllers
         }
         [AllowAnonymous]
         [HttpGet]
-
         //get all products
         public async Task<IActionResult> GetProducts([FromQuery] ProductParams productParams)
         {
@@ -88,6 +87,15 @@ namespace TelemView.API.Controllers
 
             return Ok(rootData);
         }
+
+        [AllowAnonymous]
+        [HttpGet("TopProducts")]
+        public async Task<IActionResult> GetTopProducts(){
+            var products = await _repo.GetTopProducts();
+            var productsToReturn = _mapper.Map<IEnumerable<ProductDetailsDto>>(products);
+            return Ok(productsToReturn);
+        }
+
 
         //get specific product
         [AllowAnonymous]

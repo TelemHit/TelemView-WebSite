@@ -95,7 +95,7 @@ export class EditorProductsComponent implements OnInit {
       });
   }
 
-  //show on home page - not in use
+  //show on home page
   setOnHomePage(id) {
     this.productsService
       .productOnHomePage(this.authService.decodedToken.nameid, id)
@@ -104,6 +104,7 @@ export class EditorProductsComponent implements OnInit {
         product
           ? (this.products.find((i) => i.id === id).showOnHomePage = false)
           : (this.products.find((i) => i.id === id).showOnHomePage = true);
+          console.log(this.products);
       });
   }
 

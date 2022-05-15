@@ -18,11 +18,17 @@ namespace TelemView.API.Data
             _context = context;
         }
 
+        //get all products marked for home - used in faculty website
+        public async Task<IEnumerable<Product>> GetTopProducts()
+        {
+            var products = await _context.Products.Where(p => p.ShowOnHomePage == true).ToListAsync();
+            return products;
+        }
         //get all published products
         public async Task<IEnumerable<Product>> GetAllProducts()
         {
             var productIds = await _context.Products
-            .Where(p => p.IsPublish==true).ToListAsync();
+            .Where(p => p.IsPublish == true).ToListAsync();
             return productIds;
         }
 

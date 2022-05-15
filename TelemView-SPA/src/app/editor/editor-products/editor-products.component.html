@@ -30,7 +30,7 @@
                                 <th class="text-center" scope="col">עריכה</th>
                                 <th class="text-center" scope="col">צפייה</th>
                                 <th *appHasRole="['Admin']"  class="text-center" scope="col">פרסום</th>
-                                <!-- <th class="text-center" scope="col">הצגה בדף הבית</th> -->
+                                <th *appHasRole="['Admin']" class="text-center" scope="col">פרויקט נבחר</th>
                                 <th *appHasRole="['Admin']"  class="text-center" scope="col">מחיקה</th>
                             </tr>
                         </thead>
@@ -48,12 +48,12 @@
                                         <i *ngIf="product.isPublish" class="fa fa-check-square-o"
                                             aria-hidden="true"></i>
                                     </button></td>
-                                <!-- <td class="align-middle"><button class="btn" type="button" (click)="setOnHomePage(product.id)">
+                                <td *appHasRole="['Admin']" class="align-middle"><button class="btn" type="button" (click)="setOnHomePage(product.id)">
                                         <i *ngIf="!product.showOnHomePage" class="fa fa-square-o"
                                             aria-hidden="true"></i>
                                         <i *ngIf="product.showOnHomePage" class="fa fa-check-square-o"
                                             aria-hidden="true"></i>
-                                    </button></td> -->
+                                    </button></td>
                                 <td *appHasRole="['Admin']"  class="align-middle"><button class="btn" type="button"
                                         (click)="deleteProduct(product.id, product.title)">
                                         <i class="fa fa-trash-o" aria-hidden="true"></i>

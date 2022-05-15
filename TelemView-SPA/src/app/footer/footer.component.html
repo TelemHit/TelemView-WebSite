@@ -1,5 +1,35 @@
 <div class="container-fluid  green-bg">
   <footer class="row white justify-content-center text-center align-items-center">
-    <a class="white btn-link btn" href="https://www.hit.ac.il/telem/overview" target="_blank">הפקולטה לטכנולוגיות למידה </a><span>&nbsp;|&nbsp;</span><a class="white btn-link btn" href="https://www.hit.ac.il/" target="_blank"> המכון הטכנולוגי חולון</a>
+    <a class="white btn-link btn" href="https://www.hit.ac.il/telem/overview" target="_blank">הפקולטה לטכנולוגיות למידה
+    </a><span>&nbsp;|&nbsp;</span><a class="white btn-link btn" href="https://www.hit.ac.il/" target="_blank"> המכון
+      הטכנולוגי חולון</a>
+    <span>&nbsp;|&nbsp;</span><button type="button" (click)="lgModal.show()" class="white btn-link btn"> © כל הזכויות
+      שמורות ל HIT מכון טכנולוגי חולון</button>
   </footer>
 </div>
+
+<div bsModal #lgModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header container">
+        <h4 id="dialog-sizes-name1" class="modal-title pull-left">זכויות יוצרים</h4>
+        <button type="button" class="close pull-right" (click)="lgModal.hide()" aria-label="Close">
+          <span aria-hidden="true"><i style="color: #051622;" class="fa fa-times" aria-hidden="true"></i>
+          </span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container pt-1 pb-3">
+          <p>
+            הפרויקטים המוצגים באתר זה הם בבעלות מכון טכנולוגי חולון (ע.ר.) ומוגנים בזכויות יוצרים. אין להעתיק או לעשות
+            כל שימוש שהוא בפרויקטים המוצגים באתר זה או בחלקים מהם, אלא בהתאם להוראות השימוש או באישור מראש ובכתב של רשות
+            המחקר חדשנות ובינלאומיות של מכון טכנולוגי חולון.
+            הנך רשאי/ת להדפיס דפים בודדים מהאתר, לשימוש אישי שאינו מסחרי בלבד. מובהר כי הרשאה זו לא מקנה לך בעלות
+            בחומרים שהדפסת ואינה מהווה אישור לעשות בהם או במידע שבהם שימוש מסחרי. זאת, גם אם ביצעת שינויים במידע כאמור.
+            כל שימוש בחומרים המוצגים באתר עלול לפגוע בזכויות צדדים שלישיים או בזכויות המכון ועושה השימוש יהיה אחראי
+            באופן בלעדי לכל נזק שייגרם למכון או לצד שלישי כלשהו בשל השימוש בחומרים המוצגים באתר.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>

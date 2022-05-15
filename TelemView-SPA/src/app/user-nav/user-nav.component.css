@@ -2,7 +2,7 @@
   padding: 10px 15px;
 }
 .modal-content .origin-dev{
-  font-size: 0.9em;
+  font-size: 0.7em;
 }
 .home-nav-static {
   padding: 5px 15px;
@@ -100,6 +100,9 @@
 @media only screen and (max-width: 992px) {
   .mobile-show {
     display: flex;
+  }
+  .mobile-show a {
+    width: 90%;
   }
   .mobile-hide {
     display: none;

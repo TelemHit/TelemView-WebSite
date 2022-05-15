@@ -72,6 +72,7 @@ export class MultiFilterComponent implements OnInit, OnChanges {
             console.log(error);
           });
       });
+
   }
 
   fixedHighligth(match: TypeaheadMatch, query: Array<string>): String {
@@ -85,6 +86,13 @@ export class MultiFilterComponent implements OnInit, OnChanges {
   ngOnChanges(changes) {
     if (changes.queryParams) {
       this.getQueryParams();
+    }
+    if(changes.data){
+      let lectList = [...this.data.lecturers];
+      const miki = lectList.find(x => x.name.includes("מיקי רונן"));
+      lectList = lectList.filter(y => y.id != miki.id);
+      lectList.unshift(miki);
+      this.data.lecturers = lectList;
     }
   }
 
